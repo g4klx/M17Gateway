@@ -1,0 +1,16 @@
+Debug
+Release
+x64
+*.o
+*.opendb
+*.bak
+*.obj
+*~
+*.sdf
+*.log
+*.zip
+*.exe
+*.user
+*.VC.db
+.vs
+M17Gateway

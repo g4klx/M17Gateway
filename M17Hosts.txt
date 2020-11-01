@@ -1,0 +1,61 @@
+# M17Hosts.txt
+#
+# The format of this file is the name of the reflector followed by the host name or address and port
+#
+
+# M17-214 Spain
+M17-214	214.m17.es	17000
+
+# M17-224 Spain
+M17-224	eamaster.xreflector.es	17000
+
+# M17-ARG Argentina
+M17-ARG	m17arg.ddns.net	17000
+
+# M17-AUT Austria
+M17-AUT	m17-aut.xreflector.net	17000
+
+# M17-BEL Belgium
+M17-BEL	on0lg.no-ip.org	17000
+
+# M17-DEU Germany
+M17-DEU	m17-deu.xreflector.net	17000
+
+# M17-EA7 Southern Spain
+M17-EA7	rcveleta.xreflector.es	17000
+
+# M17-GAX GAX
+M17-GAX	ea4gax.es	17000
+
+# M17-ITA Italy
+M17-ITA	m17ita.hblink.it	17000
+
+# M17-KP4 Puerto Rico
+M17-KP4	kp4ca-m17.ddns.net	17000
+
+# M17-LAT Latino
+M17-LAT	latinos.m17.es	17000
+
+# M17-M17 M17
+M17-M17	ref.m17.link	17000
+
+# M17-POL Poland
+M17-ARG	m17.hblink.network	17000
+
+# M17-POR Portugal
+M17-POR	m17.hamradio.pt	17000
+
+# M17-SAL Argentina
+M17-SAL	m17sal.m17.es	17000
+
+# M17-SPA 1 Spain
+M17-SPA_1	hblinkspain.duckdns.org	17000
+
+# M17-SPA 2 Spain
+M17-SPA_2	m17spa.xreflector.es	17000
+
+# M17-URG Uruguay
+M17-URG	m17-uruguay.ddns.net	17000
+
+# M17-USA USA
+M17-USA	m17-usa.openquad.net	17000
