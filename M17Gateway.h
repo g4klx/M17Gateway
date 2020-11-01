@@ -16,45 +16,38 @@
 *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#if !defined(Reflectors_H)
-#define	Reflectors_H
+#if !defined(M17Gateway_H)
+#define	M17Gateway_H
 
-#include "UDPSocket.h"
 #include "Timer.h"
+#include "Conf.h"
 
-#include <vector>
+#include <cstdio>
 #include <string>
+#include <vector>
 
-class CM17Reflector {
+#if !defined(_WIN32) && !defined(_WIN64)
+#include <netdb.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#else
+#include <winsock.h>
+#endif
+
+class CM17Gateway
+{
 public:
-	CM17Reflector() :
-	m_name(),
-	m_addr(),
-	m_addrLen(0U)
-	{
-	}
+	CM17Gateway(const std::string& file);
+	~CM17Gateway();
 
-	std::string      m_name;
-	sockaddr_storage m_addr;
-	unsigned int     m_addrLen;
-};
-
-class CReflectors {
-public:
-	CReflectors(const std::string& hostsFile1, const std::string& hostsFile2, unsigned int reloadTime);
-	~CReflectors();
-
-	bool load();
-
-	CM17Reflector* find(const std::string& name);
-
-	void clock(unsigned int ms);
+	void run();
 
 private:
-	std::string  m_hostsFile1;
-	std::string  m_hostsFile2;
-	std::vector<CM17Reflector*> m_reflectors;
-	CTimer       m_timer;
+	CConf m_conf;
 };
 
 #endif

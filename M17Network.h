@@ -41,7 +41,7 @@ public:
 
 	bool open();
 
-	bool link(const std::string& address, unsigned int port, char module);
+	bool link(const sockaddr_storage& addr, unsigned int addrLen, char module);
 
 	void unlink();
 

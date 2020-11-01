@@ -17,6 +17,7 @@
 */
 
 #include "Reflectors.h"
+#include "M17Defines.h"
 #include "Log.h"
 
 #include <algorithm>
@@ -38,7 +39,7 @@ m_timer(1000U, reloadTime * 60U)
 
 CReflectors::~CReflectors()
 {
-	for (std::vector<CRptReflector*>::iterator it = m_reflectors.begin(); it != m_reflectors.end(); ++it)
+	for (std::vector<CM17Reflector*>::iterator it = m_reflectors.begin(); it != m_reflectors.end(); ++it)
 		delete *it;
 
 	m_reflectors.clear();
@@ -47,7 +48,7 @@ CReflectors::~CReflectors()
 bool CReflectors::load()
 {
 	// Clear out the old reflector list
-	for (std::vector<CRptReflector*>::iterator it = m_reflectors.begin(); it != m_reflectors.end(); ++it)
+	for (std::vector<CM17Reflector*>::iterator it = m_reflectors.begin(); it != m_reflectors.end(); ++it)
 		delete *it;
 
 	m_reflectors.clear();
@@ -64,14 +65,19 @@ bool CReflectors::load()
 			char* p3 = ::strtok(NULL,   " \t\r\n");
 
 			if (p1 != NULL && p2 != NULL && p3 != NULL) {
-				std::string host  = std::string(p2);
-				unsigned int port = (unsigned int)::atoi(p3);
+				std::string name = std::string(p1);
+				std::string host = std::string(p2);
+				unsigned int port= (unsigned int)::atoi(p3);
+
+				// Convert underscores to spaces in the name
+				std::replace(name.begin(), name.end(), '_', ' ');
+				name.resize(M17_CALLSIGN_LENGTH - 2U, ' ');
 
 				sockaddr_storage addr;
 				unsigned int addrLen;
 				if (CUDPSocket::lookup(host, port, addr, addrLen) == 0) {
-					CRptReflector* refl = new CRptReflector;
-					refl->m_id      = (unsigned short)::atoi(p1);
+					CM17Reflector* refl = new CM17Reflector;
+					refl->m_name    = name;
 					refl->m_addr    = addr;
 					refl->m_addrLen = addrLen;
 					m_reflectors.push_back(refl);
@@ -97,16 +103,21 @@ bool CReflectors::load()
 
 			if (p1 != NULL && p2 != NULL && p3 != NULL) {
 				// Don't allow duplicate reflector ids from the secondary hosts file.
-				unsigned int id = (unsigned int)::atoi(p1);
-				if (find(id) == NULL) {
+				std::string name = std::string(p1);
+
+				// Convert underscores to spaces in the name
+				std::replace(name.begin(), name.end(), '_', ' ');
+				name.resize(M17_CALLSIGN_LENGTH - 2U, ' ');
+
+				if (find(name) == NULL) {
 					std::string host  = std::string(p2);
 					unsigned int port = (unsigned int)::atoi(p3);
 
 					sockaddr_storage addr;
 					unsigned int addrLen;
 					if (CUDPSocket::lookup(host, port, addr, addrLen) == 0) {
-						CRptReflector* refl = new CRptReflector;
-						refl->m_id      = id;
+						CM17Reflector* refl = new CM17Reflector;
+						refl->m_name    = name;
 						refl->m_addr    = addr;
 						refl->m_addrLen = addrLen;
 						m_reflectors.push_back(refl);
@@ -129,10 +140,10 @@ bool CReflectors::load()
 	return true;
 }
 
-CRptReflector* CReflectors::find(unsigned short id)
+CM17Reflector* CReflectors::find(const std::string& name)
 {
-	for (std::vector<CRptReflector*>::iterator it = m_reflectors.begin(); it != m_reflectors.end(); ++it) {
-		if (id == (*it)->m_id)
+	for (std::vector<CM17Reflector*>::iterator it = m_reflectors.begin(); it != m_reflectors.end(); ++it) {
+		if (name == (*it)->m_name)
 			return *it;
 	}
 

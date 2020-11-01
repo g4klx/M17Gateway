@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2016,2018,2020 by Jonathan Naylor G4KLX
+*   Copyright (C) 2016,2020 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -16,45 +16,28 @@
 *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#if !defined(Reflectors_H)
-#define	Reflectors_H
+#if !defined(Echo_H)
+#define	Echo_H
 
-#include "UDPSocket.h"
-#include "Timer.h"
-
-#include <vector>
-#include <string>
-
-class CM17Reflector {
+class CEcho
+{
 public:
-	CM17Reflector() :
-	m_name(),
-	m_addr(),
-	m_addrLen(0U)
-	{
-	}
+	CEcho(unsigned int timeout);
+	~CEcho();
 
-	std::string      m_name;
-	sockaddr_storage m_addr;
-	unsigned int     m_addrLen;
-};
+	bool write(const unsigned char* data);
 
-class CReflectors {
-public:
-	CReflectors(const std::string& hostsFile1, const std::string& hostsFile2, unsigned int reloadTime);
-	~CReflectors();
+	bool read(unsigned char* data);
 
-	bool load();
+	void end();
 
-	CM17Reflector* find(const std::string& name);
-
-	void clock(unsigned int ms);
+	void clear();
 
 private:
-	std::string  m_hostsFile1;
-	std::string  m_hostsFile2;
-	std::vector<CM17Reflector*> m_reflectors;
-	CTimer       m_timer;
+	unsigned char* m_data;
+	unsigned int   m_length;
+	unsigned int   m_used;
+	unsigned int   m_ptr;
 };
 
 #endif

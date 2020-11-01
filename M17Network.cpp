@@ -68,14 +68,11 @@ bool CM17Network::open()
 	return m_socket.open(m_addr);
 }
 
-bool CM17Network::link(const std::string& address, unsigned int port, char module)
+bool CM17Network::link(const sockaddr_storage& addr, unsigned int addrLen, char module)
 {
-	if (CUDPSocket::lookup(address, port, m_addr, m_addrLen) != 0) {
-		m_state = M17N_NOTLINKED;
-		return false;
-	}
-
-	m_module = module;
+	m_addr    = addr;
+	m_addrLen = addrLen;
+	m_module  = module;
 
 	m_state = M17N_LINKING;
 

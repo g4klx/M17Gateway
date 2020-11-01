@@ -56,6 +56,12 @@
     <ClInclude Include="RptNetwork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="M17Gateway.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Echo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Conf.cpp">
@@ -92,6 +98,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RptNetwork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M17Gateway.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Echo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
