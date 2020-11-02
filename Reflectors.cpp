@@ -132,7 +132,7 @@ bool CReflectors::load()
 	}
 
 	size_t size = m_reflectors.size();
-	LogInfo("Loaded %u Rpt reflectors", size);
+	LogInfo("Loaded %u M17 reflectors", size);
 
 	if (size == 0U)
 		return false;
