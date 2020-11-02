@@ -39,9 +39,7 @@ public:
 	CM17Network(const std::string& callsign, unsigned int port, bool debug);
 	~CM17Network();
 
-	bool open();
-
-	bool link(const sockaddr_storage& addr, unsigned int addrLen, char module);
+	bool link(const std::string& name, const sockaddr_storage& addr, unsigned int addrLen, char module);
 
 	void unlink();
 
@@ -59,6 +57,7 @@ public:
 
 private:
 	CUDPSocket       m_socket;
+	std::string      m_name;
 	sockaddr_storage m_addr;
 	unsigned int     m_addrLen;
 	bool             m_debug;

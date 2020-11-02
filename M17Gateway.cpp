@@ -189,13 +189,6 @@ void CM17Gateway::run()
 	}
 
 	CM17Network remoteNetwork(m_conf.getCallsign(), m_conf.getNetworkPort(), m_conf.getNetworkDebug());
-	ret = remoteNetwork.open();
-	if (!ret) {
-		localNetwork->close();
-		delete localNetwork;
-		::LogFinalise();
-		return;
-	}
 
 	CUDPSocket* remoteSocket = NULL;
 	if (m_conf.getRemoteCommandsEnabled()) {
@@ -237,7 +230,7 @@ void CM17Gateway::run()
 				currentAddr      = refl->m_addr;
 				currentAddrLen   = refl->m_addrLen;
 
-				remoteNetwork.link(currentAddr, currentAddrLen, module);
+				remoteNetwork.link(currentReflector, currentAddr, currentAddrLen, module);
 				status = M17S_LINKED;
 
 				LogInfo("Linking at startup to %s", currentReflector.c_str());
@@ -318,7 +311,7 @@ void CM17Gateway::run()
 						// Link to the new reflector
 						LogMessage("Switched to reflector %s by %s", currentReflector.c_str(), src.c_str());
 
-						remoteNetwork.link(currentAddr, currentAddrLen, module);
+						remoteNetwork.link(currentReflector, currentAddr, currentAddrLen, module);
 						status = M17S_LINKED;
 
 						hangTimer.start();
@@ -365,7 +358,7 @@ void CM17Gateway::run()
 								// Link to the new reflector
 								LogMessage("Switched to reflector %s by remote command", reflector.c_str());
 
-								remoteNetwork.link(currentAddr, currentAddrLen, module);
+								remoteNetwork.link(currentReflector, currentAddr, currentAddrLen, module);
 								status = M17S_LINKED;
 
 								hangTimer.start();
@@ -389,6 +382,8 @@ void CM17Gateway::run()
 
 		localNetwork->clock(ms);
 
+		remoteNetwork.clock(ms);
+
 		echo.clock(ms);
 
 		hangTimer.clock(ms);
@@ -409,7 +404,7 @@ void CM17Gateway::run()
 
 				char module = startupReflector.at(M17_CALLSIGN_LENGTH - 1U);
 
-				remoteNetwork.link(currentAddr, currentAddrLen, module);
+				remoteNetwork.link(currentReflector, currentAddr, currentAddrLen, module);
 				status = M17S_LINKED;
 
 				hangTimer.start();

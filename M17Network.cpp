@@ -30,6 +30,7 @@ const unsigned int BUFFER_LENGTH = 200U;
 
 CM17Network::CM17Network(const std::string& callsign, unsigned int port, bool debug) :
 m_socket(port),
+m_name(),
 m_addr(),
 m_addrLen(0U),
 m_debug(debug),
@@ -61,15 +62,17 @@ CM17Network::~CM17Network()
 	delete[] m_encoded;
 }
 
-bool CM17Network::open()
+bool CM17Network::link(const std::string& name, const sockaddr_storage& addr, unsigned int addrLen, char module)
 {
+	close();
+
 	LogMessage("Opening M17 network connection");
 
-	return m_socket.open(m_addr);
-}
+	bool ret = m_socket.open(addr);
+	if (!ret)
+		return false;
 
-bool CM17Network::link(const sockaddr_storage& addr, unsigned int addrLen, char module)
-{
+	m_name    = name;
 	m_addr    = addr;
 	m_addrLen = addrLen;
 	m_module  = module;
@@ -149,6 +152,9 @@ void CM17Network::clock(unsigned int ms)
 		}
 	}
 
+	if (m_state == M17N_NOTLINKED)
+		return;
+
 	unsigned char buffer[BUFFER_LENGTH];
 
 	sockaddr_storage address;
@@ -168,21 +174,21 @@ void CM17Network::clock(unsigned int ms)
 	if (::memcmp(buffer + 0U, "ACKN", 4U) == 0) {
 		m_timer.stop();
 		m_state = M17N_LINKED;
-		LogMessage("M17, linked to reflector");
+		LogMessage("M17, linked to reflector %s", m_name.c_str());
 		return;
 	}
 
 	if (::memcmp(buffer + 0U, "NACK", 4U) == 0) {
 		m_timer.stop();
 		m_state = M17N_NOTLINKED;
-		LogMessage("M17, link refused by reflector");
+		LogMessage("M17, link refused by reflector %s", m_name.c_str());
 		return;
 	}
 
 	if (::memcmp(buffer + 0U, "DISC", 4U) == 0) {
 		m_timer.stop();
 		m_state = M17N_NOTLINKED;
-		LogMessage("M17, unlinked from reflector");
+		LogMessage("M17, unlinked from reflector %s", m_name.c_str());
 		return;
 	}
 
