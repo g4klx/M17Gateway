@@ -49,6 +49,7 @@ const char* DEFAULT_INI_FILE = "M17Gateway.ini";
 const char* DEFAULT_INI_FILE = "/etc/M17Gateway.ini";
 #endif
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstdarg>

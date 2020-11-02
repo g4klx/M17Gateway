@@ -51,8 +51,8 @@ private:
 	unsigned int   m_used;
 	unsigned int   m_ptr;
 	ECHO_STATUS    m_status;
-	CTimer         m_timer;
 	CStopWatch     m_stopWatch;
+	CTimer         m_timer;
 	unsigned int   m_sent;
 };
 
