@@ -142,8 +142,11 @@ bool CReflectors::load()
 
 CM17Reflector* CReflectors::find(const std::string& name)
 {
+	std::string nm = name;
+	nm.resize(M17_CALLSIGN_LENGTH - 2U, ' ');
+
 	for (std::vector<CM17Reflector*>::iterator it = m_reflectors.begin(); it != m_reflectors.end(); ++it) {
-		if (name == (*it)->m_name)
+		if (nm == (*it)->m_name)
 			return *it;
 	}
 

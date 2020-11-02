@@ -27,13 +27,7 @@ public:
 	~CM17Utils();
 
 	static void encodeCallsign(const std::string& callsign, unsigned char* encoded);
-	static void decodeCallsign(const unsigned char* encoded, std::string& callsign);
-
-	static void splitFragmentLICH(const unsigned char* data, unsigned int& frag1, unsigned int& frag2, unsigned int& frag3, unsigned int& frag4);
-	static void splitFragmentLICHFEC(const unsigned char* data, unsigned int& frag1, unsigned int& frag2, unsigned int& frag3, unsigned int& frag4);
-
-	static void combineFragmentLICH(unsigned int frag1, unsigned int frag2, unsigned int frag3, unsigned int frag4, unsigned char* data);
-	static void combineFragmentLICHFEC(unsigned int frag1, unsigned int frag2, unsigned int frag3, unsigned int frag4, unsigned char* data);
+	static std::string decodeCallsign(const unsigned char* encoded);
 
 private:
 };

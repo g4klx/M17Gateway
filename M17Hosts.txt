@@ -40,7 +40,7 @@ M17-LAT	latinos.m17.es	17000
 M17-M17	ref.m17.link	17000
 
 # M17-POL Poland
-M17-ARG	m17.hblink.network	17000
+M17-POL	m17.hblink.network	17000
 
 # M17-POR Portugal
 M17-POR	m17.hamradio.pt	17000

@@ -51,6 +51,8 @@ public:
   std::string    getNetworkHosts2() const;
   unsigned int   getNetworkReloadTime() const;
   unsigned int   getNetworkHangTime() const;
+  std::string    getNetworkStartup() const;
+  bool           getNetworkRevert() const;
   bool           getNetworkDebug() const;
 
   // The Remote Commands section
@@ -77,6 +79,8 @@ private:
   std::string    m_networkHosts2;
   unsigned int   m_networkReloadTime;
   unsigned int   m_networkHangTime;
+  std::string    m_networkStartup;
+  bool           m_networkRevert;
   bool           m_networkDebug;
 
   bool         m_remoteCommandsEnabled;

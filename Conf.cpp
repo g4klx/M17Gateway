@@ -18,7 +18,9 @@
 
 #include "Conf.h"
 #include "Log.h"
+#include "M17Defines.h"
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -52,6 +54,8 @@ m_networkHosts1(),
 m_networkHosts2(),
 m_networkReloadTime(0U),
 m_networkHangTime(60U),
+m_networkStartup(),
+m_networkRevert(false),
 m_networkDebug(false),
 m_remoteCommandsEnabled(false),
 m_remoteCommandsPort(6075U)
@@ -144,7 +148,8 @@ bool CConf::read()
 			  m_logDisplayLevel = (unsigned int)::atoi(value);
 		  else if (::strcmp(key, "FileRotate") == 0)
 			  m_logFileRotate = ::atoi(value) ==  1;
-	  } else if (section == SECTION_NETWORK) {
+	  }
+	  else if (section == SECTION_NETWORK) {
 		  if (::strcmp(key, "Port") == 0)
 			  m_networkPort = (unsigned int)::atoi(value);
 		  else if (::strcmp(key, "HostsFile1") == 0)
@@ -155,6 +160,12 @@ bool CConf::read()
 			  m_networkReloadTime = (unsigned int)::atoi(value);
 		  else if (::strcmp(key, "HangTime") == 0)
 			  m_networkHangTime = (unsigned int)::atoi(value);
+		  else if (::strcmp(key, "Startup") == 0) {
+			  m_networkStartup = value;
+			  std::replace(m_networkStartup.begin(), m_networkStartup.end(), '_', ' ');
+			  m_networkStartup.resize(M17_CALLSIGN_LENGTH, ' ');
+		  } else if (::strcmp(key, "Revert") == 0)
+			  m_networkRevert = ::atoi(value) == 1;
 		  else if (::strcmp(key, "Debug") == 0)
 			  m_networkDebug = ::atoi(value) == 1;
 	  }  else if (section == SECTION_REMOTE_COMMANDS) {
@@ -248,6 +259,16 @@ unsigned int CConf::getNetworkReloadTime() const
 unsigned int CConf::getNetworkHangTime() const
 {
 	return m_networkHangTime;
+}
+
+std::string CConf::getNetworkStartup() const
+{
+	return m_networkStartup;
+}
+
+bool CConf::getNetworkRevert() const
+{
+	return m_networkRevert;
 }
 
 bool CConf::getNetworkDebug() const
