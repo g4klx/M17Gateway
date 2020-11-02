@@ -233,7 +233,7 @@ void CM17Gateway::run()
 				remoteNetwork.link(currentReflector, currentAddr, currentAddrLen, module);
 				status = M17S_LINKED;
 
-				LogInfo("Linking at startup to %s", currentReflector.c_str());
+				LogInfo("Linked at startup to %s", currentReflector.c_str());
 			}
 		} else {
 			startupReflector.clear();
