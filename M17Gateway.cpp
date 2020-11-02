@@ -230,14 +230,17 @@ void CM17Gateway::run()
 	if (!startupReflector.empty()) {
 		CM17Reflector* refl = reflectors.find(startupReflector);
 		if (refl != NULL) {
-			currentReflector = startupReflector;
-			currentAddr      = refl->m_addr;
-			currentAddrLen   = refl->m_addrLen;
+			char module = startupReflector.at(M17_CALLSIGN_LENGTH - 1U);
+			if (module >= 'A' && module <= 'Z') {
+				currentReflector = startupReflector;
+				currentAddr      = refl->m_addr;
+				currentAddrLen   = refl->m_addrLen;
 
-			remoteNetwork.link(currentAddr, currentAddrLen, module);
-			status = M17S_LINKED;
+				remoteNetwork.link(currentAddr, currentAddrLen, module);
+				status = M17S_LINKED;
 
-			LogInfo("Linking at startup to %s", currentReflector.c_str());
+				LogInfo("Linking at startup to %s", currentReflector.c_str());
+			}
 		} else {
 			startupReflector.clear();
 		}
@@ -271,15 +274,16 @@ void CM17Gateway::run()
 			std::string dst = CM17Utils::decodeCallsign(buffer + 0U);
 
 			if (dst == "        E") {
-				// XXX FIXME handle EOF turnaround and time
 				if (status != M17S_ECHO)
 					echo.clear();
+
 				echo.write(buffer);
 				status = M17S_ECHO;
 				hangTimer.start();
 
 				uint16_t fn = (buffer[28U] << 8) + (buffer[29U] << 0);
-				bool eof = (fn & 0x8000U) == 0x8000U;
+				if ((fn & 0x8000U) == 0x8000U)
+					echo.end();
 			} else if (dst == "        U") {
 				if (status == M17S_LINKED) {
 					LogMessage("Unlinking from reflector %s by %s", currentReflector.c_str(), src.c_str());
@@ -288,21 +292,27 @@ void CM17Gateway::run()
 
 				status = M17S_NOTLINKED;
 				hangTimer.stop();
-			} else {
-				if (reflector != currentReflector) {
+			} else if (dst.at(M17_CALLSIGN_LENGTH - 1U) == 'L') {
+				// Convert a dst value of "M17-USAAL" to a reflector value of "M17-USA A"
+				std::string reflector = dst;
+				reflector.at(M17_CALLSIGN_LENGTH - 2U) = ' ';
+				char module = reflector.at(M17_CALLSIGN_LENGTH - 1U) = dst.at(M17_CALLSIGN_LENGTH - 2U);
+
+				if (reflector != currentReflector && module >= 'A' && module <= 'Z') {
 					if (status == M17S_LINKED) {
 						LogMessage("Unlinking from reflector %s by %s", currentReflector.c_str(), src.c_str());
 
 						remoteNetwork.unlink();
-
-						hangTimer.stop();
 					}
+
+					status = M17S_NOTLINKED;
+					hangTimer.stop();
 
 					CM17Reflector* refl = reflectors.find(reflector);
 					if (refl != NULL) {
 						currentReflector = reflector;
-						currentAddr = refl->m_addr;
-						currentAddrLen = refl->m_addrLen;
+						currentAddr      = refl->m_addr;
+						currentAddrLen   = refl->m_addrLen;
 
 						// Link to the new reflector
 						LogMessage("Switched to reflector %s by %s", currentReflector.c_str(), src.c_str());
@@ -311,9 +321,6 @@ void CM17Gateway::run()
 						status = M17S_LINKED;
 
 						hangTimer.start();
-					} else {
-						status = M17S_NOTLINKED;
-						hangTimer.stop();
 					}
 				}
 			}
@@ -342,22 +349,26 @@ void CM17Gateway::run()
 
 							remoteNetwork.unlink();
 
+							status = M17S_NOTLINKED;
 							hangTimer.stop();
 						}
 
 						CM17Reflector* refl = reflectors.find(reflector);
 						if (refl != NULL) {
-							currentReflector = reflector;
-							currentAddr      = refl->m_addr;
-							currentAddrLen   = refl->m_addrLen;
+							char module = reflector.at(M17_CALLSIGN_LENGTH - 1U);
+							if (module >= 'A' && module <= 'Z') {
+								currentReflector = reflector;
+								currentAddr      = refl->m_addr;
+								currentAddrLen   = refl->m_addrLen;
 
-							// Link to the new reflector
-							LogMessage("Switched to reflector %s by remote command", reflector.c_str());
+								// Link to the new reflector
+								LogMessage("Switched to reflector %s by remote command", reflector.c_str());
 
-							remoteNetwork.link(currentAddr, currentAddrLen, module);
-							status = M17S_LINKED;
+								remoteNetwork.link(currentAddr, currentAddrLen, module);
+								status = M17S_LINKED;
 
-							hangTimer.start();
+								hangTimer.start();
+							}
 						} else {
 							currentReflector.clear();
 							status = M17S_NOTLINKED;
@@ -377,6 +388,8 @@ void CM17Gateway::run()
 
 		localNetwork->clock(ms);
 
+		echo.clock(ms);
+
 		hangTimer.clock(ms);
 		if (hangTimer.isRunning() && hangTimer.hasExpired()) {
 			if (revert && !startupReflector.empty() && currentReflector != startupReflector) {
@@ -386,12 +399,16 @@ void CM17Gateway::run()
 					remoteNetwork.unlink();
 				}
 
+				LogMessage("Relinked from %s to %s due to inactivity", currentReflector.c_str(), startupReflector.c_str());
+
 				CM17Reflector* refl = reflectors.find(startupReflector);
 				currentReflector = startupReflector;
 				currentAddr      = refl->m_addr;
 				currentAddrLen   = refl->m_addrLen;
 
-				remoteNetwork.link(currentAddr, currentAddrLen, );
+				char module = startupReflector.at(M17_CALLSIGN_LENGTH - 1U);
+
+				remoteNetwork.link(currentAddr, currentAddrLen, module);
 				status = M17S_LINKED;
 
 				hangTimer.start();

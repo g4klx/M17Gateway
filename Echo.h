@@ -19,6 +19,16 @@
 #if !defined(Echo_H)
 #define	Echo_H
 
+#include "StopWatch.h"
+#include "Timer.h"
+
+enum ECHO_STATUS {
+	ES_NONE,
+	ES_RECORDING,
+	ES_WAITING,
+	ES_PLAYING
+};
+
 class CEcho
 {
 public:
@@ -33,11 +43,17 @@ public:
 
 	void clear();
 
+	void clock(unsigned int ms);
+
 private:
 	unsigned char* m_data;
 	unsigned int   m_length;
 	unsigned int   m_used;
 	unsigned int   m_ptr;
+	ECHO_STATUS    m_status;
+	CTimer         m_timer;
+	CStopWatch     m_stopWatch;
+	unsigned int   m_sent;
 };
 
 #endif

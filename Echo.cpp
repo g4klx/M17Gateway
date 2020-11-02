@@ -26,7 +26,11 @@ CEcho::CEcho(unsigned int timeout) :
 m_data(NULL),
 m_length(timeout * 25U * 46U),
 m_used(0U),
-m_ptr(0U)
+m_ptr(0U),
+m_status(ES_NONE),
+m_stopWatch(),
+m_timer(1000U, 2U),
+m_sent(0U)
 {
 	assert(timeout > 0U);
 
@@ -48,32 +52,67 @@ bool CEcho::write(const unsigned char* data)
 	::memcpy(m_data + m_used, data, 46U);
 	m_used += 46U;
 
+	m_status = ES_RECORDING;
+
 	return true;
 }
 
 void CEcho::end()
 {
-	m_ptr = 0U;
+	m_ptr  = 0U;
+	m_sent = 0U;
+
+	m_status = ES_WAITING;
+
+	m_timer.start();
 }
 
 void CEcho::clear()
 {
+	m_sent = 0U;
 	m_used = 0U;
-	m_ptr = 0U;
+	m_ptr  = 0U;
+
+	m_status = ES_NONE;
+
+	m_timer.stop();
 }
 
 bool CEcho::read(unsigned char* data)
 {
 	assert(data != NULL);
 
-	if (m_used == 0U)
+	if (m_status != ES_PLAYING)
+		return false;
+
+	if (m_used == 0U) {
+		m_status = ES_NONE;
+		return false;
+	}
+
+	unsigned int wanted = m_stopWatch.elapsed() / 40U;
+	if (m_sent >= wanted)
 		return false;
 
 	::memcpy(data, m_data + m_ptr, 46U);
+
 	m_ptr += 46U;
+	m_sent++;
 
 	if (m_ptr >= m_used)
 		m_used = 0U;
 
 	return true;
+}
+
+void CEcho::clock(unsigned int ms)
+{
+	m_timer.clock(ms);
+	if (m_timer.isRunning() && m_timer.hasExpired()) {
+		m_status = ES_PLAYING;
+		m_sent   = 0U;
+		m_ptr    = 0U;
+		m_stopWatch.start();
+		m_timer.stop();
+	}
 }
