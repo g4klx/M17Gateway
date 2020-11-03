@@ -1,61 +1,71 @@
-# M17Hosts.txt
-#
-# The format of this file is the name of the reflector followed by the host name or address and port
-#
+# M17Hosts.txt generated hourly from https://m17project.org/m17refl.json
 
-# M17-214 Spain
-M17-214	214.m17.es	17000
+# M17-190 Argentina Room, Argentina https://m17.argentina-room.dns-cloud.net/
+M17-190 190.194.12.53 17000
 
-# M17-224 Spain
-M17-224	eamaster.xreflector.es	17000
+# M17-214 Digital Sustrai, Spain https://214.m17.es/
+M17-214 157.52.252.143 17000
 
-# M17-ARG Argentina
-M17-ARG	m17arg.ddns.net	17000
+# M17-224 DMRPlus Spain, Spain https://eamaster.xreflector.es/m17/
+M17-224 94.177.189.17 17000
 
-# M17-AUT Austria
-M17-AUT	m17-aut.xreflector.net	17000
+# M17-ARG LU8ANB Argentina Multiprotocolo, Argentina https://m17arg.ddns.net
+M17-ARG 152.171.243.8 17000
 
-# M17-BEL Belgium
-M17-BEL	on0lg.no-ip.org	17000
+# M17-AUT OE1KBC, Austria https://m17-aut.xreflector.net/
+M17-AUT 195.25.215.5 17000
 
-# M17-DEU Germany
-M17-DEU	m17-deu.xreflector.net	17000
+# M17-BEL UBA, Belgium https://on0lg.no-ip.org/m17bel/
+M17-BEL 51.68.226.67 17000
 
-# M17-EA7 Southern Spain
-M17-EA7	rcveleta.xreflector.es	17000
+# M17-DEU DG9FFM, Germany https://m17-deu.xreflector.net/
+M17-DEU 194.59.205.228 17000
 
-# M17-GAX GAX
-M17-GAX	ea4gax.es	17000
+# M17-EA7 Radio Club Veleta, Spain https://rcveleta.xreflector.es/
+M17-EA7 207.180.252.141 17000
 
-# M17-ITA Italy
-M17-ITA	m17ita.hblink.it	17000
+# M17-ESP EA7IYR, Spain https://m17spa.xreflector.es/
+M17-ESP 5.249.148.156 17000
 
-# M17-KP4 Puerto Rico
-M17-KP4	kp4ca-m17.ddns.net	17000
+# M17-GAX EA4GAX, Spain https://ea4gax.es/M17
+M17-GAX 51.83.78.210 17000
 
-# M17-LAT Latino
-M17-LAT	latinos.m17.es	17000
+# M17-GBR RoIP Network, Great Britan https://www.roip.network/m17/
+M17-GBR 144.91.99.196 17000
 
-# M17-M17 M17
-M17-M17	ref.m17.link	17000
+# M17-ITA IV3JDV, Italy https://m17ita.hblink.it/
+M17-ITA 80.211.190.216 17000
 
-# M17-POL Poland
-M17-POL	m17.hblink.network	17000
+# M17-KOR DMR KOREA, Korea https://m17-kor.dvham.com/
+M17-KOR 222.110.59.176 17000
 
-# M17-POR Portugal
-M17-POR	m17.hamradio.pt	17000
+# M17-KP4 KP4CA, Puerto Rico https://kp4ca-m17.ddns.net/
+M17-KP4 45.76.8.78 17000
 
-# M17-SAL Argentina
-M17-SAL	m17sal.m17.es	17000
+# M17-LAT Entrelaces Latinos, United States https://latinos.m17.es/
+M17-LAT 134.73.55.72 17000
 
-# M17-SPA 1 Spain
-M17-SPA_1	hblinkspain.duckdns.org	17000
+# M17-M17 M17 Project, United States https://refl.m17.link/
+M17-M17 51.81.119.111 17000
 
-# M17-SPA 2 Spain
-M17-SPA_2	m17spa.xreflector.es	17000
+# M17-NOR LA2K, Norway https://m17.la2k.no/
+M17-NOR 185.35.185.100 17000
 
-# M17-URG Uruguay
-M17-URG	m17-uruguay.ddns.net	17000
+# M17-POL SP7LAK, Poland https://m17.hblink.network/
+M17-POL 77.55.209.188 17000
 
-# M17-USA USA
-M17-USA	m17-usa.openquad.net	17000
+# M17-POR CT7AGI, Portugal https://m17.hamradio.pt/
+M17-POR 80.211.15.21 17000
+
+# M17-SAL URE Salamanca, Spain https://m17sal.m17.es/
+M17-SAL 31.14.139.112 17000
+
+# M17-SPA EA5GVK, Spain https://hblinkspain.duckdns.org/mrefd/
+M17-SPA 85.255.8.71 17000
+
+# M17-URG Uruguay Link, Uruguay https://m17-uruguay.ddns.net/m17/
+M17-URG 201.217.131.108 17000
+
+# M17-USA Openquad, United States https://m17-usa.openquad.net/
+M17-USA 3.138.122.152 17000
+
