@@ -264,8 +264,8 @@ void CM17Gateway::run()
 		bool ret = localNetwork->read(buffer);
 		if (ret) {
 			// Parse the control information
-			std::string src = CM17Utils::decodeCallsign(buffer + 6U);
-			std::string dst = CM17Utils::decodeCallsign(buffer + 0U);
+			std::string src = CM17Utils::decodeCallsign(buffer + 12U);
+			std::string dst = CM17Utils::decodeCallsign(buffer + 6U);
 
 			if (dst == "        E") {
 				if (status != M17S_ECHO)
@@ -275,7 +275,7 @@ void CM17Gateway::run()
 				status = M17S_ECHO;
 				hangTimer.start();
 
-				uint16_t fn = (buffer[28U] << 8) + (buffer[29U] << 0);
+				uint16_t fn = (buffer[34U] << 8) + (buffer[35U] << 0);
 				if ((fn & 0x8000U) == 0x8000U)
 					echo.end();
 			} else if (dst == "        U") {

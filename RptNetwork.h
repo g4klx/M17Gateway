@@ -24,7 +24,6 @@
 #include "UDPSocket.h"
 #include "Timer.h"
 
-#include <random>
 #include <cstdint>
 
 class CRptNetwork {
@@ -40,8 +39,6 @@ public:
 
 	bool read(unsigned char* data);
 
-	void reset();
-
 	void close();
 
 	void clock(unsigned int ms);
@@ -52,10 +49,7 @@ private:
 	unsigned int     m_addrLen;
 	bool             m_debug;
 	bool             m_enabled;
-	uint16_t         m_outId;
-	uint16_t         m_inId;
 	CRingBuffer<unsigned char> m_buffer;
-	std::mt19937     m_random;
 	CTimer           m_timer;
 
 	void sendPing();

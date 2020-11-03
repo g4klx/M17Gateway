@@ -21,6 +21,8 @@
 
 const unsigned int M17_CALLSIGN_LENGTH = 9U;
 
+const unsigned int M17_NETWORK_FRAME_LENGTH = 54U;
+
 const unsigned int M17_LICH_LENGTH_BITS  = 240U;
 const unsigned int M17_LICH_LENGTH_BYTES = M17_LICH_LENGTH_BITS / 8U;
 

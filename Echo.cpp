@@ -17,6 +17,7 @@
 */
 
 #include "Echo.h"
+#include "M17Defines.h"
 
 #include <cstdio>
 #include <cassert>
@@ -24,7 +25,7 @@
 
 CEcho::CEcho(unsigned int timeout) :
 m_data(NULL),
-m_length(timeout * 25U * 46U),
+m_length(timeout * 25U * M17_NETWORK_FRAME_LENGTH),
 m_used(0U),
 m_ptr(0U),
 m_status(ES_NONE),
@@ -46,11 +47,11 @@ bool CEcho::write(const unsigned char* data)
 {
 	assert(data != NULL);
 
-	if ((m_length - m_used) < 46U)
+	if ((m_length - m_used) < M17_NETWORK_FRAME_LENGTH)
 		return false;
 
-	::memcpy(m_data + m_used, data, 46U);
-	m_used += 46U;
+	::memcpy(m_data + m_used, data, M17_NETWORK_FRAME_LENGTH);
+	m_used += M17_NETWORK_FRAME_LENGTH;
 
 	m_status = ES_RECORDING;
 
@@ -94,9 +95,9 @@ bool CEcho::read(unsigned char* data)
 	if (m_sent >= wanted)
 		return false;
 
-	::memcpy(data, m_data + m_ptr, 46U);
+	::memcpy(data, m_data + m_ptr, M17_NETWORK_FRAME_LENGTH);
 
-	m_ptr += 46U;
+	m_ptr += M17_NETWORK_FRAME_LENGTH;
 	m_sent++;
 
 	if (m_ptr >= m_used)

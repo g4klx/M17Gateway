@@ -34,20 +34,13 @@ m_addr(),
 m_addrLen(0U),
 m_debug(debug),
 m_enabled(false),
-m_outId(0U),
-m_inId(0U),
 m_buffer(1000U, "Rpt Network"),
-m_random(),
 m_timer(1000U, 5U)
 {
 	if (CUDPSocket::lookup(gwyAddress, gwyPort, m_addr, m_addrLen) != 0) {
 		m_addrLen = 0U;
 		return;
 	}
-
-	std::random_device rd;
-	std::mt19937 mt(rd());
-	m_random = mt;
 }
 
 CRptNetwork::~CRptNetwork()
@@ -80,32 +73,10 @@ bool CRptNetwork::write(const unsigned char* data)
 
 	assert(data != NULL);
 
-	unsigned char buffer[100U];
-
-	buffer[0U] = 'M';
-	buffer[1U] = '1';
-	buffer[2U] = '7';
-	buffer[3U] = ' ';
-
-	// Create a random id for this transmission if needed
-	if (m_outId == 0U) {
-		std::uniform_int_distribution<uint16_t> dist(0x0001, 0xFFFE);
-		m_outId = dist(m_random);
-	}
-
-	buffer[4U] = m_outId / 256U;	// Unique session id
-	buffer[5U] = m_outId % 256U;
-
-	::memcpy(buffer + 6U, data, 46U);
-
-	// Dummy CRC
-	buffer[52U] = 0x00U;
-	buffer[53U] = 0x00U;
-
 	if (m_debug)
-		CUtils::dump(1U, "Rpt data transmitted", buffer, 54U);
+		CUtils::dump(1U, "Rpt data transmitted", data, M17_NETWORK_FRAME_LENGTH);
 
-	return m_socket.write(buffer, 54U, m_addr, m_addrLen);
+	return m_socket.write(data, M17_NETWORK_FRAME_LENGTH, m_addr, m_addrLen);
 }
 
 void CRptNetwork::clock(unsigned int ms)
@@ -143,18 +114,10 @@ void CRptNetwork::clock(unsigned int ms)
 		return;
 	}
 
-	uint16_t id = (buffer[4U] << 8) + (buffer[5U] << 0);
-	if (m_inId == 0U) {
-		m_inId = id;
-	} else {
-		if (id != m_inId)
-			return;
-	}
-
-	unsigned char c = length - 6U;
+	unsigned char c = length;
 	m_buffer.addData(&c, 1U);
 
-	m_buffer.addData(buffer + 6U, length - 6U);
+	m_buffer.addData(buffer, length);
 }
 
 bool CRptNetwork::read(unsigned char* data)
@@ -177,12 +140,6 @@ void CRptNetwork::close()
 	m_socket.close();
 
 	LogMessage("Closing Rpt network connection");
-}
-
-void CRptNetwork::reset()
-{
-	m_outId = 0U;
-	m_inId  = 0U;
 }
 
 void CRptNetwork::enable(bool enabled)
