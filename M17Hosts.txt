@@ -24,6 +24,9 @@ M17-DEU	m17-deu.xreflector.net	17000
 # M17-EA7 Southern Spain
 M17-EA7	rcveleta.xreflector.es	17000
 
+# M17-ESP Spain
+M17-ESP	5.249.148.156	17000
+
 # M17-GAX GAX
 M17-GAX	ea4gax.es	17000
 
@@ -50,9 +53,6 @@ M17-SAL	m17sal.m17.es	17000
 
 # M17-SPA 1 Spain
 M17-SPA_1	hblinkspain.duckdns.org	17000
-
-# M17-SPA 2 Spain
-M17-SPA_2	m17spa.xreflector.es	17000
 
 # M17-URG Uruguay
 M17-URG	m17-uruguay.ddns.net	17000
