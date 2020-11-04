@@ -44,8 +44,8 @@ m_timer(1000U, 5U)
 	m_encoded = new unsigned char[6U];
 
 	std::string call = callsign;
-	call.resize(8U, ' ');
-	call += "D";
+	call.resize(M17_CALLSIGN_LENGTH - 1U, ' ');
+	call += "M";
 
 	CM17Utils::encodeCallsign(call, m_encoded);
 }
