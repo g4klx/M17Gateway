@@ -68,7 +68,7 @@ bool CRptNetwork::open()
 
 bool CRptNetwork::write(const unsigned char* data)
 {
-	if (m_addrLen != 0U)
+	if (m_addrLen == 0U)
 		return false;
 
 	assert(data != NULL);

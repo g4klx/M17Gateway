@@ -115,8 +115,7 @@ void CM17Gateway::run()
 		if (pid == -1) {
 			::fprintf(stderr, "Couldn't fork() , exiting\n");
 			return;
-		}
-		else if (pid != 0) {
+		} else if (pid != 0) {
 			exit(EXIT_SUCCESS);
 		}
 
@@ -239,6 +238,8 @@ void CM17Gateway::run()
 			startupReflector.clear();
 		}
 	}
+
+	remoteNetwork.enable(true);
 
 	for (;;) {
 		unsigned char buffer[100U];
