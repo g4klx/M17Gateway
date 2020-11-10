@@ -1,10 +1,16 @@
 # M17Hosts.txt generated hourly from https://m17project.org/m17refl.json
 
+# M17-033 IW5EDX, Italy https://m17-033.dyndns.org/
+M17-033 46.226.178.84 17000
+
 # M17-190 Argentina Room, Argentina https://m17.argentina-room.dns-cloud.net/
 M17-190 190.194.12.53 17000
 
 # M17-214 Digital Sustrai, Spain https://214.m17.es/
 M17-214 157.52.252.143 17000
+
+# M17-222 RedNet IU0KRR, Italy https://m17-222.iu0krr.it/M17-222/
+M17-222 80.211.107.181 17000
 
 # M17-224 DMRPlus Spain, Spain https://eamaster.xreflector.es/m17/
 M17-224 94.177.189.17 17000
@@ -18,8 +24,14 @@ M17-AUT 195.25.215.5 17000
 # M17-BEL UBA, Belgium https://on0lg.no-ip.org/m17bel/
 M17-BEL 51.68.226.67 17000
 
+# M17-BRO AD8DP, United States https://m17-bro.dudetronics.com/
+M17-BRO 68.37.44.22 17000
+
 # M17-DEU DG9FFM, Germany https://m17-deu.xreflector.net/
 M17-DEU 194.59.205.228 17000
+
+# M17-EA1 DMRPlus EA1, Spain https://eadistrito1.m17.es/m17/
+M17-EA1 80.211.29.226 17000
 
 # M17-EA7 Radio Club Veleta, Spain https://rcveleta.xreflector.es/
 M17-EA7 207.180.252.141 17000
@@ -36,6 +48,9 @@ M17-GBR 144.91.99.196 17000
 # M17-ITA IV3JDV, Italy https://m17ita.hblink.it/
 M17-ITA 80.211.190.216 17000
 
+# M17-ITD IU7MNA, Italy https://m17.digitalham.it
+M17-ITD 188.213.168.69 17000
+
 # M17-KOR DMR KOREA, Korea https://m17-kor.dvham.com/
 M17-KOR 222.110.59.176 17000
 
@@ -50,6 +65,9 @@ M17-M17 51.81.119.111 17000
 
 # M17-NOR LA2K, Norway https://m17.la2k.no/
 M17-NOR 185.35.185.100 17000
+
+# M17-PLG Penn Link Group, United States https://xrf245.pennlinkgroup.com/mrefd/
+M17-PLG 54.85.206.3 17000
 
 # M17-POL SP7LAK, Poland https://m17.hblink.network/
 M17-POL 77.55.209.188 17000
