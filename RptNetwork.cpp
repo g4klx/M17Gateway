@@ -109,7 +109,7 @@ void CRptNetwork::clock(unsigned int ms)
 	if (::memcmp(buffer + 0U, "PING", 4U) == 0)
 		return;
 
-	if (::memcmp(buffer + 0U, "Rpt ", 4U) != 0) {
+	if (::memcmp(buffer + 0U, "M17 ", 4U) != 0) {
 		CUtils::dump(2U, "Rpt, received unknown packet", buffer, length);
 		return;
 	}
