@@ -33,8 +33,6 @@ public:
 
 	bool open();
 
-	void enable(bool enabled);
-
 	bool write(const unsigned char* data);
 
 	bool read(unsigned char* data);
@@ -48,7 +46,6 @@ private:
 	sockaddr_storage m_addr;
 	unsigned int     m_addrLen;
 	bool             m_debug;
-	bool             m_enabled;
 	CRingBuffer<unsigned char> m_buffer;
 	CTimer           m_timer;
 

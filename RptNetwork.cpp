@@ -33,7 +33,6 @@ m_socket(localPort),
 m_addr(),
 m_addrLen(0U),
 m_debug(debug),
-m_enabled(false),
 m_buffer(1000U, "Rpt Network"),
 m_timer(1000U, 5U)
 {
@@ -103,9 +102,6 @@ void CRptNetwork::clock(unsigned int ms)
 	if (m_debug)
 		CUtils::dump(1U, "Rpt Network Data Received", buffer, length);
 
-	if (!m_enabled)
-		return;
-
 	if (::memcmp(buffer + 0U, "PING", 4U) == 0)
 		return;
 
@@ -140,14 +136,6 @@ void CRptNetwork::close()
 	m_socket.close();
 
 	LogMessage("Closing Rpt network connection");
-}
-
-void CRptNetwork::enable(bool enabled)
-{
-	if (!enabled && m_enabled)
-		m_buffer.clear();
-
-	m_enabled = enabled;
 }
 
 void CRptNetwork::sendPing()

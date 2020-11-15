@@ -34,7 +34,6 @@ m_name(),
 m_addr(),
 m_addrLen(0U),
 m_debug(debug),
-m_enabled(false),
 m_buffer(1000U, "M17 Network"),
 m_state(M17N_NOTLINKED),
 m_encoded(NULL),
@@ -169,9 +168,6 @@ void CM17Network::clock(unsigned int ms)
 		return;
 	}
 
-	if (!m_enabled)
-		return;
-
 	if (::memcmp(buffer + 0U, "M17 ", 4U) != 0) {
 		CUtils::dump(2U, "M17, received unknown packet", buffer, length);
 		return;
@@ -206,14 +202,6 @@ void CM17Network::close()
 	m_socket.close();
 
 	LogMessage("Closing M17 network connection");
-}
-
-void CM17Network::enable(bool enabled)
-{
-	if (!enabled && m_enabled)
-		m_buffer.clear();
-
-	m_enabled = enabled;
 }
 
 void CM17Network::sendConnect()

@@ -42,8 +42,6 @@ public:
 
 	void unlink();
 
-	void enable(bool enabled);
-
 	bool write(const unsigned char* data);
 
 	bool read(unsigned char* data);
@@ -58,7 +56,6 @@ private:
 	sockaddr_storage m_addr;
 	unsigned int     m_addrLen;
 	bool             m_debug;
-	bool             m_enabled;
 	CRingBuffer<unsigned char> m_buffer;
 	M17NET_STATUS    m_state;
 	unsigned char*   m_encoded;

@@ -239,9 +239,6 @@ void CM17Gateway::run()
 		}
 	}
 
-	localNetwork->enable(true);
-	remoteNetwork.enable(true);
-
 	for (;;) {
 		unsigned char buffer[100U];
 
