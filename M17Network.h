@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2009-2014,2016,2018,2020 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2009-2014,2016,2018,2020,2021 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ enum M17NET_STATUS {
 
 class CM17Network {
 public:
-	CM17Network(const std::string& callsign, unsigned int port, bool debug);
+	CM17Network(const std::string& callsign, const std::string& suffix, unsigned int port, bool debug);
 	~CM17Network();
 
 	bool link(const std::string& name, const sockaddr_storage& addr, unsigned int addrLen, char module);

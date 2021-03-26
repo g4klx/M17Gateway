@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2009-2014,2016,2019,2020 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2009-2014,2016,2019,2020,2021 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 
 const unsigned int BUFFER_LENGTH = 200U;
 
-CM17Network::CM17Network(const std::string& callsign, unsigned int port, bool debug) :
+CM17Network::CM17Network(const std::string& callsign, const std::string& suffix, unsigned int port, bool debug) :
 m_socket(port),
 m_name(),
 m_addr(),
@@ -40,11 +40,15 @@ m_encoded(NULL),
 m_module(' '),
 m_timer(1000U, 5U)
 {
+	assert(!callsign.empty());
+	assert(!suffix.empty());
+	assert(port > 0U);
+
 	m_encoded = new unsigned char[6U];
 
 	std::string call = callsign;
 	call.resize(M17_CALLSIGN_LENGTH - 1U, ' ');
-	call += "M";
+	call += suffix.substr(0U, 1U);
 
 	CM17Utils::encodeCallsign(call, m_encoded);
 }
@@ -92,6 +96,8 @@ void CM17Network::unlink()
 
 bool CM17Network::write(const unsigned char* data)
 {
+	assert(data != NULL);
+
 	if (m_state != M17N_LINKED)
 		return false;
 

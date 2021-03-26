@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2015,2016,2017,2018,2020 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2015,2016,2017,2018,2020,2021 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ enum SECTION {
 CConf::CConf(const std::string& file) :
 m_file(file),
 m_callsign(),
+m_suffix("M"),
 m_rptAddress(),
 m_rptPort(0U),
 m_myPort(0U),
@@ -127,6 +128,11 @@ bool CConf::read()
 			  for (unsigned int i = 0U; value[i] != 0; i++)
 				  value[i] = ::toupper(value[i]);
 			  m_callsign = value;
+		  } else if (::strcmp(key, "Suffix") == 0) {
+			  // Convert the suffix to upper case
+			  for (unsigned int i = 0U; value[i] != 0; i++)
+				  value[i] = ::toupper(value[i]);
+			  m_suffix = value;
 		  } else if (::strcmp(key, "RptAddress") == 0)
 			  m_rptAddress = value;
 		  else if (::strcmp(key, "RptPort") == 0)
@@ -184,6 +190,11 @@ bool CConf::read()
 std::string CConf::getCallsign() const
 {
 	return m_callsign;
+}
+
+std::string CConf::getSuffix() const
+{
+	return m_suffix;
 }
 
 std::string CConf::getRptAddress() const

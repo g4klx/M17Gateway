@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2016,2017,2018,2020 by Jonathan Naylor G4KLX
+*   Copyright (C) 2016,2017,2018,2020,2021 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -187,7 +187,7 @@ void CM17Gateway::run()
 		return;
 	}
 
-	CM17Network remoteNetwork(m_conf.getCallsign(), m_conf.getNetworkPort(), m_conf.getNetworkDebug());
+	CM17Network remoteNetwork(m_conf.getCallsign(), m_conf.getSuffix(), m_conf.getNetworkPort(), m_conf.getNetworkDebug());
 
 	CUDPSocket* remoteSocket = NULL;
 	if (m_conf.getRemoteCommandsEnabled()) {
