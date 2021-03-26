@@ -320,6 +320,8 @@ void CM17Gateway::run()
 
 			// If we're linked and we have a network, send it on
 			if (status == M17S_LINKED) {
+				// Replace the destination callsign with the reflector name and module
+				CM17Utils::encodeCallsign(currentReflector, buffer + 6U);
 				remoteNetwork.write(buffer);
 				hangTimer.start();
 			}
