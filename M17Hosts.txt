@@ -1,119 +1,212 @@
-# M17Hosts.txt generated hourly from https://m17project.org/m17refl.json
+# M17Hosts.txt generated hourly from https://reflectors.m17.link/ref-list/json
 
-# M17-033 IW5EDX, Italy https://m17-033.dyndns.org/
+# M17-020 K2IE, US https://m17-020.k2ie.net
+M17-020 66.175.215.217 17000
+
+# M17-033 IT-MULTIPROTOCOL-NETWORK, IT https://m17-033.dyndns.org
 M17-033 46.226.178.84 17000
 
-# M17-190 Argentina Room, Argentina https://m17.argentina-room.dns-cloud.net/
+# M17-190 Argentina Room, AR https://m17.argentina.net
 M17-190 190.194.12.53 17000
 
-# M17-214 Digital Sustrai, Spain https://214.m17.es/
+# M17-201 M0XSI, GB https://m17.xlx201.uk
+M17-201 157.245.45.67 17000
+
+# M17-214 EA2IP, ES https://214.m17.es/
 M17-214 157.52.252.143 17000
 
-# M17-222 RedNet IU0KRR, Italy https://m17-222.iu0krr.it/M17-222/
-M17-222 80.211.107.181 17000
-
-# M17-224 DMRPlus Spain, Spain https://eamaster.xreflector.es/m17/
+# M17-224 xreflector.es, ES https://eamaster.xreflector.es/m17/
 M17-224 94.177.189.17 17000
 
-# M17-ARG LU8ANB Argentina Multiprotocolo, Argentina https://m17arg.ddns.net
+# M17-245 M0VVA, GB https://m17245.ddns.net
+M17-245 192.248.165.35 17000
+
+# M17-334 KT4ROY, US https://m17.radiotechnology.xyz
+M17-334 199.119.99.14 17000
+
+# M17-659 Open Source Amateur Radio Club, US https://m17.af0ss.org
+M17-659 104.131.106.247 17000
+
+# M17-714 EA3HKB, ES https://m17.ea3hkb.cat
+M17-714 81.169.158.155 17000
+
+# M17-ARG LU8ANB, AR https://m17arg.ddns.net/
 M17-ARG 152.170.70.57 17000
 
-# M17-AUT OE1KBC, Austria https://m17-aut.xreflector.net/
-M17-AUT 195.25.215.5 17000
+# M17-ASL 51593.it, IT https://n3tw0rk.it/
+M17-ASL 199.247.27.81 17000
 
-# M17-BEL UBA, Belgium https://on0lg.no-ip.org/m17bel/
+# M17-AUS VK4AAF, AU https://m17aus.drgnz.com/
+M17-AUS 207.148.87.158 17000
+
+# M17-AUT ÖVSV, AT https://m17-aut.xreflector.net/
+M17-AUT 195.26.215.3 17000
+
+# M17-BEL UBA-LGE, BE https://on0lg.no-ip.org/m17bel
 M17-BEL 51.68.226.67 17000
 
-# M17-BRO AD8DP, United States https://m17-bro.dudetronics.com/
+# M17-BRA PU5KOD, BR https://dvbr.net/m17
+M17-BRA 187.108.0.156 17000
+
+# M17-BRO AD8DP, US https://m17-bro.dudetronics.com
 M17-BRO 68.37.44.22 17000
 
-# M17-CAD RC Castellar, Spain https://castellar.m17.es/m17/
-M17-CAD 80.211.226.37 17000
+# M17-CAD VA3CZK, CA http://ontxlink.hopto.org/m17/index.php
+M17-CAD 166.48.140.139 17000
 
-# M17-DEU DG9FFM, Germany https://m17-deu.xreflector.net/
+# M17-CAN VE3MIC, CA https://m17-ve3rig.ddns.net
+M17-CAN 104.247.229.34 17000
+
+# M17-CAS RC-Castellar, ES https://castellar.m17.es/m17/
+M17-CAS 89.36.222.146 17000
+
+# M17-CAT www.digigrup.org, ES https://m17catalonia.ddns.net/
+M17-CAT 172.104.140.230 17000
+
+# M17-CHI HB9CSR Basel Group, CH https://m17ch-italia.ddns.net/
+M17-CHI 212.237.33.114 17000
+
+# M17-DEU xreflector.net / DG9FFM, DE https://m17-deu.xreflector.net/
 M17-DEU 194.59.205.228 17000
 
-# M17-EA1 DMRPlus EA1, Spain https://eadistrito1.m17.es/m17/
+# M17-EA1 DMR+ 4371, ES https://eadistrito1.m17.es/m17/
 M17-EA1 80.211.29.226 17000
 
-# M17-EA2 ARSA, Spain https://ea2bkh.m17.es/m17/
+# M17-EA2 ARSA, ES https://ea2bkh.m17.es/m17/
 M17-EA2 104.148.41.57 17000
 
-# M17-EA3 ADER, Spain https://ea2bkh.m17.es/m17/
-M17-EA3 62.171.178.202 17000
-
-# M17-EA4 REM ESP, Spain https://ea4rcr.m17.es/m17/
+# M17-EA4 REM-ESP, ES https://ea4rcr.m17.es/m17/
 M17-EA4 212.237.0.67 17000
 
-# M17-EA8 BM Spain, Spain https://ea8ee.m17.es/m17/
-M17-EA8 164.132.96.157 17000
-
-# M17-EA7 Radio Club Veleta, Spain https://rcveleta.xreflector.es/
+# M17-EA7 RC-VELETA, ES https://rcveleta.xreflector.es/
 M17-EA7 207.180.252.141 17000
 
-# M17-ESP EA7IYR, Spain https://m17spa.xreflector.es/
-M17-ESP 5.249.148.156 17000
+# M17-EA8 EA8EE, ES https://ea8ee.m17.es/m17/
+M17-EA8 164.132.96.157 17000
 
-# M17-GAX EA4GAX, Spain https://ea4gax.es/M17
+# M17-ESP xreflector.es, ES https://dcs018.xreflector.net/m17/
+M17-ESP 82.223.20.103 17000
+
+# M17-FIN OH6KW, FI https://openvpn.fi/M17/
+M17-FIN 130.255.76.139 17000
+
+# M17-FVG iv3jdv, IT https://m17fvg.hblink.it
+M17-FVG 80.211.64.211 17000
+
+# M17-GAX EA4GAX, ES https://ea4gax.es/M17/
 M17-GAX 51.83.78.210 17000
 
-# M17-GBR RoIP Network, Great Britan https://www.roip.network/m17/
+# M17-GBR RoIP Network, GB https://www.roip.network/m17/
 M17-GBR 144.91.99.196 17000
 
-# M17-ITA IV3JDV, Italy https://m17ita.hblink.it/
+# M17-GSP LZ1GSP, BG https://xlxsof.ddns.net:17001
+M17-GSP 37.143.205.157 17000
+
+# M17-HNC CERT SPAIN, ES https://certspain.ddns.net
+M17-HNC 47.62.127.2 17000
+
+# M17-HRV Ham Radio Village, US https://m17.hamvillage.org
+M17-HRV 52.15.234.145 17000
+
+# M17-HUB hubnetwork.uk, GB https://g7rpg.hubnetwork.uk/m17
+M17-HUB 86.26.29.17 17000
+
+# M17-IS0 Sardinia Is. https://multiprotocol.is0.org/, IT https://m17.is0.org/
+M17-IS0 51.254.206.201 17000
+
+# M17-ITA IV3JDV, IT https://m17ita.hblink.it
 M17-ITA 80.211.190.216 17000
 
-# M17-ITD IU7MNA, Italy https://m17.digitalham.it
+# M17-ITD IU7MNA, IT https://m17.itdmr.it
 M17-ITD 188.213.168.69 17000
 
-# M17-JPN Kanazawa VoIP Reflector Club, Japan https://m17.f5.si/
-M17-JPN 111.64.12.46 17000
+# M17-JPN Kanazawa VoIP Club, JP https://m17.f5.si/
+M17-JPN 180.36.148.221 17000
 
-# M17-KOR DMR KOREA, Korea https://m17-kor.dvham.com/
-M17-KOR 222.110.59.176 17000
-
-# M17-KP4 KP4CA, Puerto Rico https://kp4ca-m17.ddns.net/
+# M17-KP4 KP4CA, PR https://kp4ca-m17.ddns.net/
 M17-KP4 45.76.8.78 17000
 
-# M17-LAT Entrelaces Latinos, United States https://latinos.m17.es/
+# M17-LAT N3TX, US https://latinos.m17.es/
 M17-LAT 134.73.55.72 17000
 
-# M17-LOM HBLink Italia, Italy https://m17-lom.myddns.me:24033/
-M17-LOM 82.60.24.178 17000
+# M17-LDV IU5HJU Michele ARI Vinci, IT https://ldv.m17.es/m17/
+M17-LDV 80.211.99.134 17000
 
-# M17-M17 M17 Project, United States https://refl.m17.link/
+# M17-M17 KC1AWV, US https://ref.m17.link
 M17-M17 51.81.119.111 17000
 
-# M17-NOR LA2K, Norway https://m17.la2k.no/
+# M17-NOR LA2K club station, NO https://m17.la2k.no
 M17-NOR 185.35.185.100 17000
 
-# M17-PLG Penn Link Group, United States https://xrf245.pennlinkgroup.com/mrefd/
+# M17-NZD ZL1JX, NZ https://m17-nzd.m1m0n.net
+M17-NZD 101.100.136.64 17000
+
+# M17-NZL ZL2AUS, NZ https://m17nzl.drgnz.com/
+M17-NZL 149.28.165.127 17000
+
+# M17-OH6 OH6EWU and OH6AC, FI https://m17oh6.ddns.net/
+M17-OH6 130.255.76.76 17000
+
+# M17-OSK JL3ZII, JP https://www.ne.jp/asahi/radio/ham
+M17-OSK 116.70.234.141 17000
+
+# M17-OWL HB9GFX / DG9BDI, DE https://xlx508.hb9gfx.ch/M17-Reflector-Dashboard/index.php
+M17-OWL 185.188.4.15 17000
+
+# M17-PEG German PEGASUS Project, DE https://dmr.projekt-pegasus.net/m17/
+M17-PEG 5.9.59.26 17000
+
+# M17-PER Sistema Multiprotocolo Peru, PE https://m17.peru-digital.net.pe/
+M17-PER 190.117.61.202 17000
+
+# M17-PHP DX8WMG, PH https://dx8wmg-m17.ddns.net/
+M17-PHP 35.232.22.153 17000
+
+# M17-PLC LZ1PLC, BG https://bulgaria.ddns.net:17001
+M17-PLC 87.252.188.119 17000
+
+# M17-PLG Penn-Link Group, US https://xrf245.pennlinkgroup.com/mrefd/
 M17-PLG 54.85.206.3 17000
 
-# M17-POL SP7LAK, Poland https://m17.hblink.network/
+# M17-POL SP7LAK, PL https://m17.hblink.network/
 M17-POL 77.55.209.188 17000
 
-# M17-POR CT7AGI, Portugal https://m17.hamradio.pt/
+# M17-POR CT7AGI, PT https://m17.hamradio.pt/
 M17-POR 80.211.15.21 17000
 
-# M17-SAL URE Salamanca, Spain https://m17sal.m17.es/
-M17-SAL 31.14.139.112 17000
+# M17-QUE Quebec Francais, CA https://m17-que.ddns.net
+M17-QUE 45.62.250.140 17000
 
-# M17-SKY SKYHUBLINK SYSTEM, United States https://m17.skyhublink.com/
-M17-SKY 65.114.195.171 17000
+# M17-RTX OpenRTX, IT https://m17.openrtx.org
+M17-RTX 51.15.47.11 17000
 
-# M17-SPA EA5GVK, Spain https://hblinkspain.duckdns.org/mrefd/
+# M17-SPA EA5GVK & BLASMAKERS, ES https://hblinkspain.duckdns.org/mrefd/
 M17-SPA 85.255.8.71 17000
 
-# M17-THA HS5TQA, Thailand https://m17.dprns.com/
+# M17-THA DPRNS, TH https://m17.dprns.com
 M17-THA 203.150.19.24 17000
 
-# M17-URG Uruguay Link, Uruguay https://m17-uruguay.ddns.net/m17/
+# M17-TKO Ah-huh.net, JP https://ah-huh.net/m17/
+M17-TKO 52.192.129.174 17000
+
+# M17-TNT 9Z4RG REACT, TT https://m17.9Z4RG.com
+M17-TNT 68.183.19.139 17000
+
+# M17-UK1 2E0LXY, GB https://m17project.co.uk/m17
+M17-UK1 194.146.44.13 17000
+
+# M17-URG Uruguay Link, UY https://m17-uruguay.ddns.net/m17/
 M17-URG 201.217.131.108 17000
 
-# M17-USA Openquad, United States https://m17-usa.openquad.net/
+# M17-USA Quadnet, US https://m17-usa.openquad.net/
 M17-USA 3.138.122.152 17000
 
-# M17-ZO9 IT Zonanove, Italy https://m17zona9.duckdns.org/
+# M17-XVF https://tarxvf.tech, https://w2fbi.com, test and dev reflector, no dashboard, US https://m17ref.tarxvf.tech
+M17-XVF 104.225.216.221 17000
+
+# M17-ZL3 ZL3DMH, NZ https://m17zl3.hopto.org
+M17-ZL3 124.197.62.162 17000
+
+# M17-ZO9 iw9edp@gmail.com, IT https://m17zona9.duckdns.org/
 M17-ZO9 198.245.55.177 17000
 
