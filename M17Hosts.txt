@@ -153,6 +153,9 @@ M17-OSK 116.70.234.141 17000
 # M17-OWL HB9GFX / DG9BDI, DE https://xlx508.hb9gfx.ch/M17-Reflector-Dashboard/index.php
 M17-OWL 185.188.4.15 17000
 
+# M17-OZZ OZ-DMR, GB https://m17.oz-dmr.uk/
+M17-OZZ m17.oz-dmr.uk 17000
+
 # M17-PEG German PEGASUS Project, DE https://dmr.projekt-pegasus.net/m17/
 M17-PEG 5.9.59.26 17000
 
