@@ -136,9 +136,9 @@ bool CConf::read()
 		  } else if (::strcmp(key, "RptAddress") == 0)
 			  m_rptAddress = value;
 		  else if (::strcmp(key, "RptPort") == 0)
-			  m_rptPort = (unsigned int)::atoi(value);
+			  m_rptPort = (unsigned short)::atoi(value);
 		  else if (::strcmp(key, "LocalPort") == 0)
-			  m_myPort = (unsigned int)::atoi(value);
+			  m_myPort = (unsigned short)::atoi(value);
 		  else if (::strcmp(key, "Debug") == 0)
 			  m_debug = ::atoi(value) == 1;
 		  else if (::strcmp(key, "Daemon") == 0)
@@ -157,7 +157,7 @@ bool CConf::read()
 	  }
 	  else if (section == SECTION_NETWORK) {
 		  if (::strcmp(key, "Port") == 0)
-			  m_networkPort = (unsigned int)::atoi(value);
+			  m_networkPort = (unsigned short)::atoi(value);
 		  else if (::strcmp(key, "HostsFile1") == 0)
 			  m_networkHosts1 = value;
 		  else if (::strcmp(key, "HostsFile2") == 0)
@@ -178,7 +178,7 @@ bool CConf::read()
 		  if (::strcmp(key, "Enable") == 0)
 			  m_remoteCommandsEnabled = ::atoi(value) == 1;
 		  else if (::strcmp(key, "Port") == 0)
-			  m_remoteCommandsPort = (unsigned int)::atoi(value);
+			  m_remoteCommandsPort = (unsigned short)::atoi(value);
 	  }
   }
 
@@ -202,12 +202,12 @@ std::string CConf::getRptAddress() const
 	return m_rptAddress;
 }
 
-unsigned int CConf::getRptPort() const
+unsigned short CConf::getRptPort() const
 {
 	return m_rptPort;
 }
 
-unsigned int CConf::getMyPort() const
+unsigned short CConf::getMyPort() const
 {
 	return m_myPort;
 }
@@ -247,7 +247,7 @@ bool CConf::getLogFileRotate() const
 	return m_logFileRotate;
 }
 
-unsigned int CConf::getNetworkPort() const
+unsigned short CConf::getNetworkPort() const
 {
 	return m_networkPort;
 }
@@ -292,7 +292,7 @@ bool CConf::getRemoteCommandsEnabled() const
 	return m_remoteCommandsEnabled;
 }
 
-unsigned int CConf::getRemoteCommandsPort() const
+unsigned short CConf::getRemoteCommandsPort() const
 {
 	return m_remoteCommandsPort;
 }
