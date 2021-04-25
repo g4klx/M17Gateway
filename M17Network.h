@@ -35,7 +35,7 @@ enum M17NET_STATUS {
 
 class CM17Network {
 public:
-	CM17Network(const std::string& callsign, const std::string& suffix, unsigned int port, bool debug);
+	CM17Network(const std::string& callsign, const std::string& suffix, unsigned short port, bool debug);
 	~CM17Network();
 
 	bool link(const std::string& name, const sockaddr_storage& addr, unsigned int addrLen, char module);

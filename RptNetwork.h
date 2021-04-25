@@ -28,7 +28,7 @@
 
 class CRptNetwork {
 public:
-	CRptNetwork(unsigned int localPort, const std::string& gwyAddress, unsigned int gwyPort, bool debug);
+	CRptNetwork(unsigned short localPort, const std::string& gwyAddress, unsigned short gwyPort, bool debug);
 	~CRptNetwork();
 
 	bool open();

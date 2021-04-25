@@ -28,7 +28,7 @@
 
 const unsigned int BUFFER_LENGTH = 200U;
 
-CM17Network::CM17Network(const std::string& callsign, const std::string& suffix, unsigned int port, bool debug) :
+CM17Network::CM17Network(const std::string& callsign, const std::string& suffix, unsigned short port, bool debug) :
 m_socket(port),
 m_name(),
 m_addr(),
