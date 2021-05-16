@@ -111,6 +111,9 @@ M17-HRV 52.15.234.145 17000
 # M17-HUB hubnetwork.uk, GB https://g7rpg.hubnetwork.uk/m17
 M17-HUB 86.26.29.17 17000
 
+# M17-ICQ ICQPODCAST https://xlx.icqpodcast.com/m17/
+M17-ICQ xlx.icqpodcast.com 17000
+
 # M17-IS0 Sardinia Is. https://multiprotocol.is0.org/, IT https://m17.is0.org/
 M17-IS0 51.254.206.201 17000
 
