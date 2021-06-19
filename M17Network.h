@@ -61,6 +61,7 @@ private:
 	unsigned char*   m_encoded;
 	char             m_module;
 	CTimer           m_timer;
+	CTimer           m_timeout;
 
 	void sendConnect();
 	void sendDisconnect();

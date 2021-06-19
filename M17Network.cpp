@@ -38,7 +38,8 @@ m_buffer(1000U, "M17 Network"),
 m_state(M17N_NOTLINKED),
 m_encoded(NULL),
 m_module(' '),
-m_timer(1000U, 5U)
+m_timer(1000U, 5U),
+m_timeout(1000U, 30U)
 {
 	assert(!callsign.empty());
 	assert(!suffix.empty());
@@ -89,9 +90,10 @@ void CM17Network::unlink()
 
 	m_state = M17N_UNLINKING;
 
-	sendConnect();
+	sendDisconnect();
 
 	m_timer.start();
+	m_timeout.stop();
 }
 
 bool CM17Network::write(const unsigned char* data)
@@ -128,6 +130,18 @@ void CM17Network::clock(unsigned int ms)
 		}
 	}
 
+	m_timeout.clock(ms);
+	if (m_timeout.isRunning() && m_timeout.hasExpired()) {
+		m_timeout.stop();
+
+		if (m_state == M17N_LINKED) {
+			LogMessage("Link lost, relinking to reflector %s", m_name.c_str());
+			m_state = M17N_LINKING;
+			sendConnect();
+			m_timer.start();
+		}
+	}
+
 	if (m_state == M17N_NOTLINKED)
 		return;
 
@@ -140,7 +154,7 @@ void CM17Network::clock(unsigned int ms)
 		return;
 
 	if (!CUDPSocket::match(m_addr, address)) {
-		LogMessage("M17, packet received from an invalid source");
+		LogMessage("Packet received from an invalid source");
 		return;
 	}
 
@@ -150,27 +164,32 @@ void CM17Network::clock(unsigned int ms)
 	if (::memcmp(buffer + 0U, "ACKN", 4U) == 0) {
 		m_timer.stop();
 		m_state = M17N_LINKED;
-		LogMessage("M17, linked to reflector %s", m_name.c_str());
+		m_timeout.start();
+		LogMessage("Linked to reflector %s", m_name.c_str());
 		return;
 	}
 
 	if (::memcmp(buffer + 0U, "NACK", 4U) == 0) {
 		m_timer.stop();
 		m_state = M17N_NOTLINKED;
-		LogMessage("M17, link refused by reflector %s", m_name.c_str());
+		m_timeout.stop();
+		LogMessage("Link refused by reflector %s", m_name.c_str());
 		return;
 	}
 
 	if (::memcmp(buffer + 0U, "DISC", 4U) == 0) {
 		m_timer.stop();
 		m_state = M17N_NOTLINKED;
-		LogMessage("M17, unlinked from reflector %s", m_name.c_str());
+		m_timeout.stop();
+		LogMessage("Unlinked from reflector %s", m_name.c_str());
 		return;
 	}
 
 	if (::memcmp(buffer + 0U, "PING", 4U) == 0) {
-		if (m_state == M17N_LINKED)
+		if (m_state == M17N_LINKED) {
+			m_timeout.start();
 			sendPong();
+		}
 		return;
 	}
 
