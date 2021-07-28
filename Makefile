@@ -12,7 +12,7 @@ LIBS    = -lpthread
 LDFLAGS = -g
 
 OBJECTS = Conf.o Echo.o Log.o M17Network.o Mutex.o M17Gateway.o M17Utils.o Reflectors.o RptNetwork.o StopWatch.o Thread.o Timer.o \
-	  UDPSocket.o Utils.o
+		  UDPSocket.o Utils.o Voice.o
 
 all:		M17Gateway
 

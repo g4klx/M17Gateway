@@ -25,6 +25,7 @@
 #include "Version.h"
 #include "Thread.h"
 #include "Timer.h"
+#include "Voice.h"
 #include "Utils.h"
 #include "Echo.h"
 #include "Log.h"
@@ -202,6 +203,16 @@ void CM17Gateway::run()
 	CReflectors reflectors(m_conf.getNetworkHosts1(), m_conf.getNetworkHosts2(), m_conf.getNetworkReloadTime());
 	reflectors.load();
 
+	CVoice* voice = NULL;
+	if (m_conf.getVoiceEnabled()) {
+		voice = new CVoice(m_conf.getVoiceDirectory(), m_conf.getVoiceLanguage(), m_conf.getCallsign());
+		bool ok = voice->open();
+		if (!ok) {
+			delete voice;
+			voice = NULL;
+		}
+	}
+
 	CEcho echo(240U);
 
 	CTimer hangTimer(1000U, m_conf.getNetworkHangTime());
@@ -266,7 +277,7 @@ void CM17Gateway::run()
 			std::string src = CM17Utils::decodeCallsign(buffer + 12U);
 			std::string dst = CM17Utils::decodeCallsign(buffer + 6U);
 
-			if (dst == "ECHO     ") {
+			if (dst == "ECHO") {
 				if (status != M17S_ECHO)
 					echo.clear();
 
@@ -277,10 +288,12 @@ void CM17Gateway::run()
 				uint16_t fn = (buffer[34U] << 8) + (buffer[35U] << 0);
 				if ((fn & 0x8000U) == 0x8000U)
 					echo.end();
-			} else if (dst == "UNLINK   ") {
+			} else if (dst == "UNLINK") {
 				if (status == M17S_LINKED) {
 					LogMessage("Unlinking from reflector %s by %s", currentReflector.c_str(), src.c_str());
 					remoteNetwork.unlink();
+					if (voice != NULL)
+						voice->unlinked();
 				}
 
 				status = M17S_NOTLINKED;
@@ -313,7 +326,13 @@ void CM17Gateway::run()
 						remoteNetwork.link(currentReflector, currentAddr, currentAddrLen, module);
 						status = M17S_LINKED;
 
+						if (voice != NULL)
+							voice->linkedTo(currentReflector);
+
 						hangTimer.start();
+					} else {
+						if (voice != NULL)
+							voice->unlinked();
 					}
 				}
 			}
@@ -325,6 +344,12 @@ void CM17Gateway::run()
 				remoteNetwork.write(buffer);
 				hangTimer.start();
 			}
+		}
+
+		if (voice != NULL) {
+			unsigned int length = voice->read(buffer);
+			if (length > 0U)
+				localNetwork->write(buffer);
 		}
 
 		if (remoteSocket != NULL) {
@@ -344,6 +369,9 @@ void CM17Gateway::run()
 
 							remoteNetwork.unlink();
 
+							if (voice != NULL)
+								voice->unlinked();
+
 							status = M17S_NOTLINKED;
 							hangTimer.stop();
 						}
@@ -362,6 +390,9 @@ void CM17Gateway::run()
 								remoteNetwork.link(currentReflector, currentAddr, currentAddrLen, module);
 								status = M17S_LINKED;
 
+								if (voice != NULL)
+									voice->linkedTo(currentReflector);
+
 								hangTimer.start();
 							}
 						} else {
@@ -378,6 +409,9 @@ void CM17Gateway::run()
 
 		unsigned int ms = stopWatch.elapsed();
 		stopWatch.start();
+
+		if (voice != NULL)
+			voice->clock(ms);
 
 		reflectors.clock(ms);
 
@@ -408,12 +442,18 @@ void CM17Gateway::run()
 				remoteNetwork.link(currentReflector, currentAddr, currentAddrLen, module);
 				status = M17S_LINKED;
 
+				if (voice != NULL)
+					voice->linkedTo(startupReflector);
+
 				hangTimer.start();
 			} else if (revert && startupReflector.empty() && status == M17S_LINKED) {
 				LogMessage("Unlinking from %s due to inactivity", currentReflector.c_str());
 
 				remoteNetwork.unlink();
 				status = M17S_NOTLINKED;
+
+				if (voice != NULL)
+					voice->unlinked();
 
 				currentReflector.clear();
 
@@ -424,6 +464,8 @@ void CM17Gateway::run()
 		if (ms < 5U)
 			CThread::sleep(5U);
 	}
+
+	delete voice;
 
 	localNetwork->close();
 	delete localNetwork;

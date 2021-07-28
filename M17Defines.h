@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016,2017,2018,2020 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2016,2017,2018,2020,2021 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -43,5 +43,9 @@ const unsigned int M17_FN_LENGTH_BYTES = M17_FN_LENGTH_BITS / 8U;
 
 const unsigned int M17_CRC_LENGTH_BITS  = 16U;
 const unsigned int M17_CRC_LENGTH_BYTES = M17_CRC_LENGTH_BITS / 8U;
+
+const unsigned int M17_FRAME_TIME = 40U;
+
+const unsigned char M17_3200_SILENCE[] = { 0x01U, 0x00U, 0x09U, 0x43U, 0x9CU, 0xE4U, 0x21U, 0x08U };
 
 #endif

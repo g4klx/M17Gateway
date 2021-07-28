@@ -160,6 +160,7 @@
     <ClInclude Include="UDPSocket.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Version.h" />
+    <ClInclude Include="Voice.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Conf.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="UDPSocket.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="Voice.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

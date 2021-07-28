@@ -29,11 +29,12 @@
 const int BUFFER_SIZE = 500;
 
 enum SECTION {
-  SECTION_NONE,
-  SECTION_GENERAL,
-  SECTION_LOG,
-  SECTION_NETWORK,
-  SECTION_REMOTE_COMMANDS
+	SECTION_NONE,
+	SECTION_GENERAL,
+	SECTION_LOG,
+	SECTION_VOICE,
+	SECTION_NETWORK,
+	SECTION_REMOTE_COMMANDS
 };
 
 CConf::CConf(const std::string& file) :
@@ -50,6 +51,9 @@ m_logFileLevel(0U),
 m_logFilePath(),
 m_logFileRoot(),
 m_logFileRotate(true),
+m_voiceEnabled(true),
+m_voiceLanguage("en_GB"),
+m_voiceDirectory(),
 m_networkPort(0U),
 m_networkHosts1(),
 m_networkHosts2(),
@@ -69,122 +73,130 @@ CConf::~CConf()
 
 bool CConf::read()
 {
-  FILE* fp = ::fopen(m_file.c_str(), "rt");
-  if (fp == NULL) {
-    ::fprintf(stderr, "Couldn't open the .ini file - %s\n", m_file.c_str());
-    return false;
-  }
+	FILE* fp = ::fopen(m_file.c_str(), "rt");
+	if (fp == NULL) {
+		::fprintf(stderr, "Couldn't open the .ini file - %s\n", m_file.c_str());
+		return false;
+	}
 
-  SECTION section = SECTION_NONE;
+	SECTION section = SECTION_NONE;
 
-  char buffer[BUFFER_SIZE];
-  while (::fgets(buffer, BUFFER_SIZE, fp) != NULL) {
-	  if (buffer[0U] == '#')
-		  continue;
+	char buffer[BUFFER_SIZE];
+	while (::fgets(buffer, BUFFER_SIZE, fp) != NULL) {
+		if (buffer[0U] == '#')
+			continue;
 
-	  if (buffer[0U] == '[') {
-		  if (::strncmp(buffer, "[General]", 9U) == 0)
-			  section = SECTION_GENERAL;
-		  else if (::strncmp(buffer, "[Log]", 5U) == 0)
-			  section = SECTION_LOG;
-		  else if (::strncmp(buffer, "[Network]", 9U) == 0)
-			  section = SECTION_NETWORK;
-		  else if (::strncmp(buffer, "[Remote Commands]", 17U) == 0)
-			  section = SECTION_REMOTE_COMMANDS;
-		  else
-			  section = SECTION_NONE;
+		if (buffer[0U] == '[') {
+			if (::strncmp(buffer, "[General]", 9U) == 0)
+				section = SECTION_GENERAL;
+			else if (::strncmp(buffer, "[Log]", 5U) == 0)
+				section = SECTION_LOG;
+			else if (::strncmp(buffer, "[Voice]", 7U) == 0)
+				section = SECTION_VOICE;
+			else if (::strncmp(buffer, "[Network]", 9U) == 0)
+				section = SECTION_NETWORK;
+			else if (::strncmp(buffer, "[Remote Commands]", 17U) == 0)
+				section = SECTION_REMOTE_COMMANDS;
+			else
+				section = SECTION_NONE;
 
-		  continue;
-	  }
+			continue;
+		}
 
-	  char* key = ::strtok(buffer, " \t=\r\n");
-	  if (key == NULL)
-		  continue;
+		char* key = ::strtok(buffer, " \t=\r\n");
+		if (key == NULL)
+			continue;
 
-	  char* value = ::strtok(NULL, "\r\n");
-	  if (value == NULL)
-		  continue;
+		char* value = ::strtok(NULL, "\r\n");
+		if (value == NULL)
+			continue;
 
-	  // Remove quotes from the value
-	  size_t len = ::strlen(value);
-	  if (len > 1U && *value == '"' && value[len - 1U] == '"') {
-		  value[len - 1U] = '\0';
-		  value++;
-	  } else {
-		  char *p;
+		// Remove quotes from the value
+		size_t len = ::strlen(value);
+		if (len > 1U && *value == '"' && value[len - 1U] == '"') {
+			value[len - 1U] = '\0';
+			value++;
+		} else {
+			char *p;
 
-		  // if value is not quoted, remove after # (to make comment)
-		  if ((p = strchr(value, '#')) != NULL)
-			  *p = '\0';
+			// if value is not quoted, remove after # (to make comment)
+			if ((p = strchr(value, '#')) != NULL)
+				*p = '\0';
 
-		  // remove trailing tab/space
-		  for (p = value + strlen(value) - 1U; p >= value && (*p == '\t' || *p == ' '); p--)
-			  *p = '\0';
-	  }
+			// Remove trailing tab/space
+			for (p = value + strlen(value) - 1U; p >= value && (*p == '\t' || *p == ' '); p--)
+				*p = '\0';
+		}
 
-	  if (section == SECTION_GENERAL) {
-		  if (::strcmp(key, "Callsign") == 0) {
-			  // Convert the callsign to upper case
-			  for (unsigned int i = 0U; value[i] != 0; i++)
-				  value[i] = ::toupper(value[i]);
-			  m_callsign = value;
-		  } else if (::strcmp(key, "Suffix") == 0) {
-			  // Convert the suffix to upper case
-			  for (unsigned int i = 0U; value[i] != 0; i++)
-				  value[i] = ::toupper(value[i]);
-			  m_suffix = value;
-		  } else if (::strcmp(key, "RptAddress") == 0)
-			  m_rptAddress = value;
-		  else if (::strcmp(key, "RptPort") == 0)
-			  m_rptPort = (unsigned short)::atoi(value);
-		  else if (::strcmp(key, "LocalPort") == 0)
-			  m_myPort = (unsigned short)::atoi(value);
-		  else if (::strcmp(key, "Debug") == 0)
-			  m_debug = ::atoi(value) == 1;
-		  else if (::strcmp(key, "Daemon") == 0)
-			  m_daemon = ::atoi(value) == 1;
-	  } else if (section == SECTION_LOG) {
-		  if (::strcmp(key, "FilePath") == 0)
-			  m_logFilePath = value;
-		  else if (::strcmp(key, "FileRoot") == 0)
-			  m_logFileRoot = value;
-		  else if (::strcmp(key, "FileLevel") == 0)
-			  m_logFileLevel = (unsigned int)::atoi(value);
-		  else if (::strcmp(key, "DisplayLevel") == 0)
-			  m_logDisplayLevel = (unsigned int)::atoi(value);
-		  else if (::strcmp(key, "FileRotate") == 0)
-			  m_logFileRotate = ::atoi(value) ==  1;
-	  }
-	  else if (section == SECTION_NETWORK) {
-		  if (::strcmp(key, "Port") == 0)
-			  m_networkPort = (unsigned short)::atoi(value);
-		  else if (::strcmp(key, "HostsFile1") == 0)
-			  m_networkHosts1 = value;
-		  else if (::strcmp(key, "HostsFile2") == 0)
-			  m_networkHosts2 = value;
-		  else if (::strcmp(key, "ReloadTime") == 0)
-			  m_networkReloadTime = (unsigned int)::atoi(value);
-		  else if (::strcmp(key, "HangTime") == 0)
-			  m_networkHangTime = (unsigned int)::atoi(value);
-		  else if (::strcmp(key, "Startup") == 0) {
-			  m_networkStartup = value;
-			  std::replace(m_networkStartup.begin(), m_networkStartup.end(), '_', ' ');
-			  m_networkStartup.resize(M17_CALLSIGN_LENGTH, ' ');
-		  } else if (::strcmp(key, "Revert") == 0)
-			  m_networkRevert = ::atoi(value) == 1;
-		  else if (::strcmp(key, "Debug") == 0)
-			  m_networkDebug = ::atoi(value) == 1;
-	  }  else if (section == SECTION_REMOTE_COMMANDS) {
-		  if (::strcmp(key, "Enable") == 0)
-			  m_remoteCommandsEnabled = ::atoi(value) == 1;
-		  else if (::strcmp(key, "Port") == 0)
-			  m_remoteCommandsPort = (unsigned short)::atoi(value);
-	  }
-  }
+		if (section == SECTION_GENERAL) {
+			if (::strcmp(key, "Callsign") == 0) {
+				// Convert the callsign to upper case
+				for (unsigned int i = 0U; value[i] != 0; i++)
+					value[i] = ::toupper(value[i]);
+				m_callsign = value;
+			} else if (::strcmp(key, "Suffix") == 0) {
+				// Convert the suffix to upper case
+				for (unsigned int i = 0U; value[i] != 0; i++)
+					value[i] = ::toupper(value[i]);
+				m_suffix = value;
+			} else if (::strcmp(key, "RptAddress") == 0)
+				m_rptAddress = value;
+			else if (::strcmp(key, "RptPort") == 0)
+				m_rptPort = (unsigned short)::atoi(value);
+			else if (::strcmp(key, "LocalPort") == 0)
+				m_myPort = (unsigned short)::atoi(value);
+			else if (::strcmp(key, "Debug") == 0)
+				m_debug = ::atoi(value) == 1;
+			else if (::strcmp(key, "Daemon") == 0)
+				m_daemon = ::atoi(value) == 1;
+		} else if (section == SECTION_LOG) {
+			if (::strcmp(key, "FilePath") == 0)
+				m_logFilePath = value;
+			else if (::strcmp(key, "FileRoot") == 0)
+				m_logFileRoot = value;
+			else if (::strcmp(key, "FileLevel") == 0)
+				m_logFileLevel = (unsigned int)::atoi(value);
+			else if (::strcmp(key, "DisplayLevel") == 0)
+				m_logDisplayLevel = (unsigned int)::atoi(value);
+			else if (::strcmp(key, "FileRotate") == 0)
+				m_logFileRotate = ::atoi(value) ==  1;
+		} else if (section == SECTION_VOICE) {
+			if (::strcmp(key, "Enabled") == 0)
+				m_voiceEnabled = ::atoi(value) == 1;
+			else if (::strcmp(key, "Language") == 0)
+				m_voiceLanguage = value;
+			else if (::strcmp(key, "Directory") == 0)
+				m_voiceDirectory = value;
+		} else if (section == SECTION_NETWORK) {
+			if (::strcmp(key, "Port") == 0)
+				m_networkPort = (unsigned short)::atoi(value);
+			else if (::strcmp(key, "HostsFile1") == 0)
+				m_networkHosts1 = value;
+			else if (::strcmp(key, "HostsFile2") == 0)
+				m_networkHosts2 = value;
+			else if (::strcmp(key, "ReloadTime") == 0)
+				m_networkReloadTime = (unsigned int)::atoi(value);
+			else if (::strcmp(key, "HangTime") == 0)
+				m_networkHangTime = (unsigned int)::atoi(value);
+			else if (::strcmp(key, "Startup") == 0) {
+				m_networkStartup = value;
+				std::replace(m_networkStartup.begin(), m_networkStartup.end(), '_', ' ');
+				m_networkStartup.resize(M17_CALLSIGN_LENGTH, ' ');
+			} else if (::strcmp(key, "Revert") == 0)
+				m_networkRevert = ::atoi(value) == 1;
+			else if (::strcmp(key, "Debug") == 0)
+				m_networkDebug = ::atoi(value) == 1;
+		} else if (section == SECTION_REMOTE_COMMANDS) {
+			if (::strcmp(key, "Enable") == 0)
+				m_remoteCommandsEnabled = ::atoi(value) == 1;
+			else if (::strcmp(key, "Port") == 0)
+				m_remoteCommandsPort = (unsigned short)::atoi(value);
+		}
+	}
 
-  ::fclose(fp);
+	::fclose(fp);
 
-  return true;
+	return true;
 }
 
 std::string CConf::getCallsign() const
@@ -245,6 +257,21 @@ std::string CConf::getLogFileRoot() const
 bool CConf::getLogFileRotate() const
 {
 	return m_logFileRotate;
+}
+
+bool CConf::getVoiceEnabled() const
+{
+	return m_voiceEnabled;
+}
+
+std::string CConf::getVoiceLanguage() const
+{
+	return m_voiceLanguage;
+}
+
+std::string CConf::getVoiceDirectory() const
+{
+	return m_voiceDirectory;
 }
 
 unsigned short CConf::getNetworkPort() const
