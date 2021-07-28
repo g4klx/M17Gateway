@@ -65,6 +65,9 @@
     <ClInclude Include="Voice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="M17LSF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Conf.cpp">
@@ -110,6 +113,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Voice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="M17LSF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

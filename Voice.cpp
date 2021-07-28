@@ -24,6 +24,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <cassert>
+#include <random>
 
 #include <sys/stat.h>
 
@@ -39,6 +40,7 @@ m_language(language),
 m_indxFile(),
 m_m17File(),
 m_callsign(callsign),
+m_lsf(),
 m_status(VS_NONE),
 m_timer(1000U, 1U),
 m_stopWatch(),
@@ -107,7 +109,7 @@ bool CVoice::open()
 			if (p1 != NULL && p2 != NULL && p3 != NULL) {
 				std::string symbol  = std::string(p1);
 				unsigned int start  = ::atoi(p2);
-				unsigned int length = ::atoi(p3);
+				unsigned int length = ::atoi(p3) / 2U;		// ??? XXX
 
 				CPositions* pos = new CPositions;
 				pos->m_start = start;
@@ -123,6 +125,14 @@ bool CVoice::open()
 
 	LogInfo("Loaded the audio and index file for %s", m_language.c_str());
 
+	m_lsf.setSource(m_callsign);
+	m_lsf.setDest("INFO");
+	m_lsf.setPacketStream(M17_STREAM_TYPE);
+	m_lsf.setDataType(M17_DATA_TYPE_VOICE);
+	m_lsf.setEncryptionType(M17_ENCRYPTION_TYPE_NONE);
+	m_lsf.setMeta(M17_NULL_NONCE);
+	m_lsf.setCAN(0U);
+
 	return true;
 }
 
@@ -136,7 +146,11 @@ void CVoice::linkedTo(const std::string& reflector)
 		words.push_back("linkedto");
 	}
 
-	for (std::string::const_iterator it = reflector.cbegin(); it != reflector.cend(); ++it)
+	// Remove the "M17-" prefix of the reflector name
+	std::string name = reflector;
+	name.erase(0, 4);
+
+	for (std::string::const_iterator it = name.cbegin(); it != name.cend(); ++it)
 		words.push_back(std::string(1U, *it));
 
 	createVoice(words);
@@ -170,25 +184,35 @@ void CVoice::createVoice(const std::vector<std::string>& words)
 	m17Length += SILENCE_LENGTH;
 	m17Length += SILENCE_LENGTH;
 
+	// Create a random id for this transmission if needed
+	std::random_device rd;
+	std::mt19937 mt(rd());
+	std::uniform_int_distribution<uint16_t> dist(0x0001, 0xFFFE);
+	uint16_t id = dist(mt);
+
+	uint16_t fn = 0U;
+
 	m_voiceData = new unsigned char[m17Length * M17_NETWORK_FRAME_LENGTH];
 
 	// Start with silence
 	m_voiceLength = 0U;
 	for (unsigned int i = 0U; i < SILENCE_LENGTH; i++)
-		createFrame(M17_3200_SILENCE, 1U);
+		createFrame(id, fn, M17_3200_SILENCE, 1U, false);
 
 	for (std::vector<std::string>::const_iterator it = words.begin(); it != words.end(); ++it) {
 		if (m_positions.count(*it) > 0U) {
 			CPositions* position = m_positions.at(*it);
 			unsigned int start  = position->m_start;
 			unsigned int length = position->m_length;
-			createFrame(m_m17 + start, length);
+			createFrame(id, fn, m_m17 + start, length, false);
 		}
 	}
 
 	// End with silence
-	for (unsigned int i = 0U; i < SILENCE_LENGTH; i++)
-		createFrame(M17_3200_SILENCE, 1U);
+	for (unsigned int i = 0U; i < (SILENCE_LENGTH - 1U); i++)
+		createFrame(id, fn, M17_3200_SILENCE, 1U, false);
+
+	createFrame(id, fn, M17_3200_SILENCE, 1U, true);
 }
 
 unsigned int CVoice::read(unsigned char* data)
@@ -243,13 +267,37 @@ void CVoice::clock(unsigned int ms)
 	}
 }
 
-void CVoice::createFrame(const unsigned char* audio, unsigned int length)
+void CVoice::createFrame(uint16_t id, uint16_t& fn, const unsigned char* audio, unsigned int length, bool end)
 {
 	assert(audio != NULL);
 	assert(length > 0U);
 
 	for (unsigned int i = 0U; i < length; i++) {
 		// Create an M17 network frame
+		unsigned char frame[M17_NETWORK_FRAME_LENGTH];
+		frame[0U] = 'M';
+		frame[1U] = '1';
+		frame[2U] = '7';
+		frame[3U] = ' ';
+
+		frame[4U] = id / 256U;	// Unique session id
+		frame[5U] = id % 256U;
+
+		m_lsf.getNetwork(frame + 6U);
+
+		frame[34U] = (fn >> 8) & 0xFFU;
+		frame[35U] = (fn >> 0) & 0xFFU;
+		if (end)
+			frame[34U] |= 0x80U;
+		fn++;
+
+		::memcpy(frame + 36U, audio, M17_PAYLOAD_LENGTH_BYTES);
+
+		// Dummy CRC
+		frame[52U] = 0x00U;
+		frame[53U] = 0x00U;
+
+		::memcpy(m_voiceData + m_voiceLength, frame, M17_NETWORK_FRAME_LENGTH);
 		m_voiceLength += M17_NETWORK_FRAME_LENGTH;
 	}
 }

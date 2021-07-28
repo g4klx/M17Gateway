@@ -147,6 +147,7 @@
     <ClInclude Include="Log.h" />
     <ClInclude Include="M17Defines.h" />
     <ClInclude Include="M17Gateway.h" />
+    <ClInclude Include="M17LSF.h" />
     <ClInclude Include="M17Network.h" />
     <ClInclude Include="M17Utils.h" />
     <ClInclude Include="Mutex.h" />
@@ -166,6 +167,7 @@
     <ClCompile Include="Conf.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="M17Gateway.cpp" />
+    <ClCompile Include="M17LSF.cpp" />
     <ClCompile Include="M17Network.cpp" />
     <ClCompile Include="M17Utils.cpp" />
     <ClCompile Include="Mutex.cpp" />

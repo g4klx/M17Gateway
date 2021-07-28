@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2017,2018 by Jonathan Naylor G4KLX
+*   Copyright (C) 2017,2018,2021 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #define	Voice_H
 
 #include "StopWatch.h"
+#include "M17LSF.h"
 #include "Timer.h"
 
 #include <string>
@@ -58,6 +59,7 @@ private:
 	std::string                            m_indxFile;
 	std::string                            m_m17File;
 	std::string                            m_callsign;
+	CM17LSF                                m_lsf;
 	VOICE_STATUS                           m_status;
 	CTimer                                 m_timer;
 	CStopWatch                             m_stopWatch;
@@ -68,7 +70,7 @@ private:
 	std::unordered_map<std::string, CPositions*> m_positions;
 
 	void createVoice(const std::vector<std::string>& words);
-	void createFrame(const unsigned char* audio, unsigned int length);
+	void createFrame(uint16_t id, uint16_t& fn, const unsigned char* audio, unsigned int length, bool end);
 };
 
 #endif
