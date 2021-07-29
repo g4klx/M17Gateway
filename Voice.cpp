@@ -39,7 +39,6 @@ CVoice::CVoice(const std::string& directory, const std::string& language, const 
 m_language(language),
 m_indxFile(),
 m_m17File(),
-m_callsign(callsign),
 m_lsf(),
 m_status(VS_NONE),
 m_timer(1000U, 1U),
@@ -60,6 +59,15 @@ m_positions()
 	m_indxFile = directory + "/" + language + ".indx";
 	m_m17File  = directory + "/" + language + ".m17";
 #endif
+
+	m_lsf.setSource(callsign);
+	m_lsf.setDest("INFO");
+	m_lsf.setPacketStream(M17_STREAM_TYPE);
+	m_lsf.setDataType(M17_DATA_TYPE_VOICE);
+	m_lsf.setEncryptionType(M17_ENCRYPTION_TYPE_NONE);
+	m_lsf.setEncryptionSubType(0U);
+	m_lsf.setMeta(M17_NULL_NONCE);
+	m_lsf.setCAN(0U);
 }
 
 CVoice::~CVoice()
@@ -108,8 +116,8 @@ bool CVoice::open()
 
 			if (p1 != NULL && p2 != NULL && p3 != NULL) {
 				std::string symbol  = std::string(p1);
-				unsigned int start  = ::atoi(p2);
-				unsigned int length = ::atoi(p3) / 2U;		// ??? XXX
+				unsigned int start  = ::atoi(p2) * M17_3200_LENGTH_BYTES;
+				unsigned int length = (::atoi(p3) + 1U) / 2U;
 
 				CPositions* pos = new CPositions;
 				pos->m_start = start;
@@ -124,14 +132,6 @@ bool CVoice::open()
 	::fclose(fpm17);
 
 	LogInfo("Loaded the audio and index file for %s", m_language.c_str());
-
-	m_lsf.setSource(m_callsign);
-	m_lsf.setDest("INFO");
-	m_lsf.setPacketStream(M17_STREAM_TYPE);
-	m_lsf.setDataType(M17_DATA_TYPE_VOICE);
-	m_lsf.setEncryptionType(M17_ENCRYPTION_TYPE_NONE);
-	m_lsf.setMeta(M17_NULL_NONCE);
-	m_lsf.setCAN(0U);
 
 	return true;
 }

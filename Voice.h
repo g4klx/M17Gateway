@@ -58,7 +58,6 @@ private:
 	std::string                            m_language;
 	std::string                            m_indxFile;
 	std::string                            m_m17File;
-	std::string                            m_callsign;
 	CM17LSF                                m_lsf;
 	VOICE_STATUS                           m_status;
 	CTimer                                 m_timer;
