@@ -288,6 +288,14 @@ void CM17Gateway::run()
 				uint16_t fn = (buffer[34U] << 8) + (buffer[35U] << 0);
 				if ((fn & 0x8000U) == 0x8000U)
 					echo.end();
+			} else if (dst == "INFO") {
+				hangTimer.start();
+
+				if (voice != NULL) {
+					uint16_t fn = (buffer[34U] << 8) + (buffer[35U] << 0);
+					if ((fn & 0x8000U) == 0x8000U)
+						voice->eof();
+				}
 			} else if (dst == "UNLINK") {
 				if (status == M17S_LINKED) {
 					LogMessage("Unlinking from reflector %s by %s", currentReflector.c_str(), src.c_str());
