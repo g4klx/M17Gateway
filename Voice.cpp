@@ -166,6 +166,10 @@ void CVoice::unlinked()
 
 void CVoice::createVoice(const std::vector<std::string>& words)
 {
+	delete[] m_voiceData;
+	m_voiceData = NULL;
+	m_voiceLength = 0U;
+
 	unsigned int m17Length = 0U;
 	for (std::vector<std::string>::const_iterator it = words.begin(); it != words.end(); ++it) {
 		if (m_positions.count(*it) > 0U) {
@@ -233,9 +237,6 @@ unsigned int CVoice::read(unsigned char* data)
 
 		if (offset >= m_voiceLength) {
 			m_timer.stop();
-			m_voiceLength = 0U;
-			delete[] m_voiceData;
-			m_voiceData = NULL;
 			m_status = VS_NONE;
 		}
 

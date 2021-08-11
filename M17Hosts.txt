@@ -60,9 +60,6 @@ M17-AUT 195.26.215.3 17000
 # M17-BEL UBA-LGE, BE https://on0lg.no-ip.org/m17bel
 M17-BEL 51.68.226.67 17000
 
-# M17-BRA PU5KOD, BR https://dvbr.net/m17
-M17-BRA 187.108.0.156 17000
-
 # M17-BRO AD8DP, US https://m17-bro.dudetronics.com
 M17-BRO 68.37.44.22 17000
 
@@ -119,6 +116,9 @@ M17-GBR 144.91.99.196 17000
 
 # M17-GSP LZ1GSP, BG https://xlxsof.ddns.net:17001
 M17-GSP 37.143.205.157 17000
+
+# M17-HAM AC1KV, US https://m17-ham.ddns.net/
+M17-HAM 140.82.14.24 17000
 
 # M17-HNC CERT SPAIN, ES https://certspain.ddns.net
 M17-HNC 47.62.127.2 17000
@@ -207,6 +207,9 @@ M17-POR 80.211.15.21 17000
 # M17-QUE Quebec Francais, CA https://m17-que.ddns.net
 M17-QUE 45.62.250.140 17000
 
+# M17-RE1 France Association, FR https://m17-fra.f5dan.fr/
+M17-RE1 54.37.68.125 17000
+
 # M17-ROM M17 bridge to Tetra, RO https://tetra-romania.ddns.net/m17/
 M17-ROM 89.35.160.218 17000
 
@@ -215,6 +218,9 @@ M17-RTX 51.15.47.11 17000
 
 # M17-SPA EA5GVK & BLASMAKERS, ES https://hblinkspain.duckdns.org/mrefd/
 M17-SPA 85.255.8.71 17000
+
+# M17-SWD SWDG - South Wales Digital Group - Test Reflector, GB https://m17-ref2-swdg.net/
+M17-SWD 45.32.239.121 17000
 
 # M17-SWE AMPRnet.se, SE https://m17.amprnet.se
 M17-SWE 44.140.63.12 17000
@@ -259,7 +265,7 @@ M17-WWD 192.99.70.1 17000
 M17-XVF 104.225.216.221 17000
 
 # M17-ZL3 ZL3DMH, NZ https://xlx530.hopto.org/m17
-M17-ZL3 124.197.62.162 17000
+M17-ZL3 119.224.19.178 17000
 
 # M17-ZO9 iw9edp@gmail.com, IT https://m17zona9.duckdns.org/
 M17-ZO9 198.245.55.177 17000

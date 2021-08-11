@@ -244,10 +244,18 @@ void CM17Gateway::run()
 				status = M17S_LINKED;
 
 				LogInfo("Linked at startup to %s", currentReflector.c_str());
+
+				if (voice != NULL)
+					voice->linkedTo(currentReflector);
 			}
 		} else {
 			startupReflector.clear();
+			if (voice != NULL)
+				voice->unlinked();
 		}
+	} else {
+		if (voice != NULL)
+			voice->unlinked();
 	}
 
 	for (;;) {
