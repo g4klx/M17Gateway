@@ -60,6 +60,9 @@ m_positions()
 	m_m17File  = directory + "/" + language + ".m17";
 #endif
 
+	// 10s of audio maximum
+	m_voiceData = new unsigned char[10U * 25U * M17_NETWORK_FRAME_LENGTH];
+
 	m_lsf.setSource(callsign);
 	m_lsf.setDest("INFO");
 	m_lsf.setPacketStream(M17_STREAM_TYPE);
@@ -166,8 +169,6 @@ void CVoice::unlinked()
 
 void CVoice::createVoice(const std::vector<std::string>& words)
 {
-	delete[] m_voiceData;
-	m_voiceData = NULL;
 	m_voiceLength = 0U;
 
 	unsigned int m17Length = 0U;
@@ -196,10 +197,7 @@ void CVoice::createVoice(const std::vector<std::string>& words)
 
 	uint16_t fn = 0U;
 
-	m_voiceData = new unsigned char[m17Length * M17_NETWORK_FRAME_LENGTH];
-
 	// Start with silence
-	m_voiceLength = 0U;
 	for (unsigned int i = 0U; i < SILENCE_LENGTH; i++)
 		createFrame(id, fn, M17_3200_SILENCE, 1U, false);
 

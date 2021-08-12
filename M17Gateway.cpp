@@ -231,6 +231,9 @@ void CM17Gateway::run()
 	std::string startupReflector = m_conf.getNetworkStartup();
 	bool revert = m_conf.getNetworkRevert();
 
+	if (voice != NULL)
+		voice->unlinked();
+
 	if (!startupReflector.empty()) {
 		CM17Reflector* refl = reflectors.find(startupReflector);
 		if (refl != NULL) {
@@ -250,12 +253,7 @@ void CM17Gateway::run()
 			}
 		} else {
 			startupReflector.clear();
-			if (voice != NULL)
-				voice->unlinked();
 		}
-	} else {
-		if (voice != NULL)
-			voice->unlinked();
 	}
 
 	for (;;) {
@@ -314,11 +312,9 @@ void CM17Gateway::run()
 
 				status = M17S_NOTLINKED;
 				hangTimer.stop();
-			} else if (dst.at(M17_CALLSIGN_LENGTH - 1U) == 'L') {
-				// Convert a dst value of "M17-USAAL" to a reflector value of "M17-USA A"
+			} else if (dst.size() == M17_CALLSIGN_LENGTH) {
 				std::string reflector = dst;
-				reflector.at(M17_CALLSIGN_LENGTH - 2U) = ' ';
-				char module = reflector.at(M17_CALLSIGN_LENGTH - 1U) = dst.at(M17_CALLSIGN_LENGTH - 2U);
+				char module = reflector.at(M17_CALLSIGN_LENGTH - 1U);
 
 				if (reflector != currentReflector && module >= 'A' && module <= 'Z') {
 					if (status == M17S_LINKED) {
