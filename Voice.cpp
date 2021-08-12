@@ -60,8 +60,8 @@ m_positions()
 	m_m17File  = directory + "/" + language + ".m17";
 #endif
 
-	// 10s of audio maximum
-	m_voiceData = new unsigned char[10U * 25U * M17_NETWORK_FRAME_LENGTH];
+	// 15s of audio maximum
+	m_voiceData = new unsigned char[15U * 25U * M17_NETWORK_FRAME_LENGTH];
 
 	m_lsf.setSource(callsign);
 	m_lsf.setDest("INFO");
@@ -153,8 +153,36 @@ void CVoice::linkedTo(const std::string& reflector)
 	std::string name = reflector;
 	name.erase(0, 4);
 
-	for (std::string::const_iterator it = name.cbegin(); it != name.cend(); ++it)
+	std::string::const_iterator it = name.cbegin();
+	while (it != name.cend()) {
+		if (*it == ' ') {
+			++it;
+			break;
+		}
+
 		words.push_back(std::string(1U, *it));
+		++it;
+	}
+
+	if (it != name.cend()) {
+		switch (*it) {
+		case 'A':
+			words.push_back("alpha");
+			break;
+		case 'B':
+			words.push_back("beta");
+			break;
+		case 'C':
+			words.push_back("charlie");
+			break;
+		case 'D':
+			words.push_back("delta");
+			break;
+		default:
+			words.push_back(std::string(1U, *it));
+			break;
+		}
+	}
 
 	createVoice(words);
 }
@@ -291,6 +319,7 @@ void CVoice::createFrame(uint16_t id, uint16_t& fn, const unsigned char* audio, 
 		fn++;
 
 		::memcpy(frame + 36U, audio, M17_PAYLOAD_LENGTH_BYTES);
+		audio += M17_PAYLOAD_LENGTH_BYTES;
 
 		// Dummy CRC
 		frame[52U] = 0x00U;
