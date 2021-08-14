@@ -246,12 +246,13 @@ void CM17Gateway::run()
 			// From the reflector to the MMDVM
 			bool ret = remoteNetwork.read(buffer);
 			if (ret) {
+				// Replace the destination callsign with the brodcast callsign
+				CM17Utils::encodeCallsign("ALL", buffer + 6U);
 				localNetwork->write(buffer);
 				hangTimer.start();
 			}
 		} else if (status == M17S_ECHO) {
 			// From the echo unit to the MMDVM
-			// XXX FIXME handle the playout speed
 			bool ret = echo.read(buffer);
 			if (ret) {
 				localNetwork->write(buffer);
@@ -266,7 +267,7 @@ void CM17Gateway::run()
 			std::string src = CM17Utils::decodeCallsign(buffer + 12U);
 			std::string dst = CM17Utils::decodeCallsign(buffer + 6U);
 
-			if (dst == "ECHO     ") {
+			if (dst == "ECHO") {
 				if (status != M17S_ECHO)
 					echo.clear();
 
@@ -277,7 +278,7 @@ void CM17Gateway::run()
 				uint16_t fn = (buffer[34U] << 8) + (buffer[35U] << 0);
 				if ((fn & 0x8000U) == 0x8000U)
 					echo.end();
-			} else if (dst == "UNLINK   ") {
+			} else if (dst == "UNLINK") {
 				if (status == M17S_LINKED) {
 					LogMessage("Unlinking from reflector %s by %s", currentReflector.c_str(), src.c_str());
 					remoteNetwork.unlink();
@@ -285,7 +286,7 @@ void CM17Gateway::run()
 
 				status = M17S_NOTLINKED;
 				hangTimer.stop();
-			} else if (dst.at(M17_CALLSIGN_LENGTH - 1U) == 'L') {
+			} else if (dst.size() == M17_CALLSIGN_LENGTH && dst.at(M17_CALLSIGN_LENGTH - 1U) == 'L') {
 				// Convert a dst value of "M17-USAAL" to a reflector value of "M17-USA A"
 				std::string reflector = dst;
 				reflector.at(M17_CALLSIGN_LENGTH - 2U) = ' ';
