@@ -48,7 +48,7 @@ public:
 	void linkedTo(const std::string& reflector);
 	void unlinked();
 
-	unsigned int read(unsigned char* data);
+	bool read(unsigned char* data);
 
 	void eof();
 

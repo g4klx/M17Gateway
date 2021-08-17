@@ -203,6 +203,7 @@ void CM17Gateway::run()
 	CReflectors reflectors(m_conf.getNetworkHosts1(), m_conf.getNetworkHosts2(), m_conf.getNetworkReloadTime());
 	reflectors.load();
 
+	bool triggerVoice = false;
 	CVoice* voice = NULL;
 	if (m_conf.getVoiceEnabled()) {
 		voice = new CVoice(m_conf.getVoiceDirectory(), m_conf.getVoiceLanguage(), m_conf.getCallsign());
@@ -271,13 +272,18 @@ void CM17Gateway::run()
 			}
 		} else if (status == M17S_ECHO) {
 			// From the echo unit to the MMDVM
-			bool ret = echo.read(buffer);
-			if (ret) {
-				localNetwork->write(buffer);
-				hangTimer.start();
-			} else {
-				// End of the message, restore the original status
-				status = oldStatus;
+			ECHO_STATE est = echo.read(buffer);
+			switch (est) {
+				case EST_DATA:
+					localNetwork->write(buffer);
+					hangTimer.start();
+					break;
+				case EST_EOF:
+					// End of the message, restore the original status
+					status = oldStatus;
+					break;
+				default:
+					break;
 			}
 		}
 
@@ -303,12 +309,7 @@ void CM17Gateway::run()
 					echo.end();
 			} else if (dst == "INFO") {
 				hangTimer.start();
-
-				if (voice != NULL) {
-					uint16_t fn = (buffer[34U] << 8) + (buffer[35U] << 0);
-					if ((fn & 0x8000U) == 0x8000U)
-						voice->eof();
-				}
+				triggerVoice = true;
 			} else if (dst == "UNLINK") {
 				if (status == M17S_LINKED) {
 					LogMessage("Unlinking from reflector %s by %s", currentReflector.c_str(), src.c_str());
@@ -317,6 +318,7 @@ void CM17Gateway::run()
 						voice->unlinked();
 				}
 
+				triggerVoice = true;
 				status = oldStatus = M17S_NOTLINKED;
 				hangTimer.stop();
 			} else if (dst.size() == M17_CALLSIGN_LENGTH) {
@@ -330,9 +332,8 @@ void CM17Gateway::run()
 						remoteNetwork.unlink();
 					}
 
-					status = oldStatus = M17S_NOTLINKED;
-					hangTimer.stop();
-
+					triggerVoice = true;
+				
 					CM17Reflector* refl = reflectors.find(reflector);
 					if (refl != NULL) {
 						currentReflector = reflector;
@@ -350,8 +351,12 @@ void CM17Gateway::run()
 
 						hangTimer.start();
 					} else {
+						status = oldStatus = M17S_NOTLINKED;
+
 						if (voice != NULL)
 							voice->unlinked();
+
+						hangTimer.stop();
 					}
 				}
 			}
@@ -366,8 +371,16 @@ void CM17Gateway::run()
 		}
 
 		if (voice != NULL) {
-			unsigned int length = voice->read(buffer);
-			if (length > 0U)
+			if (triggerVoice) {
+				uint16_t fn = (buffer[34U] << 8) + (buffer[35U] << 0);
+				if ((fn & 0x8000U) == 0x8000U) {
+					voice->eof();
+					triggerVoice = false;
+				}
+			}
+
+			ret = voice->read(buffer);
+			if (ret)
 				localNetwork->write(buffer);
 		}
 

@@ -41,7 +41,7 @@ m_indxFile(),
 m_m17File(),
 m_lsf(),
 m_status(VS_NONE),
-m_timer(1000U, 1U),
+m_timer(1000U, 2U),
 m_stopWatch(),
 m_sent(0U),
 m_m17(NULL),
@@ -245,12 +245,12 @@ void CVoice::createVoice(const std::vector<std::string>& words)
 	createFrame(id, fn, M17_3200_SILENCE, 1U, true);
 }
 
-unsigned int CVoice::read(unsigned char* data)
+bool CVoice::read(unsigned char* data)
 {
 	assert(data != NULL);
 
 	if (m_status != VS_SENDING)
-		return 0U;
+		return false;
 
 	unsigned int count = m_stopWatch.elapsed() / M17_FRAME_TIME;
 
@@ -266,10 +266,10 @@ unsigned int CVoice::read(unsigned char* data)
 			m_status = VS_NONE;
 		}
 
-		return M17_NETWORK_FRAME_LENGTH;
+		return true;
 	}
 
-	return 0U;
+	return false;
 }
 
 void CVoice::eof()

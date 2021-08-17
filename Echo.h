@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2016,2020 by Jonathan Naylor G4KLX
+*   Copyright (C) 2016,2020,2021 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -22,6 +22,12 @@
 #include "StopWatch.h"
 #include "Timer.h"
 
+enum ECHO_STATE {
+	EST_NONE,
+	EST_DATA,
+	EST_EOF
+};
+
 enum ECHO_STATUS {
 	ES_NONE,
 	ES_RECORDING,
@@ -37,7 +43,7 @@ public:
 
 	bool write(const unsigned char* data);
 
-	bool read(unsigned char* data);
+	ECHO_STATE read(unsigned char* data);
 
 	void end();
 
@@ -49,11 +55,10 @@ private:
 	unsigned char* m_data;
 	unsigned int   m_length;
 	unsigned int   m_used;
-	unsigned int   m_ptr;
+	unsigned int   m_sent;
 	ECHO_STATUS    m_status;
 	CStopWatch     m_stopWatch;
 	CTimer         m_timer;
-	unsigned int   m_sent;
 };
 
 #endif

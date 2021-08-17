@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2016,2020 by Jonathan Naylor G4KLX
+*   Copyright (C) 2016,2020,2021 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -27,11 +27,10 @@ CEcho::CEcho(unsigned int timeout) :
 m_data(NULL),
 m_length(timeout * 25U * M17_NETWORK_FRAME_LENGTH),
 m_used(0U),
-m_ptr(0U),
+m_sent(0U),
 m_status(ES_NONE),
 m_stopWatch(),
-m_timer(1000U, 2U),
-m_sent(0U)
+m_timer(1000U, 2U)
 {
 	assert(timeout > 0U);
 
@@ -60,7 +59,6 @@ bool CEcho::write(const unsigned char* data)
 
 void CEcho::end()
 {
-	m_ptr  = 0U;
 	m_sent = 0U;
 
 	m_status = ES_WAITING;
@@ -72,38 +70,41 @@ void CEcho::clear()
 {
 	m_sent = 0U;
 	m_used = 0U;
-	m_ptr  = 0U;
 
 	m_status = ES_NONE;
 
 	m_timer.stop();
 }
 
-bool CEcho::read(unsigned char* data)
+ECHO_STATE CEcho::read(unsigned char* data)
 {
 	assert(data != NULL);
 
 	if (m_status != ES_PLAYING)
-		return false;
+		return EST_NONE;
 
 	if (m_used == 0U) {
 		m_status = ES_NONE;
-		return false;
+		return EST_EOF;
 	}
 
 	unsigned int wanted = m_stopWatch.elapsed() / 40U;
 	if (m_sent >= wanted)
-		return false;
+		return EST_NONE;
 
-	::memcpy(data, m_data + m_ptr, M17_NETWORK_FRAME_LENGTH);
+	unsigned int ptr = m_sent * M17_NETWORK_FRAME_LENGTH;
 
-	m_ptr += M17_NETWORK_FRAME_LENGTH;
+	if (ptr >= m_used) {
+		m_used   = 0U;
+		m_status = ES_NONE;
+		return EST_EOF;
+	}
+
+	::memcpy(data, m_data + ptr, M17_NETWORK_FRAME_LENGTH);
+
 	m_sent++;
 
-	if (m_ptr >= m_used)
-		m_used = 0U;
-
-	return true;
+	return EST_DATA;
 }
 
 void CEcho::clock(unsigned int ms)
@@ -112,7 +113,6 @@ void CEcho::clock(unsigned int ms)
 	if (m_timer.isRunning() && m_timer.hasExpired()) {
 		m_status = ES_PLAYING;
 		m_sent   = 0U;
-		m_ptr    = 0U;
 		m_stopWatch.start();
 		m_timer.stop();
 	}
