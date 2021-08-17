@@ -401,8 +401,10 @@ void CM17Gateway::run()
 
 							remoteNetwork.unlink();
 
-							if (voice != NULL)
+							if (voice != NULL) {
 								voice->unlinked();
+								voice->eof();
+							}
 
 							status = oldStatus = M17S_NOTLINKED;
 							hangTimer.stop();
@@ -422,8 +424,10 @@ void CM17Gateway::run()
 								remoteNetwork.link(currentReflector, currentAddr, currentAddrLen, module);
 								status = oldStatus = M17S_LINKED;
 
-								if (voice != NULL)
+								if (voice != NULL) {
 									voice->linkedTo(currentReflector);
+									voice->eof();
+								}
 
 								hangTimer.start();
 							}
@@ -474,8 +478,10 @@ void CM17Gateway::run()
 				remoteNetwork.link(currentReflector, currentAddr, currentAddrLen, module);
 				status = oldStatus = M17S_LINKED;
 
-				if (voice != NULL)
+				if (voice != NULL) {
 					voice->linkedTo(startupReflector);
+					voice->eof();
+				}
 
 				hangTimer.start();
 			} else if (revert && startupReflector.empty() && status == M17S_LINKED) {
@@ -484,8 +490,10 @@ void CM17Gateway::run()
 				remoteNetwork.unlink();
 				status = oldStatus = M17S_NOTLINKED;
 
-				if (voice != NULL)
+				if (voice != NULL) {
 					voice->unlinked();
+					voice->eof();
+				}
 
 				currentReflector.clear();
 
