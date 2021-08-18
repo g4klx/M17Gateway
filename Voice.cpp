@@ -170,7 +170,7 @@ void CVoice::linkedTo(const std::string& reflector)
 			words.push_back("alpha");
 			break;
 		case 'B':
-			words.push_back("beta");
+			words.push_back("bravo");
 			break;
 		case 'C':
 			words.push_back("charlie");
