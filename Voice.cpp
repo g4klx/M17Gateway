@@ -68,7 +68,7 @@ m_positions()
 	m_lsf.setPacketStream(M17_STREAM_TYPE);
 	m_lsf.setDataType(M17_DATA_TYPE_VOICE);
 	m_lsf.setEncryptionType(M17_ENCRYPTION_TYPE_NONE);
-	m_lsf.setEncryptionSubType(0U);
+	m_lsf.setEncryptionSubType(M17_ENCRYPTION_SUB_TYPE_TEXT);
 	m_lsf.setMeta(M17_NULL_NONCE);
 	m_lsf.setCAN(0U);
 }
@@ -184,7 +184,25 @@ void CVoice::linkedTo(const std::string& reflector)
 		}
 	}
 
-	createVoice(words);
+	char text[50U];
+	if (m_language == "de_DE")
+		::sprintf(text, "Verlinkt zu %s", reflector.c_str());
+	else if (m_language == "dk_DK")
+		::sprintf(text, "Linket til %s", reflector.c_str());
+	else if (m_language == "es_ES")
+		::sprintf(text, "Enlazado %s", reflector.c_str());
+	else if (m_language == "fr_FR")
+		::sprintf(text, "Connecte a %s", reflector.c_str());
+	else if (m_language == "it_IT")
+		::sprintf(text, "Connesso a %s", reflector.c_str());
+	else if (m_language == "pl_PL")
+		::sprintf(text, "Polaczony z %s", reflector.c_str());
+	else if (m_language == "se_SE")
+		::sprintf(text, "Lankad till %s", reflector.c_str());
+	else
+		::sprintf(text, "Linked to %s", reflector.c_str());
+
+	createVoice(words, text);
 }
 
 void CVoice::unlinked()
@@ -192,11 +210,56 @@ void CVoice::unlinked()
 	std::vector<std::string> words;
 	words.push_back("notlinked");
 
-	createVoice(words);
+	const char* text;
+	if (m_language == "de_DE")
+		text = "Nicht verbunden";
+	else if (m_language == "dk_DK")
+		text = "Ikke forbundet";
+	else if (m_language == "es_ES")
+		text = "No enlazado";
+	else if (m_language == "fr_FR")
+		text = "Non connecte";
+	else if (m_language == "it_IT")
+		text = "Non connesso";
+	else if (m_language == "pl_PL")
+		text = "Nie polaczony";
+	else if (m_language == "se_SE")
+		text = "Ej lankad";
+	else
+		text = "Not linked";
+
+	createVoice(words, text);
 }
 
-void CVoice::createVoice(const std::vector<std::string>& words)
+void CVoice::createVoice(const std::vector<std::string>& words, const char* text)
 {
+	assert(text != NULL);
+
+	size_t textSize = ::strlen(text);
+	unsigned char count = textSize / (M17_META_LENGTH_BYTES - 1U);
+	if ((textSize % (M17_META_LENGTH_BYTES - 1U)) > 0U)
+		count++;
+
+	std::vector<const unsigned char*> metaArray;
+	for (unsigned char n = 0U; n < count; n++) {
+		unsigned char* meta = new unsigned char[M17_META_LENGTH_BYTES];
+		::memset(meta, ' ', M17_META_LENGTH_BYTES);
+
+		meta[0U] = ((n + 1U) << 4) | (count << 0);
+
+		const char* p = text + n * (M17_META_LENGTH_BYTES - 1U);
+		size_t textSize = ::strlen(p);
+		if (textSize < (M17_META_LENGTH_BYTES - 1U))
+			::memcpy(meta + 1U, p, textSize);
+		else
+			::memcpy(meta + 1U, p, M17_META_LENGTH_BYTES - 1U);
+
+		metaArray.push_back(meta);
+	}
+
+	std::vector<const unsigned char*>::const_iterator itMeta = metaArray.cbegin();
+	m_lsf.setMeta(*itMeta);
+
 	m_voiceLength = 0U;
 
 	unsigned int m17Length = 0U;
@@ -235,6 +298,14 @@ void CVoice::createVoice(const std::vector<std::string>& words)
 			unsigned int start  = position->m_start;
 			unsigned int length = position->m_length;
 			createFrame(id, fn, m_m17 + start, length, false);
+
+			if ((fn % 6U) == 0U) {
+				++itMeta;
+				if (itMeta == metaArray.cend())
+					itMeta = metaArray.cbegin();
+
+				m_lsf.setMeta(*itMeta);
+			}
 		}
 	}
 
@@ -243,6 +314,11 @@ void CVoice::createVoice(const std::vector<std::string>& words)
 		createFrame(id, fn, M17_3200_SILENCE, 1U, false);
 
 	createFrame(id, fn, M17_3200_SILENCE, 1U, true);
+
+	for (std::vector<const unsigned char*>::iterator it = metaArray.begin(); it != metaArray.end(); ++it) {
+		delete *it;
+		metaArray.erase(it);
+	}
 }
 
 bool CVoice::read(unsigned char* data)

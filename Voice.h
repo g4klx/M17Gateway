@@ -68,7 +68,7 @@ private:
 	unsigned int                           m_voiceLength;
 	std::unordered_map<std::string, CPositions*> m_positions;
 
-	void createVoice(const std::vector<std::string>& words);
+	void createVoice(const std::vector<std::string>& words, const char* text);
 	void createFrame(uint16_t id, uint16_t& fn, const unsigned char* audio, unsigned int length, bool end);
 };
 
