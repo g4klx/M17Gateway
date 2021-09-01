@@ -41,6 +41,13 @@ void CM17LSF::getNetwork(unsigned char* data) const
 	::memcpy(data, m_lsf, M17_LSF_LENGTH_BYTES - 2U);
 }
 
+void CM17LSF::setNetwork(const unsigned char* data)
+{
+	assert(data != NULL);
+
+	::memcpy(m_lsf, data, M17_LSF_LENGTH_BYTES - 2U);
+}
+
 void CM17LSF::setSource(const std::string& callsign)
 {
 	CM17Utils::encodeCallsign(callsign, m_lsf + 6U);

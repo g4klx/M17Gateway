@@ -27,6 +27,7 @@ public:
 	~CM17LSF();
 
 	void getNetwork(unsigned char* data) const;
+	void setNetwork(const unsigned char* data);
 
 	void setSource(const std::string& callsign);
 

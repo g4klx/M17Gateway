@@ -24,6 +24,7 @@
 #include "M17Utils.h"
 #include "Version.h"
 #include "Thread.h"
+#include "M17LSF.h"
 #include "Timer.h"
 #include "Voice.h"
 #include "Utils.h"
@@ -258,6 +259,8 @@ void CM17Gateway::run()
 		}
 	}
 
+	unsigned int n = 1U;
+
 	for (;;) {
 		unsigned char buffer[100U];
 
@@ -265,9 +268,33 @@ void CM17Gateway::run()
 			// From the reflector to the MMDVM
 			bool ret = remoteNetwork.read(buffer);
 			if (ret) {
-				// Replace the destination callsign with the brodcast callsign
-				CM17Utils::encodeCallsign("ALL", buffer + 6U);
+				CM17LSF lsf;
+				lsf.setNetwork(buffer + 6U);
+
+				if (n > 40U) {
+					// Change the type to show that it's callsign data
+					lsf.setEncryptionType(M17_ENCRYPTION_TYPE_NONE);
+					lsf.setEncryptionSubType(M17_ENCRYPTION_SUB_TYPE_CALLSIGNS);
+
+					// Copy the encoded source and destination into the META field
+					lsf.setMeta(buffer + 6U);
+
+					if (n > 45U)
+						n = 0U;
+				}
+
+				n++;
+
+				// Replace the source callsign with our ours
+				lsf.setSource(m_conf.getCallsign());
+
+				// Replace the destination callsign with the broadcast callsign
+				lsf.setDest("ALL");
+
+				lsf.getNetwork(buffer + 6U);
+
 				localNetwork->write(buffer);
+
 				hangTimer.start();
 			}
 		} else if (status == M17S_ECHO) {
