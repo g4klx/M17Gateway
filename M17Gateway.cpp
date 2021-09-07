@@ -574,6 +574,7 @@ void CM17Gateway::linking()
 			m_network->stop();
 			m_timer.stop();
 			m_status = m_oldStatus = M17S_NOTLINKED;
+			m_reflector.clear();
 		}
 	} else if (status == M17N_UNLINKING) {
 		if (m_timer.isRunning() && m_timer.hasExpired()) {
@@ -594,11 +595,13 @@ void CM17Gateway::unlinking()
 	if (status == M17N_NOTLINKED) {
 		m_timer.stop();
 		m_status = m_oldStatus = M17S_NOTLINKED;
+		m_reflector.clear();
 	} else if (status == M17N_UNLINKING) {
 		if (m_timer.isRunning() && m_timer.hasExpired()) {
 			m_network->stop();
 			m_timer.stop();
 			m_status = m_oldStatus = M17S_NOTLINKED;
+			m_reflector.clear();
 		}
 	}
 }
