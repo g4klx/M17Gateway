@@ -30,7 +30,9 @@ enum M17NET_STATUS {
 	M17N_NOTLINKED,
 	M17N_LINKING,
 	M17N_LINKED,
-	M17N_UNLINKING
+	M17N_UNLINKING,
+	M17N_REJECTED,
+	M17N_FAILED
 };
 
 class CM17Network {
@@ -46,9 +48,13 @@ public:
 
 	bool read(unsigned char* data);
 
+	void stop();
+
 	void close();
 
 	void clock(unsigned int ms);
+
+	M17NET_STATUS getStatus() const;
 
 private:
 	CUDPSocket       m_socket;
