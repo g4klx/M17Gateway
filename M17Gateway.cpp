@@ -87,7 +87,7 @@ m_conf(file),
 m_status(M17S_NOTLINKED),
 m_oldStatus(M17S_NOTLINKED),
 m_network(NULL),
-m_timer(1000U, 10U),
+m_timer(1000U, 5U),
 m_reflector(),
 m_addrLen(0U),
 m_addr(),
@@ -330,6 +330,7 @@ void CM17Gateway::run()
 						LogMessage("Unlinking from reflector %s triggered by %s", m_reflector.c_str(), src.c_str());
 						m_network->stop();
 						m_network->unlink();
+
 						m_timer.start();
 					}
 
@@ -414,11 +415,6 @@ void CM17Gateway::run()
 							m_network->stop();
 							m_network->unlink();
 
-							if (voice != NULL) {
-								voice->unlinked();
-								voice->eof();
-							}
-
 							hangTimer.stop();
 							m_timer.start();
 						}
@@ -448,11 +444,7 @@ void CM17Gateway::run()
 						} else {
 							m_reflector.clear();
 							if (m_status == M17S_LINKED || m_status == M17S_LINKING) {
-								m_network->stop();
-								m_network->unlink();
-
 								m_status = m_oldStatus = M17S_UNLINKING;
-								m_timer.start();
 
 								if (voice != NULL) {
 									voice->unlinked();
@@ -581,7 +573,6 @@ void CM17Gateway::linking()
 			m_network->stop();
 			m_timer.start();
 			m_network->link(m_reflector, m_addr, m_addrLen, m_module);
-			m_status = m_oldStatus = M17S_LINKING;
 		}
 	}
 }

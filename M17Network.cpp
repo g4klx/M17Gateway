@@ -38,7 +38,7 @@ m_buffer(1000U, "M17 Network"),
 m_state(M17N_NOTLINKED),
 m_encoded(NULL),
 m_module(' '),
-m_timer(1000U, 5U),
+m_timer(1000U, 1U),
 m_timeout(1000U, 30U)
 {
 	assert(!callsign.empty());
