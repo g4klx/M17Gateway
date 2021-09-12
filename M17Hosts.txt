@@ -42,6 +42,9 @@ M17-672 51.195.200.71 17000
 # M17-714 EA3HKB, ES https://m17.ea3hkb.cat
 M17-714 81.169.158.155 17000
 
+# M17-724 PU5KOD, BR https://m17.allfive.net
+M17-724 187.108.0.156 17000
+
 # M17-983 K8JTK Hub Multimode ILS/DVMIS (K8JTK.org), US https://M17-983.k8jtk.org/
 M17-983 45.76.228.241 17000
 
@@ -54,11 +57,14 @@ M17-ASL 78.141.212.150 17000
 # M17-AUS VK4AAF, AU https://m17aus.drgnz.com/
 M17-AUS 207.148.87.158 17000
 
-# M17-AUT ÖVSV, AT https://m17-aut.xreflector.net/
+# M17-AUT Ã–VSV, AT https://m17-aut.xreflector.net/
 M17-AUT 195.26.215.3 17000
 
 # M17-BEL UBA-LGE, BE https://on0lg.no-ip.org/m17bel
 M17-BEL 51.68.226.67 17000
+
+# M17-BRA PU5KOD, BR https://m17bra.net
+M17-BRA 191.30.24.9 17000
 
 # M17-BRO AD8DP, US https://m17-bro.dudetronics.com
 M17-BRO 68.37.44.22 17000
@@ -81,6 +87,9 @@ M17-CHI 212.237.33.114 17000
 # M17-DEU xreflector.net / DG9FFM, DE https://m17-deu.xreflector.net/
 M17-DEU 194.59.205.228 17000
 
+# M17-DMR freestar.network, GB https://m17.freestar.network
+M17-DMR 192.248.145.71 17000
+
 # M17-EA1 DMR+ 4371, ES https://eadistrito1.m17.es/m17/
 M17-EA1 80.211.29.226 17000
 
@@ -101,6 +110,9 @@ M17-ESP 82.223.20.103 17000
 
 # M17-FIN OH6KW, FI https://openvpn.fi/M17/
 M17-FIN 130.255.76.139 17000
+
+# M17-FOG THE FOG - Future Orientated Gateways, GB https://m17.ham-radio-fog.org/
+M17-FOG 95.179.203.54 17000
 
 # M17-FRA France Association, FR https://m17-fra.f5dan.fr
 M17-FRA 54.37.68.125 17000
@@ -130,7 +142,7 @@ M17-HRV 52.15.234.145 17000
 M17-HUB 86.26.29.17 17000
 
 # M17-IND VU3TBR, IN https://ysf-india.ddns.net/
-M17-IND 106.51.155.139 17000
+M17-IND 183.82.248.50 17000
 
 # M17-IS0 Sardinia Is. https://multiprotocol.is0.org/, IT https://m17.is0.org/
 M17-IS0 51.254.206.201 17000
@@ -143,6 +155,9 @@ M17-ITD 188.213.168.69 17000
 
 # M17-JPN Kanazawa VoIP Club, JP https://m17.f5.si/
 M17-JPN 180.36.148.221 17000
+
+# M17-JWG KD9KCK, US https://m17.jwgtechs.com
+M17-JWG 67.175.64.113 17000
 
 # M17-KP4 KP4CA, PR https://kp4ca-m17.ddns.net/
 M17-KP4 45.76.8.78 17000
@@ -160,7 +175,7 @@ M17-M17 51.81.119.111 17000
 M17-NOR 185.35.185.100 17000
 
 # M17-NYC On behalf of N2XDD via KD2UQK, US https://kd2uqk.ham-radio-op.net
-M17-NYC 68.132.118.17 17000
+M17-NYC 100.38.158.68 17000
 
 # M17-NZD ZL1JX, NZ https://m17-nzd.m1m0n.net
 M17-NZD 101.100.136.64 17000
@@ -214,7 +229,7 @@ M17-RE1 54.37.68.125 17000
 M17-ROM 89.35.160.218 17000
 
 # M17-RTX OpenRTX, IT https://m17.openrtx.org
-M17-RTX 51.15.47.11 17000
+M17-RTX 93.41.233.12 17000
 
 # M17-SPA EA5GVK & BLASMAKERS, ES https://hblinkspain.duckdns.org/mrefd/
 M17-SPA 85.255.8.71 17000
@@ -227,9 +242,6 @@ M17-SWE 44.140.63.12 17000
 
 # M17-TAR W2FBI, US https://m17ref.tarxvf.tech
 M17-TAR 127.0.0.1 1
-
-# M17-TF1 Technology First, US https://m17.technologyfirst.cc
-M17-TF1 159.196.126.150 17000
 
 # M17-THA DPRNS, TH https://m17.dprns.com
 M17-THA 203.150.19.24 17000
@@ -269,4 +281,3 @@ M17-ZL3 119.224.19.178 17000
 
 # M17-ZO9 iw9edp@gmail.com, IT https://m17zona9.duckdns.org/
 M17-ZO9 198.245.55.177 17000
-

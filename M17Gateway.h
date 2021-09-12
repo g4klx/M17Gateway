@@ -19,6 +19,7 @@
 #if !defined(M17Gateway_H)
 #define	M17Gateway_H
 
+#include "M17Network.h"
 #include "Timer.h"
 #include "Conf.h"
 
@@ -38,6 +39,14 @@
 #include <winsock.h>
 #endif
 
+enum M17_STATUS {
+	M17S_NOTLINKED,
+	M17S_LINKED,
+	M17S_LINKING,
+	M17S_UNLINKING,
+	M17S_ECHO
+};
+
 class CM17Gateway
 {
 public:
@@ -47,7 +56,19 @@ public:
 	void run();
 
 private:
-	CConf m_conf;
+	CConf            m_conf;
+	M17_STATUS       m_status;
+	M17_STATUS       m_oldStatus;
+	CM17Network*     m_network;
+	CTimer           m_timer;
+	std::string      m_reflector;
+	unsigned int     m_addrLen;
+	sockaddr_storage m_addr;
+	char             m_module;
+
+
+	void linking();
+	void unlinking();
 };
 
 #endif

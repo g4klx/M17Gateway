@@ -38,7 +38,7 @@ m_buffer(1000U, "M17 Network"),
 m_state(M17N_NOTLINKED),
 m_encoded(NULL),
 m_module(' '),
-m_timer(1000U, 5U),
+m_timer(1000U, 1U),
 m_timeout(1000U, 30U)
 {
 	assert(!callsign.empty());
@@ -85,7 +85,7 @@ bool CM17Network::link(const std::string& name, const sockaddr_storage& addr, un
 
 void CM17Network::unlink()
 {
-	if (m_state != M17N_LINKED)
+	if (m_state != M17N_LINKED && m_state != M17N_LINKING)
 		return;
 
 	m_state = M17N_UNLINKING;
@@ -132,14 +132,9 @@ void CM17Network::clock(unsigned int ms)
 
 	m_timeout.clock(ms);
 	if (m_timeout.isRunning() && m_timeout.hasExpired()) {
+		LogMessage("Link lost to reflector %s", m_name.c_str());
+		m_state = M17N_FAILED;
 		m_timeout.stop();
-
-		if (m_state == M17N_LINKED) {
-			LogMessage("Link lost, relinking to reflector %s", m_name.c_str());
-			m_state = M17N_LINKING;
-			sendConnect();
-			m_timer.start();
-		}
 	}
 
 	if (m_state == M17N_NOTLINKED)
@@ -171,8 +166,7 @@ void CM17Network::clock(unsigned int ms)
 
 	if (::memcmp(buffer + 0U, "NACK", 4U) == 0) {
 		m_timer.stop();
-		m_state = M17N_NOTLINKED;
-		m_timeout.stop();
+		m_state = M17N_REJECTED;
 		LogMessage("Link refused by reflector %s", m_name.c_str());
 		return;
 	}
@@ -180,7 +174,6 @@ void CM17Network::clock(unsigned int ms)
 	if (::memcmp(buffer + 0U, "DISC", 4U) == 0) {
 		m_timer.stop();
 		m_state = M17N_NOTLINKED;
-		m_timeout.stop();
 		LogMessage("Unlinked from reflector %s", m_name.c_str());
 		return;
 	}
@@ -197,6 +190,9 @@ void CM17Network::clock(unsigned int ms)
 		CUtils::dump(2U, "M17, received unknown packet", buffer, length);
 		return;
 	}
+
+	if (m_state == M17N_LINKED)
+		m_timeout.start();
 
 	unsigned char c = length;
 	m_buffer.addData(&c, 1U);
@@ -221,12 +217,21 @@ bool CM17Network::read(unsigned char* data)
 
 void CM17Network::close()
 {
-	if (m_state == M17N_NOTLINKED)
-		return;
+	if (m_state == M17N_LINKED) {
+		m_socket.close();
+		LogMessage("Closing M17 network connection");
+	}
+}
 
-	m_socket.close();
+void CM17Network::stop()
+{
+	m_timeout.stop();
+	m_timer.stop();
+}
 
-	LogMessage("Closing M17 network connection");
+M17NET_STATUS CM17Network::getStatus() const
+{
+	return m_state;
 }
 
 void CM17Network::sendConnect()
