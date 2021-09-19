@@ -47,7 +47,9 @@ m_sent(0U),
 m_m17(NULL),
 m_voiceData(NULL),
 m_voiceLength(0U),
-m_positions()
+m_positions(),
+m_metaArray(),
+m_itMeta()
 {
 	assert(!directory.empty());
 	assert(!language.empty());
@@ -253,7 +255,6 @@ void CVoice::createVoice(const std::vector<std::string>& words, const char* text
 	else
 		bitMap = 0xF0U;
 
-	std::vector<const unsigned char*> metaArray;
 	for (unsigned char n = 0U; n < count; n++) {
 		unsigned char* meta = new unsigned char[M17_META_LENGTH_BYTES];
 		::memset(meta, ' ', M17_META_LENGTH_BYTES);
@@ -267,11 +268,11 @@ void CVoice::createVoice(const std::vector<std::string>& words, const char* text
 		else
 			::memcpy(meta + 1U, p, M17_META_LENGTH_BYTES - 1U);
 
-		metaArray.push_back(meta);
+		m_metaArray.push_back(meta);
 	}
 
-	std::vector<const unsigned char*>::const_iterator itMeta = metaArray.cbegin();
-	m_lsf.setMeta(*itMeta);
+	m_itMeta = m_metaArray.cbegin();
+	m_lsf.setMeta(*m_itMeta);
 
 	m_voiceLength = 0U;
 
@@ -311,14 +312,6 @@ void CVoice::createVoice(const std::vector<std::string>& words, const char* text
 			unsigned int start  = position->m_start;
 			unsigned int length = position->m_length;
 			createFrame(id, fn, m_m17 + start, length, false);
-
-			if ((fn % 6U) == 0U) {
-				++itMeta;
-				if (itMeta == metaArray.cend())
-					itMeta = metaArray.cbegin();
-
-				m_lsf.setMeta(*itMeta);
-			}
 		}
 	}
 
@@ -328,9 +321,9 @@ void CVoice::createVoice(const std::vector<std::string>& words, const char* text
 
 	createFrame(id, fn, M17_3200_SILENCE, 1U, true);
 
-	for (std::vector<const unsigned char*>::iterator it = metaArray.begin(); it != metaArray.end(); ++it)
+	for (std::vector<const unsigned char*>::iterator it = m_metaArray.begin(); it != m_metaArray.end(); ++it)
 		delete *it;
-	metaArray.clear();
+	m_metaArray.clear();
 }
 
 bool CVoice::read(unsigned char* data)
@@ -405,6 +398,13 @@ void CVoice::createFrame(uint16_t id, uint16_t& fn, const unsigned char* audio, 
 		if (end)
 			frame[34U] |= 0x80U;
 		fn++;
+		if ((fn % 6U) == 0U) {
+			++m_itMeta;
+			if (m_itMeta == m_metaArray.cend())
+				m_itMeta = m_metaArray.cbegin();
+
+			m_lsf.setMeta(*m_itMeta);
+		}
 
 		::memcpy(frame + 36U, audio, M17_PAYLOAD_LENGTH_BYTES);
 		audio += M17_PAYLOAD_LENGTH_BYTES;
