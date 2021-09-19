@@ -328,10 +328,9 @@ void CVoice::createVoice(const std::vector<std::string>& words, const char* text
 
 	createFrame(id, fn, M17_3200_SILENCE, 1U, true);
 
-	for (std::vector<const unsigned char*>::iterator it = metaArray.begin(); it != metaArray.end(); ++it) {
+	for (std::vector<const unsigned char*>::iterator it = metaArray.begin(); it != metaArray.end(); ++it)
 		delete *it;
-		metaArray.erase(it);
-	}
+	metaArray.clear();
 }
 
 bool CVoice::read(unsigned char* data)
