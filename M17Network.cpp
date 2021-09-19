@@ -63,7 +63,7 @@ bool CM17Network::link(const std::string& name, const sockaddr_storage& addr, un
 {
 	close();
 
-	LogMessage("Opening M17 network connection");
+	LogMessage("Opening M17 Network connection");
 
 	bool ret = m_socket.open(addr);
 	if (!ret)
@@ -106,7 +106,7 @@ bool CM17Network::write(const unsigned char* data)
 	assert(data != NULL);
 
 	if (m_debug)
-		CUtils::dump(1U, "M17 data transmitted", data, M17_NETWORK_FRAME_LENGTH);
+		CUtils::dump(1U, "M17 Network Data Transmitted", data, M17_NETWORK_FRAME_LENGTH);
 
 	return m_socket.write(data, M17_NETWORK_FRAME_LENGTH, m_addr, m_addrLen);
 }

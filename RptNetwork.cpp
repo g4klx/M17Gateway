@@ -53,7 +53,7 @@ bool CRptNetwork::open()
 		return false;
 	}
 
-	LogMessage("Opening Rpt network connection");
+	LogMessage("Opening Rpt Network connection");
 
 	bool ret = m_socket.open(m_addr);
 
@@ -73,7 +73,7 @@ bool CRptNetwork::write(const unsigned char* data)
 	assert(data != NULL);
 
 	if (m_debug)
-		CUtils::dump(1U, "Rpt data transmitted", data, M17_NETWORK_FRAME_LENGTH);
+		CUtils::dump(1U, "Rpt Network Data Transmitted", data, M17_NETWORK_FRAME_LENGTH);
 
 	return m_socket.write(data, M17_NETWORK_FRAME_LENGTH, m_addr, m_addrLen);
 }
