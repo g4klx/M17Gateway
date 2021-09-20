@@ -255,7 +255,7 @@ void CM17Gateway::run()
 		}
 	}
 
-	unsigned int n = 1U;
+	unsigned int n = 0U;
 
 	for (;;) {
 		unsigned char buffer[100U];
@@ -281,15 +281,16 @@ void CM17Gateway::run()
 
 				n++;
 
-				// Replace the source callsign with our ours
+				// Replace the source callsign with our ours and replace the destination callsign with the broadcast callsign
 				lsf.setSource(m_conf.getCallsign());
-
-				// Replace the destination callsign with the broadcast callsign
 				lsf.setDest("ALL");
-
 				lsf.getNetwork(buffer + 6U);
 
 				localNetwork->write(buffer);
+
+				uint16_t fn = (buffer[34U] << 8) + (buffer[35U] << 0);
+				if ((fn & 0x8000U) == 0x8000U)
+					n = 0U;
 
 				hangTimer.start();
 			}
