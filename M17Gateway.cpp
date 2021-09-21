@@ -281,8 +281,7 @@ void CM17Gateway::run()
 
 				n++;
 
-				// Replace the source callsign with our ours and replace the destination callsign with the broadcast callsign
-				lsf.setSource(m_conf.getCallsign());
+				// Replace the destination callsign with the broadcast callsign
 				lsf.setDest("ALL");
 				lsf.getNetwork(buffer + 6U);
 
@@ -299,13 +298,36 @@ void CM17Gateway::run()
 			ECHO_STATE est = echo.read(buffer);
 			switch (est) {
 				case EST_DATA:
+					if (n > 40U) {
+						CM17LSF lsf;
+						lsf.setNetwork(buffer + 6U);
+
+						// Change the type to show that it's callsign data
+						lsf.setEncryptionType(M17_ENCRYPTION_TYPE_NONE);
+						lsf.setEncryptionSubType(M17_ENCRYPTION_SUB_TYPE_CALLSIGNS);
+
+						// Copy the encoded source into the META field
+						lsf.setMeta(buffer + 6U);
+
+						lsf.getNetwork(buffer + 6U);
+
+						if (n > 45U)
+							n = 0U;
+					}
+
+					n++;
+
 					localNetwork->write(buffer);
+
 					hangTimer.start();
 					break;
+
 				case EST_EOF:
 					// End of the message, restore the original status
 					m_status = m_oldStatus;
+					n = 0U;
 					break;
+
 				default:
 					break;
 			}
