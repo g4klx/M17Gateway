@@ -272,11 +272,11 @@ void CM17Gateway::run()
 					lsf.setEncryptionType(M17_ENCRYPTION_TYPE_NONE);
 					lsf.setEncryptionSubType(M17_ENCRYPTION_SUB_TYPE_CALLSIGNS);
 
-					// Copy the encoded source and destination into the META field
+					// Copy the encoded source and the reflector into the META field
 					unsigned char meta[M17_META_LENGTH_BYTES];
 					::memset(meta, 0x00U, M17_META_LENGTH_BYTES);
 					::memcpy(meta + 0U, buffer + 12U, 6U);
-					::memcpy(meta + 6U, buffer + 6U,  6U);
+					CM17Utils::encodeCallsign(m_reflector, meta + 6U);
 					lsf.setMeta(meta);
 
 					if (n > 45U)
