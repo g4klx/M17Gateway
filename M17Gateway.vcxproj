@@ -143,7 +143,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="APRSWriter.h" />
     <ClInclude Include="Conf.h" />
+    <ClInclude Include="GPSHandler.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="M17Defines.h" />
     <ClInclude Include="M17Gateway.h" />
@@ -164,7 +166,9 @@
     <ClInclude Include="Voice.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="APRSWriter.cpp" />
     <ClCompile Include="Conf.cpp" />
+    <ClCompile Include="GPSHandler.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="M17Gateway.cpp" />
     <ClCompile Include="M17LSF.cpp" />
