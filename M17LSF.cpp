@@ -26,7 +26,7 @@
 CM17LSF::CM17LSF() :
 m_lsf(NULL)
 {
-	m_lsf = new unsigned char[M17_LSF_LENGTH_BYTES - 2U];
+	m_lsf = new unsigned char[M17_LSF_LENGTH_BYTES];
 }
 
 CM17LSF::~CM17LSF()
@@ -38,14 +38,19 @@ void CM17LSF::getNetwork(unsigned char* data) const
 {
 	assert(data != NULL);
 
-	::memcpy(data, m_lsf, M17_LSF_LENGTH_BYTES - 2U);
+	::memcpy(data, m_lsf, M17_LSF_LENGTH_BYTES);
 }
 
 void CM17LSF::setNetwork(const unsigned char* data)
 {
 	assert(data != NULL);
 
-	::memcpy(m_lsf, data, M17_LSF_LENGTH_BYTES - 2U);
+	::memcpy(m_lsf, data, M17_LSF_LENGTH_BYTES);
+}
+
+std::string CM17LSF::getSource() const
+{
+	return CM17Utils::decodeCallsign(m_lsf + 6U);
 }
 
 void CM17LSF::setSource(const std::string& callsign)
@@ -53,9 +58,19 @@ void CM17LSF::setSource(const std::string& callsign)
 	CM17Utils::encodeCallsign(callsign, m_lsf + 6U);
 }
 
+std::string CM17LSF::getDest() const
+{
+	return CM17Utils::decodeCallsign(m_lsf + 0U);
+}
+
 void CM17LSF::setDest(const std::string& callsign)
 {
 	CM17Utils::encodeCallsign(callsign, m_lsf + 0U);
+}
+
+unsigned char CM17LSF::getPacketStream() const
+{
+	return m_lsf[13U] & 0x01U;
 }
 
 void CM17LSF::setPacketStream(unsigned char ps)
@@ -64,10 +79,20 @@ void CM17LSF::setPacketStream(unsigned char ps)
 	m_lsf[13U] |= ps & 0x01U;
 }
 
+unsigned char CM17LSF::getDataType() const
+{
+	return (m_lsf[13U] >> 1) & 0x03U;
+}
+
 void CM17LSF::setDataType(unsigned char type)
 {
 	m_lsf[13U] &= 0xF9U;
 	m_lsf[13U] |= (type << 1) & 0x06U;
+}
+
+unsigned char CM17LSF::getEncryptionType() const
+{
+	return (m_lsf[13U] >> 3) & 0x03U;
 }
 
 void CM17LSF::setEncryptionType(unsigned char type)
@@ -76,10 +101,20 @@ void CM17LSF::setEncryptionType(unsigned char type)
 	m_lsf[13U] |= (type << 3) & 0x18U;
 }
 
+unsigned char CM17LSF::getEncryptionSubType() const
+{
+	return (m_lsf[13U] >> 5) & 0x03U;
+}
+
 void CM17LSF::setEncryptionSubType(unsigned char type)
 {
 	m_lsf[13U] &= 0x9FU;
 	m_lsf[13U] |= (type << 5) & 0x60U;
+}
+
+unsigned char CM17LSF::getCAN() const
+{
+	return ((m_lsf[12U] << 1) & 0x0EU) | ((m_lsf[13U] >> 7) & 0x01U);
 }
 
 void CM17LSF::setCAN(unsigned char can)
@@ -91,9 +126,17 @@ void CM17LSF::setCAN(unsigned char can)
 	m_lsf[12U] |= (can >> 1) & 0x07U;
 }
 
+void CM17LSF::getMeta(unsigned char* data) const
+{
+	assert(data != NULL);
+
+	::memcpy(data, m_lsf + 14U, M17_META_LENGTH_BYTES);
+}
+
 void CM17LSF::setMeta(const unsigned char* data)
 {
 	assert(data != NULL);
 
 	::memcpy(m_lsf + 14U, data, M17_META_LENGTH_BYTES);
 }
+

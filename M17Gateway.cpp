@@ -92,7 +92,9 @@ m_timer(1000U, 5U),
 m_reflector(),
 m_addrLen(0U),
 m_addr(),
-m_module(' ')
+m_module(' '),
+m_writer(NULL),
+m_gps(NULL)
 {
 	CUDPSocket::startup();
 }
@@ -182,6 +184,8 @@ void CM17Gateway::run()
 		::close(STDERR_FILENO);
 	}
 #endif
+
+	createGPS();
 
 	CRptNetwork* localNetwork = new CRptNetwork(m_conf.getMyPort(), m_conf.getRptAddress(), m_conf.getRptPort(), m_conf.getDebug());
 	ret = localNetwork->open();
@@ -343,9 +347,14 @@ void CM17Gateway::run()
 		// From the MMDVM to the reflector or control data
 		bool ret = localNetwork->read(buffer);
 		if (ret) {
-			// Parse the control information
-			std::string src = CM17Utils::decodeCallsign(buffer + 12U);
-			std::string dst = CM17Utils::decodeCallsign(buffer + 6U);
+			CM17LSF lsf;
+			lsf.setNetwork(buffer + 6U);
+
+			std::string src = lsf.getSource();
+			std::string dst = lsf.getDest();
+
+			if (m_gps != NULL)
+				m_gps->process(lsf);
 
 			if (dst == "ECHO") {
 				if (m_status != M17S_ECHO) {
@@ -524,6 +533,9 @@ void CM17Gateway::run()
 		if (voice != NULL)
 			voice->clock(ms);
 
+		if (m_writer != NULL)
+			m_writer->clock(ms);
+
 		m_timer.clock(ms);
 		linking();
 		unlinking();
@@ -600,6 +612,12 @@ void CM17Gateway::run()
 	m_network->close();
 	delete m_network;
 
+	if (m_gps != NULL) {
+		m_writer->close();
+		delete m_writer;
+		delete m_gps;
+	}
+
 	::LogFinalise();
 }
 
@@ -653,3 +671,48 @@ void CM17Gateway::unlinking()
 		}
 	}
 }
+
+void CM17Gateway::createGPS()
+{
+	if (!m_conf.getAPRSEnabled())
+		return;
+
+	std::string callsign  = m_conf.getCallsign();
+	std::string rptSuffix = m_conf.getSuffix();
+	std::string address   = m_conf.getAPRSAddress();
+	unsigned int port     = m_conf.getAPRSPort();
+	std::string suffix    = m_conf.getAPRSSuffix();
+	bool debug            = m_conf.getDebug();
+
+	m_writer = new CAPRSWriter(callsign, rptSuffix, address, port, debug);
+
+	unsigned int txFrequency = m_conf.getTxFrequency();
+	unsigned int rxFrequency = m_conf.getRxFrequency();
+	std::string desc         = m_conf.getAPRSDescription();
+
+	m_writer->setInfo(txFrequency, rxFrequency, desc);
+
+	// bool enabled = m_conf.getGPSDEnabled();
+	// if (enabled) {
+	//        std::string address = m_conf.getGPSDAddress();
+	//        std::string port    = m_conf.getGPSDPort();
+	//
+	//        m_writer->setGPSDLocation(address, port);
+	// } else {
+	        float latitude  = m_conf.getLatitude();
+                float longitude = m_conf.getLongitude();
+                int height      = m_conf.getHeight();
+
+                m_writer->setStaticLocation(latitude, longitude, height);
+	// }
+
+	bool ret = m_writer->open();
+	if (!ret) {
+		delete m_writer;
+		m_writer = NULL;
+		return;
+	}
+
+	m_gps = new CGPSHandler(callsign, suffix, m_writer);
+}
+

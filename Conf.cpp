@@ -31,7 +31,9 @@ const int BUFFER_SIZE = 500;
 enum SECTION {
 	SECTION_NONE,
 	SECTION_GENERAL,
+	SECTION_INFO,
 	SECTION_LOG,
+	SECTION_APRS,
 	SECTION_VOICE,
 	SECTION_NETWORK,
 	SECTION_REMOTE_COMMANDS
@@ -46,11 +48,24 @@ m_rptPort(0U),
 m_myPort(0U),
 m_debug(false),
 m_daemon(false),
+m_rxFrequency(0U),
+m_txFrequency(0U),
+m_power(0U),
+m_latitude(0.0F),
+m_longitude(0.0F),
+m_height(0),
+m_name(),
+m_description(),
 m_logDisplayLevel(0U),
 m_logFileLevel(0U),
 m_logFilePath(),
 m_logFileRoot(),
 m_logFileRotate(true),
+m_aprsEnabled(false),
+m_aprsAddress("127.0.0.1"),
+m_aprsPort(8673U),
+m_aprsSuffix(),
+m_aprsDescription(),
 m_voiceEnabled(true),
 m_voiceLanguage("en_GB"),
 m_voiceDirectory(),
@@ -89,8 +104,12 @@ bool CConf::read()
 		if (buffer[0U] == '[') {
 			if (::strncmp(buffer, "[General]", 9U) == 0)
 				section = SECTION_GENERAL;
+			else if (::strncmp(buffer, "[Info]", 6U) == 0)
+				section = SECTION_INFO;
 			else if (::strncmp(buffer, "[Log]", 5U) == 0)
 				section = SECTION_LOG;
+			else if (::strncmp(buffer, "[APRS]", 6U) == 0)
+				section = SECTION_APRS;
 			else if (::strncmp(buffer, "[Voice]", 7U) == 0)
 				section = SECTION_VOICE;
 			else if (::strncmp(buffer, "[Network]", 9U) == 0)
@@ -149,6 +168,23 @@ bool CConf::read()
 				m_debug = ::atoi(value) == 1;
 			else if (::strcmp(key, "Daemon") == 0)
 				m_daemon = ::atoi(value) == 1;
+		} else if (section == SECTION_INFO) {
+			if (::strcmp(key, "TXFrequency") == 0)
+				m_txFrequency = (unsigned int)::atoi(value);
+			else if (::strcmp(key, "RXFrequency") == 0)
+				m_rxFrequency = (unsigned int)::atoi(value);
+			else if (::strcmp(key, "Power") == 0)
+				m_power = (unsigned int)::atoi(value);
+			else if (::strcmp(key, "Latitude") == 0)
+				m_latitude = float(::atof(value));
+			else if (::strcmp(key, "Longitude") == 0)
+				m_longitude = float(::atof(value));
+			else if (::strcmp(key, "Height") == 0)
+				m_height = ::atoi(value);
+			else if (::strcmp(key, "Name") == 0)
+				m_name = value;
+			else if (::strcmp(key, "Description") == 0)
+				m_description = value;
 		} else if (section == SECTION_LOG) {
 			if (::strcmp(key, "FilePath") == 0)
 				m_logFilePath = value;
@@ -160,6 +196,17 @@ bool CConf::read()
 				m_logDisplayLevel = (unsigned int)::atoi(value);
 			else if (::strcmp(key, "FileRotate") == 0)
 				m_logFileRotate = ::atoi(value) ==  1;
+		} else if (section == SECTION_APRS) {
+			if (::strcmp(key, "Enable") == 0)
+				m_aprsEnabled = ::atoi(value) == 1;
+			else if (::strcmp(key, "Address") == 0)
+				m_aprsAddress = value;
+			else if (::strcmp(key, "Port") == 0)
+				m_aprsPort = (unsigned int)::atoi(value);
+			else if (::strcmp(key, "Suffix") == 0)
+				m_aprsSuffix = value;
+			else if (::strcmp(key, "Description") == 0)
+				m_aprsDescription = value;
 		} else if (section == SECTION_VOICE) {
 			if (::strcmp(key, "Enabled") == 0)
 				m_voiceEnabled = ::atoi(value) == 1;
@@ -234,6 +281,46 @@ bool CConf::getDaemon() const
 	return m_daemon;
 }
 
+unsigned int CConf::getRxFrequency() const
+{
+	return m_rxFrequency;
+}
+
+unsigned int CConf::getTxFrequency() const
+{
+	return m_txFrequency;
+}
+
+unsigned int CConf::getPower() const
+{
+	return m_power;
+}
+
+float CConf::getLatitude() const
+{
+	return m_latitude;
+}
+
+float CConf::getLongitude() const
+{
+	return m_longitude;
+}
+
+int CConf::getHeight() const
+{
+	return m_height;
+}
+
+std::string CConf::getName() const
+{
+	return m_name;
+}
+
+std::string CConf::getDescription() const
+{
+	return m_description;
+}
+
 unsigned int CConf::getLogDisplayLevel() const
 {
 	return m_logDisplayLevel;
@@ -257,6 +344,31 @@ std::string CConf::getLogFileRoot() const
 bool CConf::getLogFileRotate() const
 {
 	return m_logFileRotate;
+}
+
+bool CConf::getAPRSEnabled() const
+{
+	return m_aprsEnabled;
+}
+
+std::string CConf::getAPRSAddress() const
+{
+	return m_aprsAddress;
+}
+
+unsigned int CConf::getAPRSPort() const
+{
+	return m_aprsPort;
+}
+
+std::string CConf::getAPRSSuffix() const
+{
+	return m_aprsSuffix;
+}
+
+std::string CConf::getAPRSDescription() const
+{
+	return m_aprsDescription;
 }
 
 bool CConf::getVoiceEnabled() const

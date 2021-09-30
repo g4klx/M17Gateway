@@ -68,4 +68,12 @@ const unsigned char M17_ENCRYPTION_SUB_TYPE_TEXT      = 0x00U;
 const unsigned char M17_ENCRYPTION_SUB_TYPE_GPS       = 0x01U;
 const unsigned char M17_ENCRYPTION_SUB_TYPE_CALLSIGNS = 0x02U;
 
+const unsigned char M17_GPS_TYPE_FIXED    = 0x00U;
+const unsigned char M17_GPS_TYPE_MOBILE   = 0x01U;
+const unsigned char M17_GPS_TYPE_HANDHELD = 0x02U;
+
+const unsigned char M17_GPS_CLIENT_M17CLIENT = 0x00U;
+const unsigned char M17_GPS_CLIENT_OPENRTX   = 0x01U;
+
 #endif
+

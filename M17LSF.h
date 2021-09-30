@@ -29,20 +29,28 @@ public:
 	void getNetwork(unsigned char* data) const;
 	void setNetwork(const unsigned char* data);
 
+	std::string getSource() const;
 	void setSource(const std::string& callsign);
 
+	std::string getDest() const;
 	void setDest(const std::string& callsign);
 
+	unsigned char getPacketStream() const;
 	void setPacketStream(unsigned char ps);
 
+	unsigned char getDataType() const;
 	void setDataType(unsigned char type);
 
+	unsigned char getEncryptionType() const;
 	void setEncryptionType(unsigned char type);
 
+	unsigned char getEncryptionSubType() const;
 	void setEncryptionSubType(unsigned char type);
 
+	unsigned char getCAN() const;
 	void setCAN(unsigned char can);
 
+	void getMeta(unsigned char* data) const;
 	void setMeta(const unsigned char* data);
 
 private:

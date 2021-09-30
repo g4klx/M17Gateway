@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2016,2018,2020 by Jonathan Naylor G4KLX
+*   Copyright (C) 2016,2018,2020,2021 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@
 #define	M17Gateway_H
 
 #include "M17Network.h"
+#include "APRSWriter.h"
+#include "GPSHandler.h"
 #include "Timer.h"
 #include "Conf.h"
 
@@ -65,10 +67,13 @@ private:
 	unsigned int     m_addrLen;
 	sockaddr_storage m_addr;
 	char             m_module;
-
+	CAPRSWriter*     m_writer;
+	CGPSHandler*     m_gps;
 
 	void linking();
 	void unlinking();
+
+	void createGPS();
 };
 
 #endif

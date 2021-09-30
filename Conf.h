@@ -39,12 +39,29 @@ public:
 	bool         getDebug() const;
 	bool         getDaemon() const;
 
+	// The Info section
+	unsigned int getRxFrequency() const;
+	unsigned int getTxFrequency() const;
+	unsigned int getPower() const;
+	float        getLatitude() const;
+	float        getLongitude() const;
+	int          getHeight() const;
+	std::string  getName() const;
+	std::string  getDescription() const;
+
 	// The Log section
 	unsigned int getLogDisplayLevel() const;
 	unsigned int getLogFileLevel() const;
 	std::string  getLogFilePath() const;
 	std::string  getLogFileRoot() const;
 	bool         getLogFileRotate() const;
+
+	// The APRS section
+	bool         getAPRSEnabled() const;
+	std::string  getAPRSAddress() const;
+	unsigned int getAPRSPort() const;
+	std::string  getAPRSSuffix() const;
+	std::string  getAPRSDescription() const;
 
 	// The Voice section
 	bool         getVoiceEnabled() const;
@@ -75,11 +92,26 @@ private:
 	bool         m_debug;
 	bool         m_daemon;
 
+	unsigned int m_rxFrequency;
+	unsigned int m_txFrequency;
+	unsigned int m_power;
+	float        m_latitude;
+	float        m_longitude;
+	int          m_height;
+	std::string  m_name;
+	std::string  m_description;
+
 	unsigned int m_logDisplayLevel;
 	unsigned int m_logFileLevel;
 	std::string  m_logFilePath;
 	std::string  m_logFileRoot;
 	bool         m_logFileRotate;
+
+	bool         m_aprsEnabled;
+	std::string  m_aprsAddress;
+	unsigned int m_aprsPort;
+	std::string  m_aprsSuffix;
+	std::string  m_aprsDescription;
 
 	bool         m_voiceEnabled;
 	std::string  m_voiceLanguage;
