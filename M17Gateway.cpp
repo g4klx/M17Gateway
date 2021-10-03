@@ -713,6 +713,6 @@ void CM17Gateway::createGPS()
 		return;
 	}
 
-	m_gps = new CGPSHandler(callsign, suffix, m_writer);
+	m_gps = new CGPSHandler(callsign, rptSuffix, m_writer);
 }
 

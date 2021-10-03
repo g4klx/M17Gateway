@@ -216,7 +216,7 @@ void CAPRSWriter::sendIdFrameFixed()
 		server.append("S");
 
 	char output[500U];
-	::sprintf(output, "%s>APDG04,TCPIP*,qAC,%s:!%s%cD%s%c&/A=%06.0f%s %s\r\n",
+	::sprintf(output, "%s>APDG17,TCPIP*,qAC,%s:!%s%cD%s%c&/A=%06.0f%s %s\r\n",
 		m_callsign.c_str(), server.c_str(),
 		lat, (m_latitude < 0.0F)  ? 'S' : 'N',
 		lon, (m_longitude < 0.0F) ? 'W' : 'E',

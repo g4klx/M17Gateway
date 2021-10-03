@@ -37,6 +37,8 @@ m_suffix(suffix)
 {
 	assert(!callsign.empty());
 	assert(writer != NULL);
+
+	m_callsign += "-" + suffix;
 }
 
 CGPSHandler::~CGPSHandler()
@@ -118,7 +120,7 @@ void CGPSHandler::process(const CM17LSF& lsf)
 	::sprintf(output, "%s>APDPRS,M17*,qAR,%s:!%07.2f%c%c%08.2f%c%c",
 		lsf.getSource().c_str(), m_callsign.c_str(), latitude, north, sym1, longitude, east, sym2);
 
-	if (track != INVALID_GPS_DATA && speed != INVALID_GPS_DATA)
+	if (track != INVALID_GPS_DATA && speed != INVALID_GPS_DATA && speed > 0.0F)
 		::sprintf(output + ::strlen(output), "%03.0f/%03.0f", track, speed);
 
 	if (altitude != INVALID_GPS_DATA)
