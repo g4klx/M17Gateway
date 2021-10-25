@@ -152,7 +152,6 @@
     <ClInclude Include="M17LSF.h" />
     <ClInclude Include="M17Network.h" />
     <ClInclude Include="M17Utils.h" />
-    <ClInclude Include="Mutex.h" />
     <ClInclude Include="Echo.h" />
     <ClInclude Include="Reflectors.h" />
     <ClInclude Include="RingBuffer.h" />
@@ -174,7 +173,6 @@
     <ClCompile Include="M17LSF.cpp" />
     <ClCompile Include="M17Network.cpp" />
     <ClCompile Include="M17Utils.cpp" />
-    <ClCompile Include="Mutex.cpp" />
     <ClCompile Include="Echo.cpp" />
     <ClCompile Include="Reflectors.cpp" />
     <ClCompile Include="RptNetwork.cpp" />

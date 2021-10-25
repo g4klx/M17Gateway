@@ -11,7 +11,7 @@ LIBS    = -lpthread
 
 LDFLAGS = -g
 
-OBJECTS =	APRSWriter.o Conf.o Echo.o GPSHandler.o Log.o M17LSF.o M17Network.o Mutex.o M17Gateway.o M17Utils.o Reflectors.o \
+OBJECTS =	APRSWriter.o Conf.o Echo.o GPSHandler.o Log.o M17LSF.o M17Network.o M17Gateway.o M17Utils.o Reflectors.o \
 		RptNetwork.o StopWatch.o Thread.o Timer.o UDPSocket.o Utils.o Voice.o
 
 all:		M17Gateway
