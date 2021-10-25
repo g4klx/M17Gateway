@@ -45,6 +45,9 @@ M17-714 81.169.158.155 17000
 # M17-724 PU5KOD, BR https://m17.allfive.net
 M17-724 187.108.0.156 17000
 
+# M17-910 W3KIT, US https://m17.mywire.org
+M17-910 52.144.45.23 17000
+
 # M17-983 K8JTK Hub Multimode ILS/DVMIS (K8JTK.org), US https://M17-983.k8jtk.org/
 M17-983 45.76.228.241 17000
 
@@ -57,7 +60,7 @@ M17-ASL 78.141.212.150 17000
 # M17-AUS VK4AAF, AU https://m17aus.drgnz.com/
 M17-AUS 207.148.87.158 17000
 
-# M17-AUT Ã–VSV, AT https://m17-aut.xreflector.net/
+# M17-AUT ÖVSV, AT https://m17-aut.xreflector.net/
 M17-AUT 195.26.215.3 17000
 
 # M17-BEL UBA-LGE, BE https://on0lg.no-ip.org/m17bel
@@ -89,6 +92,9 @@ M17-DEU 194.59.205.228 17000
 
 # M17-DMR freestar.network, GB https://m17.freestar.network
 M17-DMR 192.248.145.71 17000
+
+# M17-DPB K9DPB, US https://m17.k9dpb.com
+M17-DPB 149.28.115.164 17000
 
 # M17-EA1 DMR+ 4371, ES https://eadistrito1.m17.es/m17/
 M17-EA1 80.211.29.226 17000
@@ -142,7 +148,7 @@ M17-HRV 52.15.234.145 17000
 M17-HUB 86.26.29.17 17000
 
 # M17-IND VU3TBR, IN https://ysf-india.ddns.net/
-M17-IND 183.82.248.50 17000
+M17-IND 124.123.68.50 17000
 
 # M17-IS0 Sardinia Is. https://multiprotocol.is0.org/, IT https://m17.is0.org/
 M17-IS0 51.254.206.201 17000
@@ -168,11 +174,17 @@ M17-LAT 80.211.94.145 17000
 # M17-LDV IU5HJU Michele ARI Vinci, IT https://ldv.m17.es/m17/
 M17-LDV 80.211.99.134 17000
 
+# M17-LSC KE4TLC, US https://ke4tlc.ddns.net
+M17-LSC 75.182.2.162 17000
+
 # M17-M17 KC1AWV, US https://ref.m17.link
 M17-M17 51.81.119.111 17000
 
 # M17-NOR LA2K club station, NO https://m17.la2k.no
 M17-NOR 185.35.185.100 17000
+
+# M17-NWR North Western Repeater Group UK, GB https://m17.nwrg.org.uk
+M17-NWR 159.242.127.220 17000
 
 # M17-NYC On behalf of N2XDD via KD2UQK, US https://kd2uqk.ham-radio-op.net
 M17-NYC 100.38.158.68 17000
@@ -198,8 +210,8 @@ M17-OZD 51.195.202.179 17000
 # M17-PEG German PEGASUS Project, DE https://dmr.projekt-pegasus.net/m17/
 M17-PEG 5.9.59.26 17000
 
-# M17-PER Sistema Multiprotocolo Peru, PE https://m17.peru-digital.net.pe/
-M17-PER 190.117.61.202 17000
+# M17-PER Multiprotocolo Perú Digital, PE https://m17.dmr-peru.pe
+M17-PER 190.117.102.122 17000
 
 # M17-PHP DX8WMG, PH https://dx8wmg-m17.ddns.net/
 M17-PHP 108.160.140.189 17000
@@ -209,6 +221,9 @@ M17-PLC 87.252.188.119 17000
 
 # M17-PLG Penn-Link Group, US https://xrf245.pennlinkgroup.com/mrefd/
 M17-PLG 54.85.206.3 17000
+
+# M17-PNL N6DOZ, US https://m17.pinoylink.net/
+M17-PNL 45.63.90.55 17000
 
 # M17-PNY K6KWB, US https://m17-pinoy.hopto.org/
 M17-PNY 144.202.114.222 17000
@@ -230,6 +245,9 @@ M17-ROM 89.35.160.218 17000
 
 # M17-RTX OpenRTX, IT https://m17.openrtx.org
 M17-RTX 93.41.233.12 17000
+
+# M17-SEL Lookout Mountain Amateur Radio Community, US https://selink.lmarc.net/m17dash
+M17-SEL 66.42.93.25 17000
 
 # M17-SPA EA5GVK & BLASMAKERS, ES https://hblinkspain.duckdns.org/mrefd/
 M17-SPA 85.255.8.71 17000
@@ -273,6 +291,9 @@ M17-WAL 192.248.172.148 17000
 # M17-WWD KE8ANE, US https://m17wwd.ddns.net/m17
 M17-WWD 192.99.70.1 17000
 
+# M17-WWR KC5HMW, US https://sdrichardson.ddns.net
+M17-WWR 149.28.254.83 17000
+
 # M17-XVF https://tarxvf.tech, https://w2fbi.com, test and dev reflector, no dashboard, US https://m17ref.tarxvf.tech
 M17-XVF 104.225.216.221 17000
 
@@ -281,3 +302,4 @@ M17-ZL3 119.224.19.178 17000
 
 # M17-ZO9 iw9edp@gmail.com, IT https://m17zona9.duckdns.org/
 M17-ZO9 198.245.55.177 17000
+
