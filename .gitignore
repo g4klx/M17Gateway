@@ -14,3 +14,4 @@ x64
 *.VC.db
 .vs
 M17Gateway
+GitVersion.h
