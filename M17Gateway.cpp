@@ -29,6 +29,7 @@
 #include "Utils.h"
 #include "Echo.h"
 #include "Log.h"
+#include "GitVersion.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
@@ -57,6 +58,16 @@ const char* DEFAULT_INI_FILE = "/etc/M17Gateway.ini";
 #include <ctime>
 #include <cstring>
 
+static bool m_killed = false;
+static int  m_signal = 0;
+
+#if !defined(_WIN32) && !defined(_WIN64)
+static void sigHandler(int signum)
+{
+	m_killed = true;
+	m_signal = signum;
+}
+#endif
 
 int main(int argc, char** argv)
 {
@@ -65,7 +76,7 @@ int main(int argc, char** argv)
 		for (int currentArg = 1; currentArg < argc; ++currentArg) {
 			std::string arg = argv[currentArg];
 			if ((arg == "-v") || (arg == "--version")) {
-				::fprintf(stdout, "M17Gateway version %s\n", VERSION);
+				::fprintf(stdout, "M17Gateway version %s git #%.7s\n", VERSION, gitversion);
 				return 0;
 			} else if (arg.substr(0, 1) == "-") {
 				::fprintf(stderr, "Usage: M17Gateway [-v|--version] [filename]\n");
@@ -76,11 +87,36 @@ int main(int argc, char** argv)
 		}
 	}
 
-	CM17Gateway* gateway = new CM17Gateway(std::string(iniFile));
-	gateway->run();
-	delete gateway;
+#if !defined(_WIN32) && !defined(_WIN64)
+	::signal(SIGINT,  sigHandler);
+	::signal(SIGTERM, sigHandler);
+	::signal(SIGHUP,  sigHandler);
+#endif
 
-	return 0;
+	int ret = 0;
+
+	do {
+		m_signal = 0;
+
+		CM17Gateway* gateway = new CM17Gateway(std::string(iniFile));
+		ret = gateway->run();
+
+		delete gateway;
+
+		if (m_signal == 2)
+			::LogInfo("M17Gateway-%s exited on receipt of SIGINT", VERSION);
+
+		if (m_signal == 15)
+			::LogInfo("M17Gateway-%s exited on receipt of SIGTERM", VERSION);
+
+		if (m_signal == 1)
+			::LogInfo("M17Gateway-%s restarted on receipt of SIGHUP", VERSION);
+
+	} while (m_signal == 1);
+
+	::LogFinalise();
+
+	return ret;
 }
 
 CM17Gateway::CM17Gateway(const std::string& file) :
@@ -104,12 +140,12 @@ CM17Gateway::~CM17Gateway()
 	CUDPSocket::shutdown();
 }
 
-void CM17Gateway::run()
+int CM17Gateway::run()
 {
 	bool ret = m_conf.read();
 	if (!ret) {
 		::fprintf(stderr, "M17Gateway: cannot read the .ini file\n");
-		return;
+		return 1;
 	}
 
 #if !defined(_WIN32) && !defined(_WIN64)
@@ -119,7 +155,7 @@ void CM17Gateway::run()
 		pid_t pid = ::fork();
 		if (pid == -1) {
 			::fprintf(stderr, "Couldn't fork() , exiting\n");
-			return;
+			return -1;
 		} else if (pid != 0) {
 			exit(EXIT_SUCCESS);
 		}
@@ -127,13 +163,13 @@ void CM17Gateway::run()
 		// Create new session and process group
 		if (::setsid() == -1) {
 			::fprintf(stderr, "Couldn't setsid(), exiting\n");
-			return;
+			return -1;
 		}
 
 		// Set the working directory to the root directory
 		if (::chdir("/") == -1) {
 			::fprintf(stderr, "Couldn't cd /, exiting\n");
-			return;
+			return -1;
 		}
 
 		// If we are currently root...
@@ -141,7 +177,7 @@ void CM17Gateway::run()
 			struct passwd* user = ::getpwnam("mmdvm");
 			if (user == NULL) {
 				::fprintf(stderr, "Could not get the mmdvm user, exiting\n");
-				return;
+				return -1;
 			}
 
 			uid_t mmdvm_uid = user->pw_uid;
@@ -150,18 +186,18 @@ void CM17Gateway::run()
 			// Set user and group ID's to mmdvm:mmdvm
 			if (setgid(mmdvm_gid) != 0) {
 				::fprintf(stderr, "Could not set mmdvm GID, exiting\n");
-				return;
+				return -1;
 			}
 
 			if (setuid(mmdvm_uid) != 0) {
 				::fprintf(stderr, "Could not set mmdvm UID, exiting\n");
-				return;
+				return -1;
 			}
 
-			// Double check it worked (AKA Paranoia) 
+			// Double check it worked (AKA Paranoia)
 			if (setuid(0) != -1) {
 				::fprintf(stderr, "It's possible to regain root - something is wrong!, exiting\n");
-				return;
+				return -1;
 			}
 		}
 	}
@@ -174,7 +210,7 @@ void CM17Gateway::run()
 #endif
 	if (!ret) {
 		::fprintf(stderr, "M17Gateway: unable to open the log file\n");
-		return;
+		return -1;
 	}
 
 #if !defined(_WIN32) && !defined(_WIN64)
@@ -189,10 +225,8 @@ void CM17Gateway::run()
 
 	CRptNetwork* localNetwork = new CRptNetwork(m_conf.getMyPort(), m_conf.getRptAddress(), m_conf.getRptPort(), m_conf.getDebug());
 	ret = localNetwork->open();
-	if (!ret) {
-		::LogFinalise();
-		return;
-	}
+	if (!ret)
+		return -1;
 
 	m_network = new CM17Network(m_conf.getCallsign(), m_conf.getSuffix(), m_conf.getNetworkPort(), m_conf.getNetworkDebug());
 
@@ -227,7 +261,8 @@ void CM17Gateway::run()
 	CStopWatch stopWatch;
 	stopWatch.start();
 
-	LogMessage("Starting M17Gateway-%s", VERSION);
+	LogMessage("M17Gateway-%s is starting", VERSION);
+	LogMessage("Built %s %s (GitID #%.7s)", __TIME__, __DATE__, gitversion);
 
 	std::string startupReflector = m_conf.getNetworkStartup();
 	bool revert = m_conf.getNetworkRevert();
@@ -261,7 +296,7 @@ void CM17Gateway::run()
 
 	unsigned int n = 0U;
 
-	for (;;) {
+	while (!m_killed) {
 		unsigned char buffer[100U];
 
 		if (m_status == M17S_LINKED) {
@@ -401,7 +436,7 @@ void CM17Gateway::run()
 					}
 
 					triggerVoice = true;
-				
+
 					CM17Reflector* refl = reflectors.find(reflector);
 					if (refl != NULL) {
 						m_reflector = reflector;
@@ -430,23 +465,31 @@ void CM17Gateway::run()
 					}
 				}
 			}
+		}
 
-			if (m_status == M17S_LINKED) {
-				// If the link has failed, try and relink
-				M17NET_STATUS netStatus = m_network->getStatus();
-				if (netStatus == M17N_FAILED) {
-					LogMessage("Relinking to reflector %s", m_reflector.c_str());
-					m_status = M17S_LINKING;
-				}
-
-				// If we're linked and we have a network, send it on
-				if (m_status == M17S_LINKED) {
-					// Replace the destination callsign with the reflector name and module
-					CM17Utils::encodeCallsign(m_reflector, buffer + 6U);
-					m_network->write(buffer);
-					hangTimer.start();
-				}
+		// If the link has failed, try and relink
+		M17NET_STATUS netStatus = m_network->getStatus();
+		if (m_status == M17S_LINKED) {
+			//M17NET_STATUS netStatus = m_network->getStatus();
+			if (netStatus == M17N_FAILED) {
+				LogMessage("Relinking to reflector %s", m_reflector.c_str());
+				m_status = M17S_LINKING;
+				m_timer.start();
+				hangTimer.start();
 			}
+
+			// If we're linked and we have a network, send it on
+			if (m_status == M17S_LINKED) {
+				// Replace the destination callsign with the reflector name and module
+				CM17Utils::encodeCallsign(m_reflector, buffer + 6U);
+				m_network->write(buffer);
+				hangTimer.start();
+			}
+		} else if ((m_status == M17S_NOTLINKED) && (netStatus == M17N_NOTLINKED) && (m_reflector.empty() == false)) {
+			LogMessage("Relinking to reflector %s", m_reflector.c_str());
+			m_status = M17S_LINKING;
+			hangTimer.start();
+			m_timer.start();
 		}
 
 		if (voice != NULL) {
@@ -521,6 +564,7 @@ void CM17Gateway::run()
 							}
 
 							hangTimer.stop();
+							m_timer.stop();
 						}
 					}
 				} else {
@@ -620,7 +664,7 @@ void CM17Gateway::run()
 		delete m_gps;
 	}
 
-	::LogFinalise();
+	return 0;
 }
 
 void CM17Gateway::linking()
@@ -717,4 +761,3 @@ void CM17Gateway::createGPS()
 
 	m_gps = new CGPSHandler(callsign, rptSuffix, m_writer);
 }
-
