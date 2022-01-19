@@ -75,7 +75,7 @@ bool CM17Network::link(const std::string& name, const sockaddr_storage& addr, un
 	m_module  = module;
 
 	m_state = M17N_LINKING;
-	
+
 	sendConnect();
 
 	m_timer.start();
@@ -217,9 +217,8 @@ bool CM17Network::read(unsigned char* data)
 
 void CM17Network::close()
 {
-	if ((m_state == M17N_LINKED) || (m_state == M17N_LINKING) || (m_state == M17N_FAILED)) {
+	if (m_state == M17N_LINKED) {
 		m_socket.close();
-		m_state = M17N_NOTLINKED;
 		LogMessage("Closing M17 network connection");
 	}
 }
