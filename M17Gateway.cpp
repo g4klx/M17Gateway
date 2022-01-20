@@ -505,7 +505,7 @@ int CM17Gateway::run()
 			if (res > 0) {
 				buffer[res] = '\0';
 				if (::memcmp(buffer + 0U, "Reflector", 9U) == 0) {
-					std::string reflector = std::string((char*)(buffer + 9U));
+					std::string reflector = ((strlen((char*)buffer + 0U) > 10) ? std::string((char*)(buffer + 10U)) : "");
 					std::replace(reflector.begin(), reflector.end(), '_', ' ');
 					reflector.resize(M17_CALLSIGN_LENGTH, ' ');
 
