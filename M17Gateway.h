@@ -55,7 +55,7 @@ public:
 	CM17Gateway(const std::string& file);
 	~CM17Gateway();
 
-	void run();
+	int run();
 
 private:
 	CConf            m_conf;
