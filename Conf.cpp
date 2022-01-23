@@ -78,7 +78,7 @@ m_networkStartup(),
 m_networkRevert(false),
 m_networkDebug(false),
 m_remoteCommandsEnabled(false),
-m_remoteCommandsPort(6075U)
+m_remoteCommandsPort(6076U)
 {
 }
 
