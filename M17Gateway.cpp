@@ -483,6 +483,19 @@ int CM17Gateway::run()
 				}
 			}
 		}
+		else {
+			if (m_status == M17S_LINKED) {
+				// If the link has failed, try and relink
+				M17NET_STATUS netStatus = m_network->getStatus();
+				if (netStatus == M17N_FAILED) {
+					LogMessage("Relinking to reflector %s", m_reflector.c_str());
+					m_status = M17S_LINKING;
+
+					if (voice != NULL)
+						voice->unlinked();
+				}
+			}
+		}
 
 		if (voice != NULL) {
 			if (triggerVoice) {
@@ -670,7 +683,7 @@ void CM17Gateway::linking()
 		return;
 
 	M17NET_STATUS status = m_network->getStatus();
-	if (status == M17N_NOTLINKED) {
+	if ((status == M17N_NOTLINKED) || (status == M17N_FAILED)) {
 		m_timer.start();
 		m_network->link(m_reflector, m_addr, m_addrLen, m_module);
 	} else if (status == M17N_LINKED) {
