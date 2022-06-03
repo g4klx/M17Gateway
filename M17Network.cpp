@@ -137,7 +137,7 @@ void CM17Network::clock(unsigned int ms)
 		m_timeout.stop();
 	}
 
-	if ((m_state == M17N_NOTLINKED) || (m_state == M17N_FAILED))
+	if (m_state == M17N_NOTLINKED)
 		return;
 
 	unsigned char buffer[BUFFER_LENGTH];
