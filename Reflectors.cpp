@@ -139,7 +139,7 @@ bool CReflectors::load()
 CM17Reflector* CReflectors::find(const std::string& name)
 {
 	std::string nm = name;
-	nm.resize(7U);
+	nm.resize(3U);
 
 	for (std::vector<CM17Reflector*>::iterator it = m_reflectors.begin(); it != m_reflectors.end(); ++it) {
 		if (nm == (*it)->m_name)
