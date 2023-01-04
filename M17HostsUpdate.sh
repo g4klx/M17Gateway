@@ -49,7 +49,7 @@
 M17HOSTSPATH=/path/to/M17/hosts/file
 M17HOSTSFILE=${M17HOSTSPATH}/M17Hosts.txt
 
-DATABASEURL='http://www.dudetronics.com/ar-dns/M17Hosts.txt'
+DATABASEURL='https://reflectors.m17.link/ref-list/export'
 
 ###############################################################################
 #
