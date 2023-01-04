@@ -151,9 +151,7 @@ void CVoice::linkedTo(const std::string& reflector)
 		words.push_back("linkedto");
 	}
 
-	// Remove the "M17-" prefix of the reflector name
 	std::string name = reflector;
-	name.erase(0, 4);
 
 	std::string::const_iterator it = name.cbegin();
 	while (it != name.cend()) {
