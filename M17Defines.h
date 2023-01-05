@@ -19,7 +19,7 @@
 #if !defined(M17DEFINES_H)
 #define  M17DEFINES_H
 
-const unsigned int M17_CALLSIGN_LENGTH = 5U;
+const unsigned int M17_CALLSIGN_LENGTH = 9U;
 
 const unsigned int M17_NETWORK_FRAME_LENGTH = 54U;
 

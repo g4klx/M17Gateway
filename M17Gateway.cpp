@@ -273,7 +273,7 @@ int CM17Gateway::run()
 	if (!startupReflector.empty()) {
 		CM17Reflector* refl = reflectors.find(startupReflector);
 		if (refl != NULL) {
-			char module = startupReflector.at(M17_CALLSIGN_LENGTH - 1U);
+			char module = startupReflector.at(M17_CALLSIGN_LENGTH - 5U);
 			if (module >= 'A' && module <= 'Z') {
 				m_reflector = startupReflector;
 				m_addr      = refl->m_addr;
@@ -424,7 +424,7 @@ int CM17Gateway::run()
 				hangTimer.stop();
 			} else if (dst.size() == M17_CALLSIGN_LENGTH) {
 				std::string reflector = dst;
-				char module = reflector.at(M17_CALLSIGN_LENGTH - 1U);
+				char module = reflector.at(M17_CALLSIGN_LENGTH - 5U);
 
 				if (reflector != m_reflector && module >= 'A' && module <= 'Z') {
 					if (m_status == M17S_LINKED || m_status == M17S_LINKING) {
@@ -522,7 +522,7 @@ int CM17Gateway::run()
 
 						CM17Reflector* refl = reflectors.find(reflector);
 						if (refl != NULL) {
-							char module = reflector.at(M17_CALLSIGN_LENGTH - 1U);
+							char module = reflector.at(M17_CALLSIGN_LENGTH - 5U);
 							if (module >= 'A' && module <= 'Z') {
 								m_reflector = reflector;
 								m_addr      = refl->m_addr;
@@ -605,7 +605,7 @@ int CM17Gateway::run()
 				m_reflector = startupReflector;
 				m_addr      = refl->m_addr;
 				m_addrLen   = refl->m_addrLen;
-				m_module    = startupReflector.at(M17_CALLSIGN_LENGTH - 1U);
+				m_module    = startupReflector.at(M17_CALLSIGN_LENGTH - 5U);
 
 				m_status = m_oldStatus = M17S_LINKING;
 
