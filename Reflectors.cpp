@@ -66,7 +66,7 @@ bool CReflectors::load()
 
 			if (p1 != NULL && p2 != NULL && p3 != NULL) {
 				std::string name = std::string(p1);
-				name.resize(M17_CALLSIGN_LENGTH - 6U, ' ');
+				name.resize(M17_CALLSIGN_LENGTH - 2U, ' ');
 
 				std::string host = std::string(p2);
 
@@ -103,7 +103,7 @@ bool CReflectors::load()
 			if (p1 != NULL && p2 != NULL && p3 != NULL) {
 				// Don't allow duplicate reflector ids from the secondary hosts file.
 				std::string name = std::string(p1);
-				name.resize(M17_CALLSIGN_LENGTH - 6U, ' ');
+				name.resize(M17_CALLSIGN_LENGTH - 2U, ' ');
 
 				if (find(name) == NULL) {
 					std::string host  = std::string(p2);
@@ -139,7 +139,7 @@ bool CReflectors::load()
 CM17Reflector* CReflectors::find(const std::string& name)
 {
 	std::string nm = name;
-	nm.resize(3U);
+	nm.resize(7U);
 
 	for (std::vector<CM17Reflector*>::iterator it = m_reflectors.begin(); it != m_reflectors.end(); ++it) {
 		if (nm == (*it)->m_name)
