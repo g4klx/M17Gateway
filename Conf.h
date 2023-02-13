@@ -62,6 +62,7 @@ public:
 	unsigned int getAPRSPort() const;
 	std::string  getAPRSSuffix() const;
 	std::string  getAPRSDescription() const;
+	std::string  getAPRSSymbol() const;
 
 	// The Voice section
 	bool         getVoiceEnabled() const;
@@ -112,6 +113,7 @@ private:
 	unsigned int m_aprsPort;
 	std::string  m_aprsSuffix;
 	std::string  m_aprsDescription;
+	std::string  m_aprsSymbol;
 
 	bool         m_voiceEnabled;
 	std::string  m_voiceLanguage;
