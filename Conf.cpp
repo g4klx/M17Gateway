@@ -66,6 +66,7 @@ m_aprsAddress("127.0.0.1"),
 m_aprsPort(8673U),
 m_aprsSuffix(),
 m_aprsDescription(),
+m_aprsSymbol(),
 m_voiceEnabled(true),
 m_voiceLanguage("en_GB"),
 m_voiceDirectory(),
@@ -207,6 +208,8 @@ bool CConf::read()
 				m_aprsSuffix = value;
 			else if (::strcmp(key, "Description") == 0)
 				m_aprsDescription = value;
+                        else if (::strcmp(key, "Symbol") == 0)
+                                m_aprsSymbol = value;
 		} else if (section == SECTION_VOICE) {
 			if (::strcmp(key, "Enabled") == 0)
 				m_voiceEnabled = ::atoi(value) == 1;
@@ -369,6 +372,11 @@ std::string CConf::getAPRSSuffix() const
 std::string CConf::getAPRSDescription() const
 {
 	return m_aprsDescription;
+}
+
+std::string CConf::getAPRSSymbol() const
+{
+       return m_aprsSymbol;
 }
 
 bool CConf::getVoiceEnabled() const
