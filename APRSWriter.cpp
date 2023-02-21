@@ -50,6 +50,16 @@ m_gpsdData()
 	assert(port > 0U);
 
 	if (!suffix.empty()) {
+		// The M17 spec allows for callsigns with a "Station ID" ("-N"); e,g. "W0CHP-1",
+		// as well as an M17 "Secondary Operating Suffixes" in the callsign; e.g. "W0CHP/H".
+		// Ergo, we need to strip the Station ID from the call, otherwise it will attempt
+		// to login to APRS-IS as "W0CHP-1-H" which is invalid, and as a result, fail to
+		// login to APRS-IS servers. Below, we strip the Station ID,  but append the
+		// native M17 suffix and an APRS suffix.
+		// 
+		// Strip the 17 callsign Station ID if present...
+		m_callsign = m_callsign.substr(0, m_callsign.find("-", 0));
+		// Append the M17 Secondary Operating Suffix
 		m_callsign.append("-");
 		m_callsign.append(suffix.substr(0U, 1U));
 	}
