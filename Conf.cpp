@@ -71,6 +71,7 @@ m_voiceEnabled(true),
 m_voiceLanguage("en_GB"),
 m_voiceDirectory(),
 m_networkPort(0U),
+m_networkLocalPort(0U),
 m_networkHosts1(),
 m_networkHosts2(),
 m_networkReloadTime(0U),
@@ -220,6 +221,8 @@ bool CConf::read()
 		} else if (section == SECTION_NETWORK) {
 			if (::strcmp(key, "Port") == 0)
 				m_networkPort = (unsigned short)::atoi(value);
+			else if (::strcmp(key, "LocalPort") == 0)
+				m_networkLocalPort = (unsigned short)::atoi(value);
 			else if (::strcmp(key, "HostsFile1") == 0)
 				m_networkHosts1 = value;
 			else if (::strcmp(key, "HostsFile2") == 0)
@@ -397,6 +400,11 @@ std::string CConf::getVoiceDirectory() const
 unsigned short CConf::getNetworkPort() const
 {
 	return m_networkPort;
+}
+
+unsigned short CConf::getNetworkLocalPort() const
+{
+	return m_networkLocalPort;
 }
 
 std::string CConf::getNetworkHosts1() const

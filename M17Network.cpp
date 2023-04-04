@@ -43,7 +43,7 @@ m_timeout(1000U, 30U)
 {
 	assert(!callsign.empty());
 	assert(!suffix.empty());
-	assert(port > 0U);
+	// assert(port > 0U);
 
 	m_encoded = new unsigned char[6U];
 
@@ -251,6 +251,8 @@ void CM17Network::sendConnect()
 	buffer[9U] = m_encoded[5U];
 
 	buffer[10U] = m_module;
+
+	LogDebug("Connecting module %c", m_module);
 
 	if (m_debug)
 		CUtils::dump(1U, "M17 data transmitted", buffer, 11U);

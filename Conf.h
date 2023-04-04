@@ -71,6 +71,7 @@ public:
 
 	// The Network section
 	unsigned short getNetworkPort() const;
+	unsigned short getNetworkLocalPort() const;
 	std::string    getNetworkHosts1() const;
 	std::string    getNetworkHosts2() const;
 	unsigned int   getNetworkReloadTime() const;
@@ -120,6 +121,7 @@ private:
 	std::string  m_voiceDirectory;
 
 	unsigned short m_networkPort;
+	unsigned short m_networkLocalPort;
 	std::string    m_networkHosts1;
 	std::string    m_networkHosts2;
 	unsigned int   m_networkReloadTime;
