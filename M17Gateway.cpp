@@ -228,7 +228,7 @@ int CM17Gateway::run()
 	if (!ret)
 		return -1;
 
-	m_network = new CM17Network(m_conf.getCallsign(), m_conf.getSuffix(), m_conf.getNetworkPort(), m_conf.getNetworkDebug());
+	m_network = new CM17Network(m_conf.getCallsign(), m_conf.getSuffix(), m_conf.getNetworkLocalPort(), m_conf.getNetworkDebug());
 
 	CUDPSocket* remoteSocket = NULL;
 	if (m_conf.getRemoteCommandsEnabled()) {
