@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2015,2016,2017,2018,2020,2021 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2015,2016,2017,2018,2020,2021,2023 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -51,18 +51,19 @@ public:
 
 	// The Log section
 	unsigned int getLogDisplayLevel() const;
-	unsigned int getLogFileLevel() const;
-	std::string  getLogFilePath() const;
-	std::string  getLogFileRoot() const;
-	bool         getLogFileRotate() const;
+	unsigned int getLogMQTTLevel() const;
 
 	// The APRS section
 	bool         getAPRSEnabled() const;
-	std::string  getAPRSAddress() const;
-	unsigned int getAPRSPort() const;
 	std::string  getAPRSSuffix() const;
 	std::string  getAPRSDescription() const;
 	std::string  getAPRSSymbol() const;
+
+	// The MQTT section
+	std::string    getMQTTAddress() const;
+	unsigned short getMQTTPort() const;
+	unsigned int   getMQTTKeepalive() const;
+	std::string    getMQTTName() const;
 
 	// The Voice section
 	bool         getVoiceEnabled() const;
@@ -82,7 +83,6 @@ public:
 
 	// The Remote Commands section
 	bool           getRemoteCommandsEnabled() const;
-	unsigned short getRemoteCommandsPort() const;
 
 private:
 	std::string  m_file;
@@ -104,17 +104,17 @@ private:
 	std::string  m_description;
 
 	unsigned int m_logDisplayLevel;
-	unsigned int m_logFileLevel;
-	std::string  m_logFilePath;
-	std::string  m_logFileRoot;
-	bool         m_logFileRotate;
+	unsigned int m_logMQTTLevel;
 
 	bool         m_aprsEnabled;
-	std::string  m_aprsAddress;
-	unsigned int m_aprsPort;
 	std::string  m_aprsSuffix;
 	std::string  m_aprsDescription;
 	std::string  m_aprsSymbol;
+
+	std::string    m_mqttAddress;
+	unsigned short m_mqttPort;
+	unsigned int   m_mqttKeepalive;
+	std::string    m_mqttName;
 
 	bool         m_voiceEnabled;
 	std::string  m_voiceLanguage;
@@ -131,7 +131,6 @@ private:
 	bool           m_networkDebug;
 
 	bool           m_remoteCommandsEnabled;
-	unsigned short m_remoteCommandsPort;
 };
 
 #endif

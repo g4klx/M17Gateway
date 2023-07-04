@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2016,2018,2020,2021 by Jonathan Naylor G4KLX
+*   Copyright (C) 2016,2018,2020,2021,2023 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@
 #include "M17Network.h"
 #include "APRSWriter.h"
 #include "GPSHandler.h"
+#include "Reflectors.h"
+#include "Voice.h"
 #include "Timer.h"
 #include "Conf.h"
 
@@ -63,6 +65,9 @@ private:
 	M17_STATUS       m_oldStatus;
 	CM17Network*     m_network;
 	CTimer           m_timer;
+	CTimer           m_hangTimer;
+	CReflectors*     m_reflectors;
+	CVoice*          m_voice;
 	std::string      m_reflector;
 	unsigned int     m_addrLen;
 	sockaddr_storage m_addr;
@@ -74,6 +79,11 @@ private:
 	void unlinking();
 
 	void createGPS();
+
+	void writeCommand(const std::string& command);
+
+	static void onCommand(const std::string& command);
 };
 
 #endif
+

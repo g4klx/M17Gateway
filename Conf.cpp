@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2015,2016,2017,2018,2020,2021 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2015,2016,2017,2018,2020,2021,2023 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ enum SECTION {
 	SECTION_INFO,
 	SECTION_LOG,
 	SECTION_APRS,
+	SECTION_MQTT,
 	SECTION_VOICE,
 	SECTION_NETWORK,
 	SECTION_REMOTE_COMMANDS
@@ -57,16 +58,15 @@ m_height(0),
 m_name(),
 m_description(),
 m_logDisplayLevel(0U),
-m_logFileLevel(0U),
-m_logFilePath(),
-m_logFileRoot(),
-m_logFileRotate(true),
+m_logMQTTLevel(0U),
 m_aprsEnabled(false),
-m_aprsAddress("127.0.0.1"),
-m_aprsPort(8673U),
 m_aprsSuffix(),
 m_aprsDescription(),
 m_aprsSymbol(),
+m_mqttAddress("127.0.0.1"),
+m_mqttPort(1883U),
+m_mqttKeepalive(60U),
+m_mqttName("m17-gateway"),
 m_voiceEnabled(true),
 m_voiceLanguage("en_GB"),
 m_voiceDirectory(),
@@ -79,8 +79,7 @@ m_networkHangTime(60U),
 m_networkStartup(),
 m_networkRevert(false),
 m_networkDebug(false),
-m_remoteCommandsEnabled(false),
-m_remoteCommandsPort(6076U)
+m_remoteCommandsEnabled(false)
 {
 }
 
@@ -112,6 +111,8 @@ bool CConf::read()
 				section = SECTION_LOG;
 			else if (::strncmp(buffer, "[APRS]", 6U) == 0)
 				section = SECTION_APRS;
+			else if (::strncmp(buffer, "[MQTT]", 6U) == 0)
+				section = SECTION_MQTT;
 			else if (::strncmp(buffer, "[Voice]", 7U) == 0)
 				section = SECTION_VOICE;
 			else if (::strncmp(buffer, "[Network]", 9U) == 0)
@@ -188,29 +189,28 @@ bool CConf::read()
 			else if (::strcmp(key, "Description") == 0)
 				m_description = value;
 		} else if (section == SECTION_LOG) {
-			if (::strcmp(key, "FilePath") == 0)
-				m_logFilePath = value;
-			else if (::strcmp(key, "FileRoot") == 0)
-				m_logFileRoot = value;
-			else if (::strcmp(key, "FileLevel") == 0)
-				m_logFileLevel = (unsigned int)::atoi(value);
+			if (::strcmp(key, "MQTTLevel") == 0)
+				m_logMQTTLevel = (unsigned int)::atoi(value);
 			else if (::strcmp(key, "DisplayLevel") == 0)
 				m_logDisplayLevel = (unsigned int)::atoi(value);
-			else if (::strcmp(key, "FileRotate") == 0)
-				m_logFileRotate = ::atoi(value) ==  1;
 		} else if (section == SECTION_APRS) {
 			if (::strcmp(key, "Enable") == 0)
 				m_aprsEnabled = ::atoi(value) == 1;
-			else if (::strcmp(key, "Address") == 0)
-				m_aprsAddress = value;
-			else if (::strcmp(key, "Port") == 0)
-				m_aprsPort = (unsigned int)::atoi(value);
 			else if (::strcmp(key, "Suffix") == 0)
 				m_aprsSuffix = value;
 			else if (::strcmp(key, "Description") == 0)
 				m_aprsDescription = value;
                         else if (::strcmp(key, "Symbol") == 0)
                                 m_aprsSymbol = value;
+		} else if (section == SECTION_MQTT) {
+			if (::strcmp(key, "Address") == 0)
+				m_mqttAddress = value;
+			else if (::strcmp(key, "Port") == 0)
+				m_mqttPort = (unsigned short)::atoi(value);
+			else if (::strcmp(key, "Keepalive") == 0)
+				m_mqttKeepalive = (unsigned int)::atoi(value);
+			else if (::strcmp(key, "Name") == 0)
+				m_mqttName = value;
 		} else if (section == SECTION_VOICE) {
 			if (::strcmp(key, "Enabled") == 0)
 				m_voiceEnabled = ::atoi(value) == 1;
@@ -242,8 +242,6 @@ bool CConf::read()
 		} else if (section == SECTION_REMOTE_COMMANDS) {
 			if (::strcmp(key, "Enable") == 0)
 				m_remoteCommandsEnabled = ::atoi(value) == 1;
-			else if (::strcmp(key, "Port") == 0)
-				m_remoteCommandsPort = (unsigned short)::atoi(value);
 		}
 	}
 
@@ -332,39 +330,14 @@ unsigned int CConf::getLogDisplayLevel() const
 	return m_logDisplayLevel;
 }
 
-unsigned int CConf::getLogFileLevel() const
+unsigned int CConf::getLogMQTTLevel() const
 {
-	return m_logFileLevel;
-}
-
-std::string CConf::getLogFilePath() const
-{
-	return m_logFilePath;
-}
-
-std::string CConf::getLogFileRoot() const
-{
-	return m_logFileRoot;
-}
-
-bool CConf::getLogFileRotate() const
-{
-	return m_logFileRotate;
+	return m_logMQTTLevel;
 }
 
 bool CConf::getAPRSEnabled() const
 {
 	return m_aprsEnabled;
-}
-
-std::string CConf::getAPRSAddress() const
-{
-	return m_aprsAddress;
-}
-
-unsigned int CConf::getAPRSPort() const
-{
-	return m_aprsPort;
 }
 
 std::string CConf::getAPRSSuffix() const
@@ -380,6 +353,26 @@ std::string CConf::getAPRSDescription() const
 std::string CConf::getAPRSSymbol() const
 {
        return m_aprsSymbol;
+}
+
+std::string CConf::getMQTTAddress() const
+{
+	return m_mqttAddress;
+}
+
+unsigned short CConf::getMQTTPort() const
+{
+	return m_mqttPort;
+}
+
+unsigned int CConf::getMQTTKeepalive() const
+{
+	return m_mqttKeepalive;
+}
+
+std::string CConf::getMQTTName() const
+{
+	return m_mqttName;
 }
 
 bool CConf::getVoiceEnabled() const
@@ -447,7 +440,3 @@ bool CConf::getRemoteCommandsEnabled() const
 	return m_remoteCommandsEnabled;
 }
 
-unsigned short CConf::getRemoteCommandsPort() const
-{
-	return m_remoteCommandsPort;
-}
