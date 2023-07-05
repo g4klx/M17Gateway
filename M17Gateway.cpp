@@ -220,7 +220,7 @@ int CM17Gateway::run()
 
 	::LogInitialise(m_conf.getLogDisplayLevel(), m_conf.getLogMQTTLevel());
 
-	std::vector<std::pair<std::string, void (*)(const std::string&)>> subscriptions;
+	std::vector<std::pair<std::string, void (*)(const unsigned char*, unsigned int)>> subscriptions;
 	subscriptions.push_back(std::make_pair("command", CM17Gateway::onCommand));
 
 	m_mqtt = new CMQTTConnection(m_conf.getMQTTAddress(), m_conf.getMQTTPort(), m_conf.getMQTTName(), subscriptions, m_conf.getMQTTKeepalive());
@@ -748,10 +748,11 @@ void CM17Gateway::writeCommand(const std::string& command)
 	}
 }
 
-void CM17Gateway::onCommand(const std::string& command)
+void CM17Gateway::onCommand(const unsigned char* command, unsigned int length)
 {
 	assert(gateway != NULL);
+	assert(command != NULL);
 
-	gateway->writeCommand(command);
+	gateway->writeCommand(std::string((char*)command, length));
 }
 

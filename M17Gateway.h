@@ -82,7 +82,7 @@ private:
 
 	void writeCommand(const std::string& command);
 
-	static void onCommand(const std::string& command);
+	static void onCommand(const unsigned char* command, unsigned int length);
 };
 
 #endif
