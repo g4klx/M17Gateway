@@ -738,12 +738,12 @@ void CM17Gateway::writeCommand(const std::string& command)
 		}
 	} else if (command.substr(0, 6) == "status") {
 		std::string state = std::string("m17:") + ((m_network == NULL) ? "n/a" : ((m_network->getStatus() == M17N_LINKED) ? "conn" : "disc"));
-		m_mqtt->publish("command", state);
+		m_mqtt->publish("response", state);
 	} else if (command.substr(0, 4) == "host") {
 		std::string ref(m_reflector);
 		std::replace(ref.begin(), ref.end(), ' ', '_');
 		std::string host = std::string("m17:\"") + (((m_network == NULL) || (ref.length() == 0)) ? "NONE" : ref) + "\"";
-		m_mqtt->publish("command", host);
+		m_mqtt->publish("response", host);
 	} else {
 		CUtils::dump("Invalid remote command received", (unsigned char*)command.c_str(), command.size());
 	}
