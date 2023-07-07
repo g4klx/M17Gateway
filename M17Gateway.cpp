@@ -217,7 +217,6 @@ int CM17Gateway::run()
 		::close(STDERR_FILENO);
 	}
 #endif
-
 	::LogInitialise(m_conf.getLogDisplayLevel(), m_conf.getLogMQTTLevel());
 
 	std::vector<std::pair<std::string, void (*)(const unsigned char*, unsigned int)>> subscriptions;
@@ -582,9 +581,6 @@ int CM17Gateway::run()
 		delete m_writer;
 		delete m_gps;
 	}
-
-	m_mqtt->close();
-	delete m_mqtt;
 
 	return 0;
 }
