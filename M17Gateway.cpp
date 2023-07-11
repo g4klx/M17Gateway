@@ -100,6 +100,7 @@ int main(int argc, char** argv)
 	int ret = 0;
 
 	do {
+		m_killed = false;
 		m_signal = 0;
 
 		gateway = new CM17Gateway(std::string(iniFile));
@@ -227,7 +228,7 @@ int CM17Gateway::run()
 	ret = m_mqtt->open();
 	if (!ret) {
 		delete m_mqtt;
-		return -1;
+		return 1;
 	}
 
 	createGPS();
@@ -259,14 +260,13 @@ int CM17Gateway::run()
 	CStopWatch stopWatch;
 	stopWatch.start();
 
-	LogMessage("M17Gateway-%s is starting", VERSION);
-	LogMessage("Built %s %s (GitID #%.7s)", __TIME__, __DATE__, gitversion);
+	LogInfo("M17Gateway-%s is starting", VERSION);
+	LogInfo("Built %s %s (GitID #%.7s)", __TIME__, __DATE__, gitversion);
+
+	writeJSONStatus("M17Gateway is starting");
 
 	std::string startupReflector = m_conf.getNetworkStartup();
 	bool revert = m_conf.getNetworkRevert();
-
-	if (m_voice != NULL)
-		m_voice->unlinked();
 
 	if (!startupReflector.empty()) {
 		CM17Reflector* refl = m_reflectors->find(startupReflector);
@@ -281,6 +281,7 @@ int CM17Gateway::run()
 				m_status = m_oldStatus = M17S_LINKING;
 
 				LogInfo("Linked at startup to %s", m_reflector.c_str());
+				writeJSONLinking("startup", m_reflector);
 
 				if (m_voice != NULL)
 					m_voice->linkedTo(m_reflector);
@@ -289,7 +290,14 @@ int CM17Gateway::run()
 			}
 		} else {
 			startupReflector.clear();
+			writeJSONUnlinked("startup");
+			if (m_voice != NULL)
+				m_voice->unlinked();
 		}
+	} else {
+		writeJSONUnlinked("startup");
+		if (m_voice != NULL)
+			m_voice->unlinked();
 	}
 
 	unsigned int n = 0U;
@@ -411,6 +419,7 @@ int CM17Gateway::run()
 					m_network->stop();
 					m_network->unlink();
 
+					writeJSONUnlinked("user");
 					if (m_voice != NULL)
 						m_voice->unlinked();
 
@@ -427,6 +436,7 @@ int CM17Gateway::run()
 				if (reflector != m_reflector && module >= 'A' && module <= 'Z') {
 					if (m_status == M17S_LINKED || m_status == M17S_LINKING) {
 						LogMessage("Unlinking from reflector %s triggered by %s", m_reflector.c_str(), src.c_str());
+						writeJSONUnlinked("user");
 						m_network->stop();
 						m_network->unlink();
 
@@ -443,6 +453,7 @@ int CM17Gateway::run()
 						m_module    = module;
 
 						// Link to the new reflector
+						writeJSONLinking("user", m_reflector);
 						LogMessage("Linking to reflector %s triggered by %s", m_reflector.c_str(), src.c_str());
 
 						m_status = m_oldStatus = M17S_LINKING;
@@ -456,6 +467,7 @@ int CM17Gateway::run()
 						if (m_status == M17S_LINKED || m_status == M17S_LINKING)
 							m_status = m_oldStatus = M17S_UNLINKING;
 
+						writeJSONUnlinked("user");
 						if (m_voice != NULL)
 							m_voice->unlinked();
 
@@ -468,6 +480,7 @@ int CM17Gateway::run()
 				// If the link has failed, try and relink
 				M17NET_STATUS netStatus = m_network->getStatus();
 				if (netStatus == M17N_FAILED) {
+					writeJSONRelinking(m_reflector);
 					LogMessage("Relinking to reflector %s", m_reflector.c_str());
 					m_status = M17S_LINKING;
 				}
@@ -525,6 +538,9 @@ int CM17Gateway::run()
 					m_network->unlink();
 				}
 
+				writeJSONUnlinked("timer");
+				writeJSONLinking("timer", startupReflector);
+
 				LogMessage("Relinked from %s to %s due to inactivity", m_reflector.c_str(), startupReflector.c_str());
 
 				CM17Reflector* refl = m_reflectors->find(startupReflector);
@@ -544,6 +560,7 @@ int CM17Gateway::run()
 				m_timer.start();
 			} else if (revert && startupReflector.empty() && (m_status == M17S_LINKED || m_status == M17S_LINKING)) {
 				LogMessage("Unlinking from %s due to inactivity", m_reflector.c_str());
+				writeJSONUnlinked("timer");
 
 				m_network->stop();
 				m_network->unlink();
@@ -565,6 +582,9 @@ int CM17Gateway::run()
 		if (ms < 5U)
 			CThread::sleep(5U);
 	}
+
+	LogInfo("M17Gateway is stopping");
+	writeJSONStatus("M17Gateway is stopping");
 
 	delete m_voice;
 
@@ -689,6 +709,7 @@ void CM17Gateway::writeCommand(const std::string& command)
 		if (reflector != m_reflector) {
 			if (m_status == M17S_LINKED || m_status == M17S_LINKING) {
 				LogMessage("Unlinked from reflector %s by remote command", m_reflector.c_str());
+				writeJSONUnlinked("remote");
 
 				m_network->stop();
 				m_network->unlink();
@@ -708,6 +729,8 @@ void CM17Gateway::writeCommand(const std::string& command)
 
 					// Link to the new reflector
 					LogMessage("Switched to reflector %s by remote command", m_reflector.c_str());
+					writeJSONUnlinked("timer");
+					writeJSONLinking("timer", m_reflector);
 
 					m_status = m_oldStatus = M17S_LINKING;
 
@@ -722,6 +745,7 @@ void CM17Gateway::writeCommand(const std::string& command)
 			} else {
 				m_reflector.clear();
 				if (m_status == M17S_LINKED || m_status == M17S_LINKING) {
+					writeJSONUnlinked("command");
 					m_status = m_oldStatus = M17S_UNLINKING;
 					if (m_voice != NULL) {
 						m_voice->unlinked();
@@ -743,6 +767,50 @@ void CM17Gateway::writeCommand(const std::string& command)
 	} else {
 		CUtils::dump("Invalid remote command received", (unsigned char*)command.c_str(), command.size());
 	}
+}
+
+void CM17Gateway::writeJSONStatus(const std::string& status)
+{
+	nlohmann::json json;
+
+	json["timestamp"] = CUtils::createTimestamp();
+	json["message"]   = status;
+
+	WriteJSON("status", json);
+}
+
+void CM17Gateway::writeJSONLinking(const std::string& reason, const std::string& reflector)
+{
+	nlohmann::json json;
+
+	json["timestamp"] = CUtils::createTimestamp();
+	json["action"]    = "linking";
+	json["reason"]    = reason;
+	json["reflector"] = reflector;
+
+	WriteJSON("link", json);
+}
+
+void CM17Gateway::writeJSONUnlinked(const std::string& reason)
+{
+	nlohmann::json json;
+
+	json["timestamp"] = CUtils::createTimestamp();
+	json["action"]    = "unlinked";
+	json["reason"]    = reason;
+
+	WriteJSON("link", json);
+}
+
+void CM17Gateway::writeJSONRelinking(const std::string& reflector)
+{
+	nlohmann::json json;
+
+	json["timestamp"] = CUtils::createTimestamp();
+	json["action"]    = "relinking";
+	json["reflector"] = reflector;
+
+	WriteJSON("link", json);
 }
 
 void CM17Gateway::onCommand(const unsigned char* command, unsigned int length)

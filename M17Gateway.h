@@ -80,6 +80,11 @@ private:
 
 	void createGPS();
 
+	void writeJSONStatus(const std::string& status);
+	void writeJSONLinking(const std::string& reason, const std::string& reflector);
+	void writeJSONUnlinked(const std::string& reason);
+	void writeJSONRelinking(const std::string& reflector);
+
 	void writeCommand(const std::string& command);
 
 	static void onCommand(const unsigned char* command, unsigned int length);
