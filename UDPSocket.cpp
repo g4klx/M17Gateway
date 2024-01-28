@@ -312,12 +312,13 @@ bool CUDPSocket::write(const unsigned char* buffer, unsigned int length, const s
 
 void CUDPSocket::close()
 {
-	assert(m_fd >= 0);
-
+	if (m_fd >= 0) {
 #if defined(_WIN32) || defined(_WIN64)
-	::closesocket(m_fd);
+		::closesocket(m_fd);
 #else
-	::close(m_fd);
+		::close(m_fd);
 #endif
-	m_fd = -1;
+		m_fd = -1;
+	}
 }
+
