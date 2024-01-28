@@ -173,11 +173,6 @@ bool CUDPSocket::open(unsigned int af)
 		return false;
 	}
 
-	if ((af != AF_UNSPEC) && (af != addr.ss_family)) {
-		LogError("The local address type and the remote address type do not match");
-		return false;
-	}
-
 	m_fd = ::socket(addr.ss_family, SOCK_DGRAM, 0);
 	if (m_fd < 0) {
 #if defined(_WIN32) || defined(_WIN64)
