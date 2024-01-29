@@ -46,7 +46,7 @@ public:
 	CUDPSocket(unsigned short port = 0U);
 	~CUDPSocket();
 
-	bool open(unsigned int af = AF_UNSPEC);
+	bool open();
 	bool open(const sockaddr_storage& address);
 
 	int  read(unsigned char* buffer, unsigned int length, sockaddr_storage& address, unsigned int &addressLength);
@@ -67,7 +67,12 @@ public:
 private:
 	std::string    m_localAddress;
 	unsigned short m_localPort;
+#if defined(_WIN32) || defined(_WIN64)
+	SOCKET         m_fd;
+#else
 	int            m_fd;
+#endif
+	sa_family_t    m_af;
 };
 
 #endif

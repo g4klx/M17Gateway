@@ -36,14 +36,16 @@
 CUDPSocket::CUDPSocket(const std::string& address, unsigned short port) :
 m_localAddress(address),
 m_localPort(port),
-m_fd(-1)
+m_fd(-1),
+m_af(AF_UNSPEC)
 {
 }
 
 CUDPSocket::CUDPSocket(unsigned short port) :
 m_localAddress(),
 m_localPort(port),
-m_fd(-1)
+m_fd(-1),
+m_af(AF_UNSPEC)
 {
 }
 
@@ -151,10 +153,12 @@ bool CUDPSocket::isNone(const sockaddr_storage& addr)
 
 bool CUDPSocket::open(const sockaddr_storage& address)
 {
-	return open(address.ss_family);
+	m_af = address.ss_family;
+
+	return open();
 }
 
-bool CUDPSocket::open(unsigned int af)
+bool CUDPSocket::open()
 {
 	assert(m_fd == -1);
 
@@ -164,7 +168,7 @@ bool CUDPSocket::open(unsigned int af)
 
 	::memset(&hints, 0, sizeof(hints));
 	hints.ai_flags  = AI_PASSIVE;
-	hints.ai_family = af;
+	hints.ai_family = m_af;
 
 	// To determine protocol family, call lookup() on the local address first.
 	int err = lookup(m_localAddress, m_localPort, addr, addrlen, hints);
@@ -173,7 +177,9 @@ bool CUDPSocket::open(unsigned int af)
 		return false;
 	}
 
-	m_fd = ::socket(addr.ss_family, SOCK_DGRAM, 0);
+	m_af = addr.ss_family;
+
+	m_fd = ::socket(m_af, SOCK_DGRAM, 0);
 	if (m_fd < 0) {
 #if defined(_WIN32) || defined(_WIN64)
 		LogError("Cannot create the UDP socket, err: %lu", ::GetLastError());
