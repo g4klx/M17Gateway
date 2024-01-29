@@ -217,10 +217,9 @@ bool CM17Network::read(unsigned char* data)
 
 void CM17Network::close()
 {
-	if (m_state == M17N_LINKED) {
-		m_socket.close();
-		LogMessage("Closing M17 network connection");
-	}
+	m_socket.close();
+
+	LogMessage("Closing M17 network connection");
 }
 
 void CM17Network::stop()
