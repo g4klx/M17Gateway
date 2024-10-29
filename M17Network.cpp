@@ -79,6 +79,7 @@ bool CM17Network::link(const std::string& name, const sockaddr_storage& addr, un
 	sendConnect();
 
 	m_timer.start();
+	m_timeout.start();
 
 	return true;
 }
@@ -93,7 +94,7 @@ void CM17Network::unlink()
 	sendDisconnect();
 
 	m_timer.start();
-	m_timeout.stop();
+	m_timeout.start();
 }
 
 bool CM17Network::write(const unsigned char* data)
@@ -132,13 +133,25 @@ void CM17Network::clock(unsigned int ms)
 
 	m_timeout.clock(ms);
 	if (m_timeout.isRunning() && m_timeout.hasExpired()) {
-		LogMessage("Link lost to reflector %s", m_name.c_str());
-		m_state = M17N_FAILED;
-		m_timeout.stop();
-	}
+		switch (m_state) {
+		case M17N_LINKING:
+			LogMessage("Linking failed with reflector %s", m_name.c_str());
+			m_state = M17N_FAILED;
+			break;
+		case M17N_UNLINKING:
+			m_state = M17N_NOTLINKED;
+			break;
+		default:
+			LogMessage("Link lost to reflector %s", m_name.c_str());
+			m_state = M17N_FAILED;
+			break;
+		}
 
-	if (m_state == M17N_NOTLINKED)
+		m_timeout.stop();
+		m_timer.stop();
+
 		return;
+	}
 
 	unsigned char buffer[BUFFER_LENGTH];
 
@@ -146,6 +159,9 @@ void CM17Network::clock(unsigned int ms)
 	unsigned int addrLen;
 	int length = m_socket.read(buffer, BUFFER_LENGTH, address, addrLen);
 	if (length <= 0)
+		return;
+
+	if (m_state == M17N_NOTLINKED || m_state == M17N_REJECTED || m_state == M17N_FAILED)
 		return;
 
 	if (!CUDPSocket::match(m_addr, address)) {
@@ -191,13 +207,14 @@ void CM17Network::clock(unsigned int ms)
 		return;
 	}
 
-	if (m_state == M17N_LINKED)
+	if (m_state == M17N_LINKED) {
 		m_timeout.start();
 
-	unsigned char c = length;
-	m_buffer.addData(&c, 1U);
+		unsigned char c = length;
+		m_buffer.addData(&c, 1U);
 
-	m_buffer.addData(buffer, length);
+		m_buffer.addData(buffer, length);
+	}
 }
 
 bool CM17Network::read(unsigned char* data)

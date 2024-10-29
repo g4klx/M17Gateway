@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2017,2018.2021 by Jonathan Naylor G4KLX
+*   Copyright (C) 2017,2018.2021,2024 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -353,7 +353,7 @@ bool CVoice::read(unsigned char* data)
 	return false;
 }
 
-void CVoice::eof()
+void CVoice::start()
 {
 	if (m_voiceLength == 0U)
 		return;

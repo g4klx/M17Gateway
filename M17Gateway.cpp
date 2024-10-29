@@ -291,6 +291,8 @@ int CM17Gateway::run()
 
 				LogInfo("Linked at startup to %s", m_reflector.c_str());
 
+				m_network->link(m_reflector, m_addr, m_addrLen, m_module);
+
 				if (voice != NULL)
 					voice->linkedTo(m_reflector);
 
@@ -301,9 +303,63 @@ int CM17Gateway::run()
 		}
 	}
 
+	if (voice != NULL)
+		voice->start();
+
 	unsigned int n = 0U;
 
 	while (!m_killed) {
+		M17NET_STATUS netStatus = m_network->getStatus();
+
+		switch (m_status) {
+		case M17S_LINKING:
+			switch (netStatus) {
+			case M17N_LINKING:
+				// Nothing to do
+				break;
+			case M17N_LINKED:
+				m_status = m_oldStatus = M17S_LINKED;
+				break;
+			default:
+				m_status = m_oldStatus = M17S_NOTLINKED;
+				if (voice != NULL) {
+					voice->unlinked();
+					voice->start();
+				}
+				break;
+			}
+			break;
+
+		case M17S_LINKED:
+			switch (netStatus) {
+			case M17N_LINKED:
+				// Nothing to do
+				break;
+			default:
+				m_status = m_oldStatus = M17S_NOTLINKED;
+				if (voice != NULL) {
+					voice->unlinked();
+					voice->start();
+				}
+				break;
+			}
+			break;
+
+		case M17S_UNLINKING:
+			switch (netStatus) {
+			case M17N_UNLINKING:
+				// Nothing to do
+				break;
+			default:
+				m_status = m_oldStatus = M17S_NOTLINKED;
+				break;
+			}
+			break;
+
+		default:	// M17S_NOTLINKED or M17S_ECHO
+			break;
+		}
+
 		unsigned char buffer[100U];
 
 		if (m_status == M17S_LINKED) {
@@ -472,30 +528,13 @@ int CM17Gateway::run()
 					}
 				}
 			}
-
-			if (m_status == M17S_LINKED) {
-				// If the link has failed, try and relink
-				M17NET_STATUS netStatus = m_network->getStatus();
-				if (netStatus == M17N_FAILED) {
-					LogMessage("Relinking to reflector %s", m_reflector.c_str());
-					m_status = M17S_LINKING;
-				}
-
-				// If we're linked and we have a network, send it on
-				if (m_status == M17S_LINKED) {
-					// Replace the destination callsign with the reflector name and module
-					CM17Utils::encodeCallsign(m_reflector, buffer + 6U);
-					m_network->write(buffer);
-					hangTimer.start();
-				}
-			}
 		}
 
 		if (voice != NULL) {
 			if (triggerVoice) {
 				uint16_t fn = (buffer[34U] << 8) + (buffer[35U] << 0);
 				if ((fn & 0x8000U) == 0x8000U) {
-					voice->eof();
+					voice->start();
 					triggerVoice = false;
 				}
 			}
@@ -543,7 +582,7 @@ int CM17Gateway::run()
 
 								if (voice != NULL) {
 									voice->linkedTo(m_reflector);
-									voice->eof();
+									voice->start();
 								}
 
 								hangTimer.start();
@@ -556,7 +595,7 @@ int CM17Gateway::run()
 
 								if (voice != NULL) {
 									voice->unlinked();
-									voice->eof();
+									voice->start();
 								}
 							}
 
@@ -618,7 +657,7 @@ int CM17Gateway::run()
 
 				if (voice != NULL) {
 					voice->linkedTo(startupReflector);
-					voice->eof();
+					voice->start();
 				}
 
 				hangTimer.start();
@@ -633,7 +672,7 @@ int CM17Gateway::run()
 
 				if (voice != NULL) {
 					voice->unlinked();
-					voice->eof();
+					voice->start();
 				}
 
 				m_reflector.clear();
