@@ -7,13 +7,16 @@ M17-000 81.231.241.25 17000
 M17-001 185.243.214.85 17001
 
 # M17-002 cumbriaCQ.com, GB http://digital.cumbriacq.com:3000
-M17-002 89.240.4.99 17000
+M17-002 80.190.85.142 17000
+
+# M17-003 KA1MXL, US http://m17.ridigitallink.net
+M17-003 192.210.174.154 17000
 
 # M17-007 K6JWN, US https://m17-007.k6jwn.org
 M17-007 96.43.137.101 17000
 
-# M17-010 Ham Radio Net Zone - SA7SVR, GR https://cqzone.org/m17
-M17-010 81.231.241.25 17777
+# M17-010 Ham Radio Net Zone - SA7SVR, GR http://m17net.org
+M17-010 46.59.68.211 17001
 
 # M17-020 K2IE, US https://m17-020.k2ie.net
 M17-020 66.175.215.217 17000
@@ -30,6 +33,9 @@ M17-090 172.245.19.144 17000
 # M17-100 HELLAS Zone Net!, GR https://hellaszone.com/m17/
 M17-100 81.231.241.25 17000
 
+# M17-111 HELLAS Ham Radio Net Zone, SE http://m17net.org:8080
+M17-111 46.59.68.211 17000
+
 # M17-128 RadioHUB, AR http://m17-128.radiohub.ar
 M17-128 200.80.247.90 17000
 
@@ -45,11 +51,17 @@ M17-149 122.154.140.136 17000
 # M17-164 K4FSG, US http://reflector.k4fsg.net
 M17-164 44.98.254.88 17000
 
+# M17-17M DroidStar.Net, US http://M17Server.duckdns.org
+M17-17M 155.138.213.86 17000
+
 # M17-182 DS5QDR HAM World, KR http://m17-182.duckdns.org:90
 M17-182 119.199.235.196 17000
 
 # M17-190 Argentina Room, AR https://m17.argentina.net
 M17-190 186.123.100.105 17000
+
+# M17-198 Technology First, US http://privacyessential.us.to
+M17-198 159.196.204.19 17000
 
 # M17-199 TEST, AR http://www.google.com
 M17-199 45.164.228.196 17000
@@ -65,6 +77,9 @@ M17-216 74.214.25.135 17000
 
 # M17-222 Hellas-FRN, GR https://hellas-frn.net/m17-222
 M17-222 51.154.9.233 17000
+
+# M17-226 145500.xyz, RO https://m17.145500.xyz/
+M17-226 192.18.133.90 17000
 
 # M17-235 DVSPH, GB https://dvsph.net/m17
 M17-235 75.119.140.37 17000
@@ -87,6 +102,9 @@ M17-260 88.156.169.164 17000
 # M17-265 SQ5akc, PL http://185.174.14.75/M17
 M17-265 185.174.14.75 17000
 
+# M17-2MC 2 Meter Crew, US https://wg5eek.com/m17/
+M17-2MC 167.224.241.212 17000
+
 # M17-334 Alabama Link, US https://m17.radiotechnology.xyz
 M17-334 96.47.95.121 17000
 
@@ -100,16 +118,22 @@ M17-432 112.213.34.65 17000
 M17-603 65.175.191.169 17000
 
 # M17-621 HRCCLINK, US https://urf.hrcc.link
-M17-621 50.46.10.157 17000
+M17-621 50.52.77.68 17000
 
 # M17-659 Open Source Amateur Radio Club, US http://m17.af0ss.org:1717
-M17-659 104.131.106.247 17000
+M17-659 64.23.130.152 17000
 
 # M17-672 Pi-Star Multi-Reflector (MW0MWZ), GB https://xlx672-dash.pistar.uk/
 M17-672 213.171.214.2 17000
 
+# M17-705 ve3ukw, CA http://m17.ve3ukw.ca:3000
+M17-705 216.129.211.32 17000
+
 # M17-714 EA3HKB, ES https://m17.ea3hkb.cat
 M17-714 81.169.158.155 17000
+
+# M17-718 Allstar_515930-Net.IT_Hub, IT http://romastream718.online/#/
+M17-718 74.50.85.149 17000
 
 # M17-724 PU5KOD, BR http://pu5kod.net:3000
 M17-724 177.131.119.153 17724
@@ -130,12 +154,15 @@ M17-815 47.5.115.3 17000
 M17-818 188.166.226.76 17000
 
 # M17-847 Chandler Hams, US https://m17-847.kk7mnz.com
-M17-847 72.208.238.81 17000
+M17-847 98.171.104.209 17000
 
 # M17-848 KK7MNZ, US https://m17-848.kk7mnz.com
 M17-848 24.199.69.152 17000
 
-# M17-910 W3KIT, US https://m17.mywire.org
+# M17-909 HS1AB, TH http://xlx.vra.or.th:3000
+M17-909 198.13.49.172 17000
+
+# M17-910 XLX910 - Washington, DC - Maryland - Virginia, US http://m17.mywire.org:3000
 M17-910 78.138.0.61 17000
 
 # M17-911 HS5BLO, TH https://911m17.freeddns.org
@@ -147,14 +174,23 @@ M17-922 81.150.10.63 17000
 # M17-926 KF3RRY, US https://urf.kf3rry.org
 M17-926 44.31.112.11 17000
 
+# M17-942 Digital Dragon Radio, GB http://m17-942.ntsy.me:3000
+M17-942 18.170.163.13 17000
+
 # M17-948 ICQPodcast (M1MRB / W9ICQ), GB http://m17icq.icqpodcast.com
 M17-948 46.101.36.246 17000
 
 # M17-983 K8JTK Hub Multimode ILS/DVMIS (K8JTK.org), US https://M17-983.k8jtk.org/
 M17-983 45.76.228.241 17000
 
-# M17-999 IW1ELO, IT https://m17-999.duckdns.org
+# M17-994 The Online Radio Club, GB https://xlx994.onlineradioclub.org
+M17-994 192.248.158.56 17000
+
+# M17-999 IW1ELO, IT https://m17-999.freedmr.it/
 M17-999 94.177.173.53 17000
+
+# M17-9V1 , SG http://139.162.27.103:3000
+M17-9V1 139.162.27.103 17000
 
 # M17-AFG Amateurfunk Forschungsgruppe der TU Kaiserslautern DL0XK, DE https://m17.amateurfunk.uni-kl.de
 M17-AFG 131.246.124.119 17000
@@ -174,14 +210,17 @@ M17-ARC 167.179.91.150 17000
 # M17-ARG LU8ANB, AR https://m17arg.ddns.net/
 M17-ARG 152.170.70.57 17000
 
-# M17-ASL https://51593.it, IT https://m17-asl.ddns.net/m17
-M17-ASL 45.77.142.226 17000
+# M17-ASL https://allstarlink-italia.it, IT https://m17asl.ddns.net/
+M17-ASL 74.50.85.149 17000
 
-# M17-AUT Ã–VSV, AT https://m17-aut.xreflector.net/
+# M17-AUT ÖVSV, AT https://m17-aut.xreflector.net/
 M17-AUT 195.26.215.3 17000
 
-# M17-BEL UBA-BE, BE https://freedmr.be/m17bel
-M17-BEL 161.97.169.233 17000
+# M17-BAT Sez. ARI di Trani, IT http://aritrani.does-it.net/m17/
+M17-BAT 62.84.190.249 17000
+
+# M17-BEL UBA-BE, BE http://2061.adn.systems:3000
+M17-BEL 173.212.223.187 17000
 
 # M17-BRA PU5KOD, BR http://m17bra.net
 M17-BRA 35.198.35.247 17000
@@ -203,6 +242,9 @@ M17-CAT 172.104.140.230 17000
 
 # M17-CCV JA2CCV, JP https://m17.owari.biz/ref-dash
 M17-CCV 116.91.197.3 17000
+
+# M17-CEL DL2OAM, DE http://85.215.198.111:8930
+M17-CEL 85.215.198.111 17000
 
 # M17-CHI HB9CSR Basel Group, CH https://m17ch-italia.ddns.net/
 M17-CHI 212.237.33.114 17000
@@ -241,7 +283,7 @@ M17-DEV 127.0.0.1 17000
 M17-DGN 87.1.0.40 17000
 
 # M17-DMR freestar.network, GB https://m17.freestar.network
-M17-DMR 81.150.15.15 17000
+M17-DMR 81.136.218.49 17000
 
 # M17-EA1 DMR+ 4371, ES https://eadistrito1.m17.es/m17/
 M17-EA1 80.211.29.226 17000
@@ -295,7 +337,7 @@ M17-HNC 47.62.127.2 17000
 M17-HRV 52.15.234.145 17000
 
 # M17-HUB hubnetwork.uk, GB https://g7rpg.hubnetwork.uk/m17
-M17-HUB 86.26.29.17 17000
+M17-HUB 81.187.19.200 17000
 
 # M17-HWN HamWAN Memphis Metro, US https://m17.memhamwan.net/
 M17-HWN 44.34.132.17 17000
@@ -318,8 +360,8 @@ M17-IS0 51.254.206.201 17000
 # M17-ITA IV3JDV, IT https://m17ita.hblink.it
 M17-ITA 80.211.190.216 17000
 
-# M17-ITC IZ0THD, IT http://famiuse.ddns.net:3000
-M17-ITC 79.36.233.133 17000
+# M17-ITC IZ0THD, IT http://185.205.209.70:3000
+M17-ITC 185.205.209.70 17000
 
 # M17-ITD IU7MNA, IT https://m17.itdmr.it
 M17-ITD 188.213.168.69 17000
@@ -355,7 +397,7 @@ M17-KRD 77.66.180.214 17000
 M17-KRG 155.138.212.8 17000
 
 # M17-LAB M17 Project, US https://ref.m17labs.org
-M17-LAB 1.2.3.4 17000
+M17-LAB 127.0.0.1 17000
 
 # M17-LAT N3TX, US https://latinos.m17.es/m17/
 M17-LAT 80.211.94.145 17000
@@ -379,10 +421,16 @@ M17-M17 152.70.192.70 17000
 M17-MBK 104.145.237.90 17000
 
 # M17-MEX XE1E, MX https://m17.xe1e.net
-M17-MEX 201.137.123.119 17000
+M17-MEX 201.137.113.219 17000
 
 # M17-MGB PU4RON, BR https://mgbrasil-m17.ddns.net
 M17-MGB 165.73.249.152 17000
+
+# M17-MJA VK3MJA, AU https://mja.vkradio.com/
+M17-MJA 103.236.163.81 17000
+
+# M17-N18 Jan, DG3YJB, DE http://dg3yjb.beba.re/M17Reflector/index.php
+M17-N18 144.76.12.90 17000
 
 # M17-NLD M17 Dutch Reflector PD2VDY, NL http://51.83.46.75:39000
 M17-NLD 51.83.46.75 17000
@@ -391,12 +439,12 @@ M17-NLD 51.83.46.75 17000
 M17-NOR 185.35.185.100 17000
 
 # M17-NRG LZ1GSP, BG http://m17nrg.ddns.net
-M17-NRG 92.247.173.181 17000
+M17-NRG 78.83.115.219 17000
 
 # M17-NWR North Western Repeater Group UK, GB https://m17.nwrg.org.uk
-M17-NWR 159.242.127.220 17000
+M17-NWR 217.40.29.234 17000
 
-# M17-NYS KD2YFY, US http://m17nys.kd2yfy.net:81
+# M17-NYS KD2YFY, US https://m17nys.kd2yfy.net:444
 M17-NYS 135.148.149.42 17000
 
 # M17-NZD ZL1JX, NZ https://m17-nzd.m1m0n.net
@@ -404,6 +452,9 @@ M17-NZD 101.100.136.64 17000
 
 # M17-NZL ZL2AUS, NZ https://m17nzl.drgnz.com/
 M17-NZL 149.28.165.127 17000
+
+# M17-OAF VU3FBT & S21AF, BD http://m17.onirbanbd.com
+M17-OAF 152.67.9.13 17000
 
 # M17-OFW DV1PPK, PH https://ofwham.duckdns.org/index.php
 M17-OFW 45.76.176.109 17000
@@ -429,7 +480,7 @@ M17-OZD 51.195.201.20 17000
 # M17-PEG German PEGASUS Project, DE https://dmr.projekt-pegasus.net/m17/
 M17-PEG 5.9.59.26 17000
 
-# M17-PER Multiprotocolo PerÃº Digital, PE https://m17.dmr-peru.net
+# M17-PER Multiprotocolo Perú Digital, PE https://m17.dmr-peru.net
 M17-PER 190.117.233.28 17000
 
 # M17-PHP DX8WMG, PH https://dx8wmg-m17.ddns.net/
@@ -454,13 +505,16 @@ M17-POR 80.211.15.21 17000
 M17-PRT 198.244.234.7 17000
 
 # M17-QDR DS5QDR Heonmin Lee, KR http://m17-qdr.duckdns.org:90
-M17-QDR 121.176.20.29 17000
+M17-QDR 118.47.146.80 17000
 
 # M17-QSO don't publish, I'm just reserving the name for qso.email, US https://tarxvf.tech
 M17-QSO 127.0.0.1 17000
 
 # M17-QUE Quebec Francais, CA https://m17-que.ddns.net
 M17-QUE 45.62.250.140 17000
+
+# M17-RLX ARRLx, PT http://sdrpt2.dynip.sapo.pt
+M17-RLX 85.243.199.245 17000
 
 # M17-ROM M17 bridge to Tetra, RO https://tetra-romania.ddns.net/m17/
 M17-ROM 89.35.160.218 17000
@@ -473,9 +527,6 @@ M17-SCS 45.77.119.250 17000
 
 # M17-SEL Lookout Mountain Amateur Radio Community, US https://selink.lmarc.net/m17dash
 M17-SEL 66.42.93.25 17000
-
-# M17-SFX Starfield Amateur Radio Club, JP https://m17-sfx.starfield.link
-M17-SFX 133.242.190.226 17000
 
 # M17-SKY SkyHub Link System, US https://m17.skyhublink.com
 M17-SKY 65.114.195.171 17000
@@ -525,6 +576,9 @@ M17-TST 51.81.119.102 17000
 # M17-TWN BV3UN, TW https://m17twn.ddns.net
 M17-TWN 114.34.207.164 17000
 
+# M17-UA2 ORLink, UA http://digi.uaradio.link
+M17-UA2 158.101.28.29 17000
+
 # M17-UAX QRZ Odessa, UA http://m17.qrz.od.ua:3000
 M17-UAX 178.136.51.229 17000
 
@@ -540,7 +594,7 @@ M17-URG 23.234.239.179 17000
 # M17-URU Uruguay Link, UY https://m17uru.c4fm.es/
 M17-URU 23.234.239.179 17000
 
-# M17-USA KD2YFY, US http://m17usa.kd2yfy.net:81
+# M17-USA KD2YFY, US https://m17usa.kd2yfy.net
 M17-USA 135.148.148.180 17000
 
 # M17-VK7 VK7HSE, AU https://vk7hse.duckdns.org/m17
@@ -552,9 +606,6 @@ M17-WAL 192.248.172.148 17000
 # M17-WDG Western US Digital Group W6DGT, US https://m17.wesdig.com/
 M17-WDG 107.152.39.89 17000
 
-# M17-WHO Who Cares Amateur Radio Group, US https://m17.whocaresradio.com
-M17-WHO 137.220.63.8 17000
-
 # M17-WWD KE8ANE, US https://m17wwd.ddns.net/m17
 M17-WWD 192.99.70.1 17000
 
@@ -562,7 +613,7 @@ M17-WWD 192.99.70.1 17000
 M17-WWR 104.238.145.198 17000
 
 # M17-XOR OE3ANC - Dev Reflector, AT https://ref.oe3xor.at
-M17-XOR 49.12.247.207 17000
+M17-XOR 168.119.171.247 17000
 
 # M17-XVF https://tarxvf.tech, no dashboard, test and dev reflector, not always up, US https://tarxvf.tech
 M17-XVF 104.225.216.221 17000
@@ -575,3 +626,46 @@ M17-ZL3 119.224.19.178 17000
 
 # M17-ZO9 iw9edp@gmail.com, IT https://m17zona9.duckdns.org/
 M17-ZO9 198.245.55.177 17000
+
+# URF106 Eastern-MI-Link, US http://urf106.com
+URF106 73.190.23.244 17000
+
+# URF204 PD2VDY, NL http://127.0.0.1
+URF204 127.0.0.1 17000
+
+# URF239 Who Cares ARG, US https://urf239.whocaresradio.com
+URF239 147.79.74.69 17000
+
+# URF300 PU5KOD, BR https://xlx300.net
+URF300 35.198.35.247 17000
+
+# URF307 QuadNet, US https://xlx307.ddns.net/
+URF307 72.21.76.154 17000
+
+# URF478 Ham Radio Village, US https://urf.hamvillage.org
+URF478 35.232.151.255 17000
+
+# URF493 Hosted by W0CHP of WPSD fame ;-), US https://urf493.w0chp.radio
+URF493 104.218.221.46 17000
+
+# URF517 RadioSC, US http://xlx517.radiosc.net
+URF517 67.212.42.234 17000
+
+# URF587 QuadNet, US https://xlx587.openquad.net
+URF587 104.8.207.66 17000
+
+# URFBAT Sez. ARI di Trani, IT http://aritrani.does-it.net/urfd/
+URFBAT 62.84.190.249 17000
+
+# URFBRA PU5KOD, BR https://xlxbra.net
+URFBRA 177.131.119.153 17000
+
+# URFDIG , US https://urf.w3lby.com
+URFDIG 5.161.226.224 17000
+
+# URFLAB KC1AWV, US https://localhost:3000
+URFLAB 127.0.0.1 17000
+
+# URFNLD PD2VDY, NL http://141.95.54.250:65080/
+URFNLD 141.95.54.250 17000
+
