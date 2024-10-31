@@ -165,7 +165,7 @@ void CM17Network::clock(unsigned int ms)
 		return;
 
 	if (!CUDPSocket::match(m_addr, address)) {
-		LogMessage("Packet received from an invalid source");
+		LogMessage("M17 Packet received from an invalid source");
 		return;
 	}
 

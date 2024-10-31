@@ -22,7 +22,6 @@
 #include "M17Network.h"
 #include "APRSWriter.h"
 #include "GPSHandler.h"
-#include "Timer.h"
 #include "Conf.h"
 
 #include <cstdio>
@@ -62,16 +61,12 @@ private:
 	M17_STATUS       m_status;
 	M17_STATUS       m_oldStatus;
 	CM17Network*     m_network;
-	CTimer           m_timer;
 	std::string      m_reflector;
 	unsigned int     m_addrLen;
 	sockaddr_storage m_addr;
 	char             m_module;
 	CAPRSWriter*     m_writer;
 	CGPSHandler*     m_gps;
-
-	void linking();
-	void unlinking();
 
 	void createGPS();
 };

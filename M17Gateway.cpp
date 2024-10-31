@@ -131,7 +131,6 @@ m_conf(file),
 m_status(M17S_NOTLINKED),
 m_oldStatus(M17S_NOTLINKED),
 m_network(NULL),
-m_timer(1000U, 5U),
 m_reflector(),
 m_addrLen(0U),
 m_addr(),
@@ -287,16 +286,13 @@ int CM17Gateway::run()
 				m_addrLen   = refl->m_addrLen;
 				m_module    = module;
 
+				LogInfo("Linking at startup to %s", m_reflector.c_str());
+
 				m_status = m_oldStatus = M17S_LINKING;
-
-				LogInfo("Linked at startup to %s", m_reflector.c_str());
-
 				m_network->link(m_reflector, m_addr, m_addrLen, m_module);
 
 				if (voice != NULL)
 					voice->linkedTo(m_reflector);
-
-				m_timer.start();
 			}
 		} else {
 			startupReflector.clear();
@@ -319,9 +315,11 @@ int CM17Gateway::run()
 				break;
 			case M17N_LINKED:
 				m_status = m_oldStatus = M17S_LINKED;
+				LogInfo("Linked to %s", m_reflector.c_str());
 				break;
 			default:
 				m_status = m_oldStatus = M17S_NOTLINKED;
+				LogInfo("Linking failed with %s", m_reflector.c_str());
 				if (voice != NULL) {
 					voice->unlinked();
 					voice->start();
@@ -337,6 +335,7 @@ int CM17Gateway::run()
 				break;
 			default:
 				m_status = m_oldStatus = M17S_NOTLINKED;
+				LogInfo("Link failed with %s", m_reflector.c_str());
 				if (voice != NULL) {
 					voice->unlinked();
 					voice->start();
@@ -352,6 +351,7 @@ int CM17Gateway::run()
 				break;
 			default:
 				m_status = m_oldStatus = M17S_NOTLINKED;
+				LogInfo("Unlinked from %s", m_reflector.c_str());
 				break;
 			}
 			break;
@@ -473,14 +473,13 @@ int CM17Gateway::run()
 			} else if (dst == "UNLINK") {
 				if (m_status == M17S_LINKED || m_status == M17S_LINKING) {
 					LogMessage("Unlinking from reflector %s triggered by %s", m_reflector.c_str(), src.c_str());
+
+					m_status = m_oldStatus = M17S_UNLINKING;
 					m_network->stop();
 					m_network->unlink();
 
 					if (voice != NULL)
 						voice->unlinked();
-
-					m_status = m_oldStatus = M17S_UNLINKING;
-					m_timer.start();
 				}
 
 				triggerVoice = true;
@@ -492,10 +491,9 @@ int CM17Gateway::run()
 				if (reflector != m_reflector && module >= 'A' && module <= 'Z') {
 					if (m_status == M17S_LINKED || m_status == M17S_LINKING) {
 						LogMessage("Unlinking from reflector %s triggered by %s", m_reflector.c_str(), src.c_str());
+
 						m_network->stop();
 						m_network->unlink();
-
-						m_timer.start();
 					}
 
 					triggerVoice = true;
@@ -511,12 +509,12 @@ int CM17Gateway::run()
 						LogMessage("Linking to reflector %s triggered by %s", m_reflector.c_str(), src.c_str());
 
 						m_status = m_oldStatus = M17S_LINKING;
+						m_network->link(m_reflector, m_addr, m_addrLen, m_module);
 
 						if (voice != NULL)
 							voice->linkedTo(m_reflector);
 
 						hangTimer.start();
-						m_timer.start();
 					} else {
 						if (m_status == M17S_LINKED || m_status == M17S_LINKING)
 							m_status = m_oldStatus = M17S_UNLINKING;
@@ -563,7 +561,6 @@ int CM17Gateway::run()
 							m_network->unlink();
 
 							hangTimer.stop();
-							m_timer.start();
 						}
 
 						CM17Reflector* refl = reflectors.find(reflector);
@@ -579,6 +576,7 @@ int CM17Gateway::run()
 								LogMessage("Switched to reflector %s by remote command", m_reflector.c_str());
 
 								m_status = m_oldStatus = M17S_LINKING;
+								m_network->link(m_reflector, m_addr, m_addrLen, m_module);
 
 								if (voice != NULL) {
 									voice->linkedTo(m_reflector);
@@ -586,7 +584,6 @@ int CM17Gateway::run()
 								}
 
 								hangTimer.start();
-								m_timer.start();
 							}
 						} else {
 							m_reflector.clear();
@@ -625,10 +622,6 @@ int CM17Gateway::run()
 		if (m_writer != NULL)
 			m_writer->clock(ms);
 
-		m_timer.clock(ms);
-		linking();
-		unlinking();
-
 		reflectors.clock(ms);
 
 		localNetwork->clock(ms);
@@ -654,6 +647,7 @@ int CM17Gateway::run()
 				m_module    = startupReflector.at(M17_CALLSIGN_LENGTH - 1U);
 
 				m_status = m_oldStatus = M17S_LINKING;
+				m_network->link(m_reflector, m_addr, m_addrLen, m_module);
 
 				if (voice != NULL) {
 					voice->linkedTo(startupReflector);
@@ -661,14 +655,12 @@ int CM17Gateway::run()
 				}
 
 				hangTimer.start();
-				m_timer.start();
 			} else if (revert && startupReflector.empty() && (m_status == M17S_LINKED || m_status == M17S_LINKING)) {
 				LogMessage("Unlinking from %s due to inactivity", m_reflector.c_str());
 
+				m_status = m_oldStatus = M17S_UNLINKING;
 				m_network->stop();
 				m_network->unlink();
-
-				m_status = m_oldStatus = M17S_UNLINKING;
 
 				if (voice != NULL) {
 					voice->unlinked();
@@ -678,7 +670,6 @@ int CM17Gateway::run()
 				m_reflector.clear();
 
 				hangTimer.stop();
-				m_timer.start();
 			}
 		}
 
@@ -708,57 +699,6 @@ int CM17Gateway::run()
 	}
 
 	return 0;
-}
-
-void CM17Gateway::linking()
-{
-	if (m_status != M17S_LINKING)
-		return;
-
-	M17NET_STATUS status = m_network->getStatus();
-	if (status == M17N_NOTLINKED) {
-		m_timer.start();
-		m_network->link(m_reflector, m_addr, m_addrLen, m_module);
-	} else if (status == M17N_LINKED) {
-		m_timer.stop();
-		m_status = m_oldStatus = M17S_LINKED;
-	} else if (status == M17N_REJECTED) {
-		m_timer.stop();
-		m_status = m_oldStatus = M17S_NOTLINKED;
-	} else if (status == M17N_LINKING) {
-		if (m_timer.isRunning() && m_timer.hasExpired()) {
-			m_network->stop();
-			m_timer.stop();
-			m_status = m_oldStatus = M17S_NOTLINKED;
-			m_reflector.clear();
-		}
-	} else if (status == M17N_UNLINKING) {
-		if (m_timer.isRunning() && m_timer.hasExpired()) {
-			m_network->stop();
-			m_timer.start();
-			m_network->link(m_reflector, m_addr, m_addrLen, m_module);
-		}
-	}
-}
-
-void CM17Gateway::unlinking()
-{
-	if (m_status != M17S_UNLINKING)
-		return;
-
-	M17NET_STATUS status = m_network->getStatus();
-	if (status == M17N_NOTLINKED) {
-		m_timer.stop();
-		m_status = m_oldStatus = M17S_NOTLINKED;
-		m_reflector.clear();
-	} else if (status == M17N_UNLINKING) {
-		if (m_timer.isRunning() && m_timer.hasExpired()) {
-			m_network->stop();
-			m_timer.stop();
-			m_status = m_oldStatus = M17S_NOTLINKED;
-			m_reflector.clear();
-		}
-	}
 }
 
 void CM17Gateway::createGPS()
