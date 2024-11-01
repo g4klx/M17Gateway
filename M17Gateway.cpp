@@ -286,7 +286,7 @@ int CM17Gateway::run()
 				m_addrLen   = refl->m_addrLen;
 				m_module    = module;
 
-				LogInfo("Linking at startup to %s", m_reflector.c_str());
+				LogMessage("Linking at startup to %s", m_reflector.c_str());
 
 				m_status = m_oldStatus = M17S_LINKING;
 				m_network->link(m_reflector, m_addr, m_addrLen, m_module);
@@ -315,11 +315,11 @@ int CM17Gateway::run()
 				break;
 			case M17N_LINKED:
 				m_status = m_oldStatus = M17S_LINKED;
-				LogInfo("Linked to %s", m_reflector.c_str());
+				LogMessage("Linked to %s", m_reflector.c_str());
 				break;
 			default:
 				m_status = m_oldStatus = M17S_NOTLINKED;
-				LogInfo("Linking failed with %s", m_reflector.c_str());
+				LogMessage("Linking failed with %s", m_reflector.c_str());
 				if (voice != NULL) {
 					voice->unlinked();
 					voice->start();
@@ -333,9 +333,15 @@ int CM17Gateway::run()
 			case M17N_LINKED:
 				// Nothing to do
 				break;
+			case M17N_FAILED:
+				LogMessage("Relinking to reflector %s", m_reflector.c_str());
+				m_network->stop();
+				m_network->link(m_reflector, m_addr, m_addrLen, m_module);
+				m_status = M17S_LINKING;
+				break;
 			default:
 				m_status = m_oldStatus = M17S_NOTLINKED;
-				LogInfo("Link failed with %s", m_reflector.c_str());
+				LogMessage("Link failed with %s", m_reflector.c_str());
 				if (voice != NULL) {
 					voice->unlinked();
 					voice->start();
@@ -351,7 +357,7 @@ int CM17Gateway::run()
 				break;
 			default:
 				m_status = m_oldStatus = M17S_NOTLINKED;
-				LogInfo("Unlinked from %s", m_reflector.c_str());
+				LogMessage("Unlinked from %s", m_reflector.c_str());
 				break;
 			}
 			break;
