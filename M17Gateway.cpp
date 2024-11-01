@@ -526,18 +526,18 @@ int CM17Gateway::run()
 					}
 				} else {
 					if (m_status == M17S_LINKED) {
-						lsf.setDest("ALL");
-						lsf.getNetwork(buffer + 6U);
-
+						// Replace the destination callsign with the reflector name and module
+						CM17Utils::encodeCallsign(m_reflector, buffer + 6U);
 						m_network->write(buffer);
+						hangTimer.start();
 					}
 				}
 			} else {
 				if (m_status == M17S_LINKED) {
-					lsf.setDest("ALL");
-					lsf.getNetwork(buffer + 6U);
-
+					// Replace the destination callsign with the reflector name and module
+					CM17Utils::encodeCallsign(m_reflector, buffer + 6U);
 					m_network->write(buffer);
+					hangTimer.start();
 				}
 			}
 		}
