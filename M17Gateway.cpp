@@ -524,6 +524,20 @@ int CM17Gateway::run()
 
 						hangTimer.stop();
 					}
+				} else {
+					if (m_status == M17S_LINKED) {
+						lsf.setDest("ALL");
+						lsf.getNetwork(buffer + 6U);
+
+						m_network->write(buffer);
+					}
+				}
+			} else {
+				if (m_status == M17S_LINKED) {
+					lsf.setDest("ALL");
+					lsf.getNetwork(buffer + 6U);
+
+					m_network->write(buffer);
 				}
 			}
 		}
