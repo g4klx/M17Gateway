@@ -38,8 +38,8 @@ m_buffer(1000U, "M17 Network"),
 m_state(M17N_NOTLINKED),
 m_encoded(NULL),
 m_module(' '),
-m_timer(1000U, 1U),
-m_timeout(1000U, 30U)
+m_timer(1000U, 3U),
+m_timeout(1000U, 60U)
 {
 	assert(!callsign.empty());
 	assert(!suffix.empty());
@@ -107,7 +107,7 @@ bool CM17Network::write(const unsigned char* data)
 	assert(data != NULL);
 
 	if (m_debug)
-		CUtils::dump(1U, "M17 Network Data Transmitted", data, M17_NETWORK_FRAME_LENGTH);
+		CUtils::dump(1U, "Network Data Transmitted", data, M17_NETWORK_FRAME_LENGTH);
 
 	return m_socket.write(data, M17_NETWORK_FRAME_LENGTH, m_addr, m_addrLen);
 }
@@ -141,9 +141,12 @@ void CM17Network::clock(unsigned int ms)
 		case M17N_UNLINKING:
 			m_state = M17N_NOTLINKED;
 			break;
-		default:
+		case M17N_LINKED:
 			LogMessage("Link lost to reflector %s", m_name.c_str());
 			m_state = M17N_FAILED;
+			break;
+		default:
+			LogWarning("Timeout in state %d", int(m_state));
 			break;
 		}
 
@@ -165,32 +168,34 @@ void CM17Network::clock(unsigned int ms)
 		return;
 
 	if (!CUDPSocket::match(m_addr, address)) {
-		LogMessage("M17 Packet received from an invalid source");
+		LogMessage("Packet received from an invalid source");
 		return;
 	}
 
 	if (m_debug)
-		CUtils::dump(1U, "M17 Network Data Received", buffer, length);
+		CUtils::dump(1U, "Network Data Received", buffer, length);
 
 	if (::memcmp(buffer + 0U, "ACKN", 4U) == 0) {
+		m_timeout.start();
 		m_timer.stop();
 		m_state = M17N_LINKED;
-		m_timeout.start();
-		LogMessage("Linked to reflector %s", m_name.c_str());
+		LogMessage("Received an ACKN from reflector %s", m_name.c_str());
 		return;
 	}
 
 	if (::memcmp(buffer + 0U, "NACK", 4U) == 0) {
+		m_timeout.stop();
 		m_timer.stop();
 		m_state = M17N_REJECTED;
-		LogMessage("Link refused by reflector %s", m_name.c_str());
+		LogMessage("Received a NACK from reflector %s", m_name.c_str());
 		return;
 	}
 
 	if (::memcmp(buffer + 0U, "DISC", 4U) == 0) {
+		m_timeout.stop();
 		m_timer.stop();
 		m_state = M17N_NOTLINKED;
-		LogMessage("Unlinked from reflector %s", m_name.c_str());
+		LogMessage("Received a DISC from reflector %s", m_name.c_str());
 		return;
 	}
 
@@ -203,7 +208,7 @@ void CM17Network::clock(unsigned int ms)
 	}
 
 	if (::memcmp(buffer + 0U, "M17 ", 4U) != 0) {
-		CUtils::dump(2U, "M17, received unknown packet", buffer, length);
+		CUtils::dump(2U, "Received an unknown packet", buffer, length);
 		return;
 	}
 
@@ -239,12 +244,6 @@ void CM17Network::close()
 	LogMessage("Closing M17 network connection");
 }
 
-void CM17Network::stop()
-{
-	m_timeout.stop();
-	m_timer.stop();
-}
-
 M17NET_STATUS CM17Network::getStatus() const
 {
 	return m_state;
@@ -271,7 +270,7 @@ void CM17Network::sendConnect()
 	LogDebug("Connecting module %c", m_module);
 
 	if (m_debug)
-		CUtils::dump(1U, "M17 data transmitted", buffer, 11U);
+		CUtils::dump(1U, "network Data Transmitted", buffer, 11U);
 
 	m_socket.write(buffer, 11U, m_addr, m_addrLen);
 }
@@ -293,7 +292,7 @@ void CM17Network::sendPong()
 	buffer[9U] = m_encoded[5U];
 
 	if (m_debug)
-		CUtils::dump(1U, "M17 data transmitted", buffer, 10U);
+		CUtils::dump(1U, "Network Data Transmitted", buffer, 10U);
 
 	m_socket.write(buffer, 10U, m_addr, m_addrLen);
 }
@@ -315,7 +314,7 @@ void CM17Network::sendDisconnect()
 	buffer[9U] = m_encoded[5U];
 
 	if (m_debug)
-		CUtils::dump(1U, "M17 data transmitted", buffer, 10U);
+		CUtils::dump(1U, "Network Data Transmitted", buffer, 10U);
 
 	m_socket.write(buffer, 10U, m_addr, m_addrLen);
 }

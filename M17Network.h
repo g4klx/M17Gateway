@@ -48,8 +48,6 @@ public:
 
 	bool read(unsigned char* data);
 
-	void stop();
-
 	void close();
 
 	void clock(unsigned int ms);

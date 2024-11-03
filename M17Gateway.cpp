@@ -317,13 +317,17 @@ int CM17Gateway::run()
 				m_status = m_oldStatus = M17S_LINKED;
 				LogMessage("Linked to %s", m_reflector.c_str());
 				break;
-			default:
+			case M17N_REJECTED:
 				m_status = m_oldStatus = M17S_NOTLINKED;
-				LogMessage("Linking failed with %s", m_reflector.c_str());
+				LogMessage("Linking rejected by %s", m_reflector.c_str());
 				if (voice != NULL) {
 					voice->unlinked();
 					voice->start();
 				}
+				break;
+			default:
+				LogMessage("Linking failed with %s, trying again", m_reflector.c_str());
+				m_network->link(m_reflector, m_addr, m_addrLen, m_module);
 				break;
 			}
 			break;
@@ -335,7 +339,6 @@ int CM17Gateway::run()
 				break;
 			case M17N_FAILED:
 				LogMessage("Relinking to reflector %s", m_reflector.c_str());
-				m_network->stop();
 				m_network->link(m_reflector, m_addr, m_addrLen, m_module);
 				m_status = M17S_LINKING;
 				break;
@@ -481,7 +484,6 @@ int CM17Gateway::run()
 					LogMessage("Unlinking from reflector %s triggered by %s", m_reflector.c_str(), src.c_str());
 
 					m_status = m_oldStatus = M17S_UNLINKING;
-					m_network->stop();
 					m_network->unlink();
 
 					if (voice != NULL)
@@ -498,7 +500,6 @@ int CM17Gateway::run()
 					if (m_status == M17S_LINKED || m_status == M17S_LINKING) {
 						LogMessage("Unlinking from reflector %s triggered by %s", m_reflector.c_str(), src.c_str());
 
-						m_network->stop();
 						m_network->unlink();
 					}
 
@@ -577,7 +578,6 @@ int CM17Gateway::run()
 						if (m_status == M17S_LINKED || m_status == M17S_LINKING) {
 							LogMessage("Unlinked from reflector %s by remote command", m_reflector.c_str());
 
-							m_network->stop();
 							m_network->unlink();
 
 							hangTimer.stop();
@@ -653,10 +653,8 @@ int CM17Gateway::run()
 		hangTimer.clock(ms);
 		if (hangTimer.isRunning() && hangTimer.hasExpired()) {
 			if (revert && !startupReflector.empty() && m_reflector != startupReflector) {
-				if (m_status == M17S_LINKED || m_status == M17S_LINKING) {
-					m_network->stop();
+				if (m_status == M17S_LINKED || m_status == M17S_LINKING)
 					m_network->unlink();
-				}
 
 				LogMessage("Relinked from %s to %s due to inactivity", m_reflector.c_str(), startupReflector.c_str());
 
@@ -679,7 +677,6 @@ int CM17Gateway::run()
 				LogMessage("Unlinking from %s due to inactivity", m_reflector.c_str());
 
 				m_status = m_oldStatus = M17S_UNLINKING;
-				m_network->stop();
 				m_network->unlink();
 
 				if (voice != NULL) {
