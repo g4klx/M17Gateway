@@ -228,6 +228,9 @@ M17-BRA 35.198.35.247 17000
 # M17-BRO AD8DP, US https://m17-bro.dudetronics.com
 M17-BRO 68.37.44.22 17000
 
+# M17-BTT C4FM_BAT, IT http://iz7exi.duckdns.org:8855/main.php
+M17-BTT 82.85.236.36 17000
+
 # M17-CAD VA3CZK, CA http://ontxlink.hopto.org/m17/index.php
 M17-CAD 166.48.140.139 17000
 
