@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2018,2020,2021 by Jonathan Naylor G4KLX
+*   Copyright (C) 2018,2020,2021,2025 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ m_writer(writer),
 m_suffix(suffix)
 {
 	assert(!callsign.empty());
-	assert(writer != NULL);
+	assert(writer != nullptr);
 
 	m_callsign += "-" + suffix;
 }

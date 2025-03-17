@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2017,2018,2021 by Jonathan Naylor G4KLX
+*   Copyright (C) 2017,2018,2021,2024,2025 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -23,14 +23,15 @@
 #include "M17LSF.h"
 #include "Timer.h"
 
+#include <cstdint>
 #include <string>
 #include <vector>
 #include <unordered_map>
 
-enum VOICE_STATUS {
-	VS_NONE,
-	VS_WAITING,
-	VS_SENDING
+enum class VOICE_STATUS {
+	NONE,
+	WAITING,
+	SENDING
 };
 
 struct CPositions {
@@ -50,7 +51,7 @@ public:
 
 	bool read(unsigned char* data);
 
-	void eof();
+	void start();
 
 	void clock(unsigned int ms);
 

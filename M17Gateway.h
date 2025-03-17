@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2016,2018,2020,2021,2023 by Jonathan Naylor G4KLX
+*   Copyright (C) 2016,2018,2020,2021,2023,2025 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -43,12 +43,12 @@
 #include <winsock.h>
 #endif
 
-enum M17_STATUS {
-	M17S_NOTLINKED,
-	M17S_LINKED,
-	M17S_LINKING,
-	M17S_UNLINKING,
-	M17S_ECHO
+enum class M17_STATUS {
+	NOTLINKED,
+	LINKED,
+	LINKING,
+	UNLINKING,
+	ECHO
 };
 
 class CM17Gateway
@@ -64,7 +64,6 @@ private:
 	M17_STATUS       m_status;
 	M17_STATUS       m_oldStatus;
 	CM17Network*     m_network;
-	CTimer           m_timer;
 	CTimer           m_hangTimer;
 	CReflectors*     m_reflectors;
 	CVoice*          m_voice;
@@ -74,9 +73,6 @@ private:
 	char             m_module;
 	CAPRSWriter*     m_writer;
 	CGPSHandler*     m_gps;
-
-	void linking();
-	void unlinking();
 
 	void createGPS();
 

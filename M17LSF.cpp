@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020,2021 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2020,2021,2025 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 #include <cstring>
 
 CM17LSF::CM17LSF() :
-m_lsf(NULL)
+m_lsf(nullptr)
 {
 	m_lsf = new unsigned char[M17_LSF_LENGTH_BYTES];
 }
@@ -36,14 +36,14 @@ CM17LSF::~CM17LSF()
 
 void CM17LSF::getNetwork(unsigned char* data) const
 {
-	assert(data != NULL);
+	assert(data != nullptr);
 
 	::memcpy(data, m_lsf, M17_LSF_LENGTH_BYTES);
 }
 
 void CM17LSF::setNetwork(const unsigned char* data)
 {
-	assert(data != NULL);
+	assert(data != nullptr);
 
 	::memcpy(m_lsf, data, M17_LSF_LENGTH_BYTES);
 }
@@ -128,14 +128,14 @@ void CM17LSF::setCAN(unsigned char can)
 
 void CM17LSF::getMeta(unsigned char* data) const
 {
-	assert(data != NULL);
+	assert(data != nullptr);
 
 	::memcpy(data, m_lsf + 14U, M17_META_LENGTH_BYTES);
 }
 
 void CM17LSF::setMeta(const unsigned char* data)
 {
-	assert(data != NULL);
+	assert(data != nullptr);
 
 	::memcpy(m_lsf + 14U, data, M17_META_LENGTH_BYTES);
 }

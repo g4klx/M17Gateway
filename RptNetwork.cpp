@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2009-2014,2016,2019,2020 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2009-2014,2016,2019,2020,2025 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ bool CRptNetwork::write(const unsigned char* data)
 	if (m_addrLen == 0U)
 		return false;
 
-	assert(data != NULL);
+	assert(data != nullptr);
 
 	if (m_debug)
 		CUtils::dump(1U, "Rpt Network Data Transmitted", data, M17_NETWORK_FRAME_LENGTH);
@@ -118,7 +118,7 @@ void CRptNetwork::clock(unsigned int ms)
 
 bool CRptNetwork::read(unsigned char* data)
 {
-	assert(data != NULL);
+	assert(data != nullptr);
 
 	if (m_buffer.isEmpty())
 		return false;
