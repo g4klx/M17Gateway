@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2016,2020,2021 by Jonathan Naylor G4KLX
+*   Copyright (C) 2016,2020,2021,2025 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -22,17 +22,17 @@
 #include "StopWatch.h"
 #include "Timer.h"
 
-enum ECHO_STATE {
-	EST_NONE,
-	EST_DATA,
-	EST_EOF
+enum class ECHO_STATE {
+	NONE,
+	DATA,
+	END
 };
 
-enum ECHO_STATUS {
-	ES_NONE,
-	ES_RECORDING,
-	ES_WAITING,
-	ES_PLAYING
+enum class ECHO_STATUS {
+	NONE,
+	RECORDING,
+	WAITING,
+	PLAYING
 };
 
 class CEcho

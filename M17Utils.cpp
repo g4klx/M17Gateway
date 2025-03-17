@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020,2021,2024 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2020,2021,2024,2025 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ const std::string M17_CHARS = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-/.";
 
 void CM17Utils::encodeCallsign(const std::string& callsign, unsigned char* encoded)
 {
-	assert(encoded != NULL);
+	assert(encoded != nullptr);
 
 	if (callsign == "ALL      ") {
 		encoded[0U] = 0xFFU;
@@ -66,7 +66,7 @@ void CM17Utils::encodeCallsign(const std::string& callsign, unsigned char* encod
 
 std::string CM17Utils::decodeCallsign(const unsigned char* encoded)
 {
-	assert(encoded != NULL);
+	assert(encoded != nullptr);
 
 	std::string callsign;
 

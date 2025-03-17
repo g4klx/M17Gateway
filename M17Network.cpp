@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2009-2014,2016,2019,2020,2021,2024 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2009-2014,2016,2019,2020,2021,2024,2025 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -35,8 +35,8 @@ m_addr(),
 m_addrLen(0U),
 m_debug(debug),
 m_buffer(1000U, "M17 Network"),
-m_state(M17N_NOTLINKED),
-m_encoded(NULL),
+m_state(M17NET_STATUS::NOTLINKED),
+m_encoded(nullptr),
 m_module(' '),
 m_timer(1000U, 3U),
 m_timeout(1000U, 60U)
@@ -74,7 +74,7 @@ bool CM17Network::link(const std::string& name, const sockaddr_storage& addr, un
 	m_addrLen = addrLen;
 	m_module  = module;
 
-	m_state = M17N_LINKING;
+	m_state = M17NET_STATUS::LINKING;
 
 	sendConnect();
 
@@ -86,10 +86,10 @@ bool CM17Network::link(const std::string& name, const sockaddr_storage& addr, un
 
 void CM17Network::unlink()
 {
-	if (m_state != M17N_LINKED && m_state != M17N_LINKING)
+	if (m_state != M17NET_STATUS::LINKED && m_state != M17NET_STATUS::LINKING)
 		return;
 
-	m_state = M17N_UNLINKING;
+	m_state = M17NET_STATUS::UNLINKING;
 
 	sendDisconnect();
 
@@ -99,12 +99,12 @@ void CM17Network::unlink()
 
 bool CM17Network::write(const unsigned char* data)
 {
-	assert(data != NULL);
+	assert(data != nullptr);
 
-	if (m_state != M17N_LINKED)
+	if (m_state != M17NET_STATUS::LINKED)
 		return false;
 
-	assert(data != NULL);
+	assert(data != nullptr);
 
 	if (m_debug)
 		CUtils::dump(1U, "Network Data Transmitted", data, M17_NETWORK_FRAME_LENGTH);
@@ -117,11 +117,11 @@ void CM17Network::clock(unsigned int ms)
 	m_timer.clock(ms);
 	if (m_timer.isRunning() && m_timer.hasExpired()) {
 		switch (m_state) {
-		case M17N_LINKING:
+		case M17NET_STATUS::LINKING:
 			sendConnect();
 			m_timer.start();
 			break;
-		case M17N_UNLINKING:
+		case M17NET_STATUS::UNLINKING:
 			sendDisconnect();
 			m_timer.start();
 			break;
@@ -134,16 +134,16 @@ void CM17Network::clock(unsigned int ms)
 	m_timeout.clock(ms);
 	if (m_timeout.isRunning() && m_timeout.hasExpired()) {
 		switch (m_state) {
-		case M17N_LINKING:
+		case M17NET_STATUS::LINKING:
 			LogMessage("Linking failed with reflector %s", m_name.c_str());
-			m_state = M17N_FAILED;
+			m_state = M17NET_STATUS::FAILED;
 			break;
-		case M17N_UNLINKING:
-			m_state = M17N_NOTLINKED;
+		case M17NET_STATUS::UNLINKING:
+			m_state = M17NET_STATUS::NOTLINKED;
 			break;
-		case M17N_LINKED:
+		case M17NET_STATUS::LINKED:
 			LogMessage("Link lost to reflector %s", m_name.c_str());
-			m_state = M17N_FAILED;
+			m_state = M17NET_STATUS::FAILED;
 			break;
 		default:
 			LogWarning("Timeout in state %d", int(m_state));
@@ -164,7 +164,7 @@ void CM17Network::clock(unsigned int ms)
 	if (length <= 0)
 		return;
 
-	if (m_state == M17N_NOTLINKED || m_state == M17N_REJECTED || m_state == M17N_FAILED)
+	if (m_state == M17NET_STATUS::NOTLINKED || m_state == M17NET_STATUS::REJECTED || m_state == M17NET_STATUS::FAILED)
 		return;
 
 	if (!CUDPSocket::match(m_addr, address)) {
@@ -178,7 +178,7 @@ void CM17Network::clock(unsigned int ms)
 	if (::memcmp(buffer + 0U, "ACKN", 4U) == 0) {
 		m_timeout.start();
 		m_timer.stop();
-		m_state = M17N_LINKED;
+		m_state = M17NET_STATUS::LINKED;
 		LogMessage("Received an ACKN from reflector %s", m_name.c_str());
 		return;
 	}
@@ -186,7 +186,7 @@ void CM17Network::clock(unsigned int ms)
 	if (::memcmp(buffer + 0U, "NACK", 4U) == 0) {
 		m_timeout.stop();
 		m_timer.stop();
-		m_state = M17N_REJECTED;
+		m_state = M17NET_STATUS::REJECTED;
 		LogMessage("Received a NACK from reflector %s", m_name.c_str());
 		return;
 	}
@@ -194,13 +194,13 @@ void CM17Network::clock(unsigned int ms)
 	if (::memcmp(buffer + 0U, "DISC", 4U) == 0) {
 		m_timeout.stop();
 		m_timer.stop();
-		m_state = M17N_NOTLINKED;
+		m_state = M17NET_STATUS::NOTLINKED;
 		LogMessage("Received a DISC from reflector %s", m_name.c_str());
 		return;
 	}
 
 	if (::memcmp(buffer + 0U, "PING", 4U) == 0) {
-		if (m_state == M17N_LINKED) {
+		if (m_state == M17NET_STATUS::LINKED) {
 			m_timeout.start();
 			sendPong();
 		}
@@ -212,7 +212,7 @@ void CM17Network::clock(unsigned int ms)
 		return;
 	}
 
-	if (m_state == M17N_LINKED) {
+	if (m_state == M17NET_STATUS::LINKED) {
 		m_timeout.start();
 
 		unsigned char c = length;
@@ -224,7 +224,7 @@ void CM17Network::clock(unsigned int ms)
 
 bool CM17Network::read(unsigned char* data)
 {
-	assert(data != NULL);
+	assert(data != nullptr);
 
 	if (m_buffer.isEmpty())
 		return false;

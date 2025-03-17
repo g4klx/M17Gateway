@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2009-2014,2016,2018,2020,2021 by Jonathan Naylor G4KLX
+ *   Copyright (C) 2009-2014,2016,2018,2020,2021,2025 by Jonathan Naylor G4KLX
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -26,13 +26,13 @@
 
 #include <cstdint>
 
-enum M17NET_STATUS {
-	M17N_NOTLINKED,
-	M17N_LINKING,
-	M17N_LINKED,
-	M17N_UNLINKING,
-	M17N_REJECTED,
-	M17N_FAILED
+enum class M17NET_STATUS {
+	NOTLINKED,
+	LINKING,
+	LINKED,
+	UNLINKING,
+	REJECTED,
+	FAILED
 };
 
 class CM17Network {

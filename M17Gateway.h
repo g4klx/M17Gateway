@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2016,2018,2020,2021 by Jonathan Naylor G4KLX
+*   Copyright (C) 2016,2018,2020,2021,2025 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -40,12 +40,12 @@
 #include <winsock.h>
 #endif
 
-enum M17_STATUS {
-	M17S_NOTLINKED,
-	M17S_LINKED,
-	M17S_LINKING,
-	M17S_UNLINKING,
-	M17S_ECHO
+enum class M17_STATUS {
+	NOTLINKED,
+	LINKED,
+	LINKING,
+	UNLINKING,
+	ECHO
 };
 
 class CM17Gateway

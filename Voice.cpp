@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2017,2018.2021,2024 by Jonathan Naylor G4KLX
+*   Copyright (C) 2017,2018.2021,2024,2025 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -40,12 +40,12 @@ m_language(language),
 m_indxFile(),
 m_m17File(),
 m_lsf(),
-m_status(VS_NONE),
+m_status(VOICE_STATUS::NONE),
 m_timer(1000U, 2U),
 m_stopWatch(),
 m_sent(0U),
-m_m17(NULL),
-m_voiceData(NULL),
+m_m17(nullptr),
+m_voiceData(nullptr),
 m_voiceLength(0U),
 m_positions(),
 m_metaArray(),
@@ -89,7 +89,7 @@ CVoice::~CVoice()
 bool CVoice::open()
 {
 	FILE* fpindx = ::fopen(m_indxFile.c_str(), "rt");
-	if (fpindx == NULL) {
+	if (fpindx == nullptr) {
 		LogError("Unable to open the index file - %s", m_indxFile.c_str());
 		return false;
 	}
@@ -103,7 +103,7 @@ bool CVoice::open()
 	}
 
 	FILE* fpm17 = ::fopen(m_m17File.c_str(), "rb");
-	if (fpm17 == NULL) {
+	if (fpm17 == nullptr) {
 		LogError("Unable to open the M17 file - %s", m_m17File.c_str());
 		::fclose(fpindx);
 		return false;
@@ -114,12 +114,12 @@ bool CVoice::open()
 	size_t sizeRead = ::fread(m_m17, 1U, statStruct.st_size, fpm17);
 	if (sizeRead != 0U) {
 		char buffer[80U];
-		while (::fgets(buffer, 80, fpindx) != NULL) {
+		while (::fgets(buffer, 80, fpindx) != nullptr) {
 			char* p1 = ::strtok(buffer, "\t\r\n");
-			char* p2 = ::strtok(NULL, "\t\r\n");
-			char* p3 = ::strtok(NULL, "\t\r\n");
+			char* p2 = ::strtok(nullptr, "\t\r\n");
+			char* p3 = ::strtok(nullptr, "\t\r\n");
 
-			if (p1 != NULL && p2 != NULL && p3 != NULL) {
+			if (p1 != nullptr && p2 != nullptr && p3 != nullptr) {
 				std::string symbol  = std::string(p1);
 				unsigned int start  = ::atoi(p2) * M17_3200_LENGTH_BYTES;
 				unsigned int length = (::atoi(p3) + 1U) / 2U;
@@ -235,7 +235,7 @@ void CVoice::unlinked()
 
 void CVoice::createVoice(const std::vector<std::string>& words, const char* text)
 {
-	assert(text != NULL);
+	assert(text != nullptr);
 
 	size_t textSize = ::strlen(text);
 	unsigned char count = textSize / (M17_META_LENGTH_BYTES - 1U);
@@ -328,9 +328,9 @@ void CVoice::createVoice(const std::vector<std::string>& words, const char* text
 
 bool CVoice::read(unsigned char* data)
 {
-	assert(data != NULL);
+	assert(data != nullptr);
 
-	if (m_status != VS_SENDING)
+	if (m_status != VOICE_STATUS::SENDING)
 		return false;
 
 	unsigned int count = m_stopWatch.elapsed() / M17_FRAME_TIME;
@@ -344,7 +344,7 @@ bool CVoice::read(unsigned char* data)
 
 		if (offset >= m_voiceLength) {
 			m_timer.stop();
-			m_status = VS_NONE;
+			m_status = VOICE_STATUS::NONE;
 		}
 
 		return true;
@@ -358,7 +358,7 @@ void CVoice::start()
 	if (m_voiceLength == 0U)
 		return;
 
-	m_status = VS_WAITING;
+	m_status = VOICE_STATUS::WAITING;
 
 	m_timer.start();
 }
@@ -367,9 +367,9 @@ void CVoice::clock(unsigned int ms)
 {
 	m_timer.clock(ms);
 	if (m_timer.isRunning() && m_timer.hasExpired()) {
-		if (m_status == VS_WAITING) {
+		if (m_status == VOICE_STATUS::WAITING) {
 			m_stopWatch.start();
-			m_status = VS_SENDING;
+			m_status = VOICE_STATUS::SENDING;
 			m_sent = 0U;
 		}
 	}
@@ -377,7 +377,7 @@ void CVoice::clock(unsigned int ms)
 
 void CVoice::createFrame(uint16_t id, uint16_t& fn, const unsigned char* audio, unsigned int length, bool end)
 {
-	assert(audio != NULL);
+	assert(audio != nullptr);
 	assert(length > 0U);
 
 	for (unsigned int i = 0U; i < length; i++) {
