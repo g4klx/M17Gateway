@@ -67,6 +67,9 @@ m_mqttAddress("127.0.0.1"),
 m_mqttPort(1883U),
 m_mqttKeepalive(60U),
 m_mqttName("m17-gateway"),
+m_mqttAuthEnabled(false),
+m_mqttUsername(),
+m_mqttPassword(),
 m_voiceEnabled(true),
 m_voiceLanguage("en_GB"),
 m_voiceDirectory(),
@@ -211,6 +214,12 @@ bool CConf::read()
 				m_mqttKeepalive = (unsigned int)::atoi(value);
 			else if (::strcmp(key, "Name") == 0)
 				m_mqttName = value;
+			else if (::strcmp(key, "Auth") == 0)
+				m_mqttAuthEnabled = ::atoi(value) == 1;
+			else if (::strcmp(key, "Username") == 0)
+				m_mqttUsername = value;
+			else if (::strcmp(key, "Password") == 0)
+				m_mqttPassword = value;
 		} else if (section == SECTION::VOICE) {
 			if (::strcmp(key, "Enabled") == 0)
 				m_voiceEnabled = ::atoi(value) == 1;
@@ -373,6 +382,21 @@ unsigned int CConf::getMQTTKeepalive() const
 std::string CConf::getMQTTName() const
 {
 	return m_mqttName;
+}
+
+bool CConf::getMQTTAuthEnabled() const
+{
+	return m_mqttAuthEnabled;
+}
+
+std::string CConf::getMQTTUsername() const
+{
+	return m_mqttUsername;
+}
+
+std::string CConf::getMQTTPassword() const
+{
+	return m_mqttPassword;
 }
 
 bool CConf::getVoiceEnabled() const
