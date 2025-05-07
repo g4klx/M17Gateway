@@ -7,6 +7,8 @@ The "INFO" command is available to cause the gateway to issue a voice confirmati
 
 The MMDVM .ini file should have the IP address and port number of the client in the [M17 Network] settings.
 
+The file that contains the information about the reachable reflectors is held in the M17Hosts.txt file that should be donwloaded from the DVRef.com web site. A script to do this under Linux is included. This is handled automatically in WPSD and Pi-Star.
+
 These programs build on 32-bit and 64-bit Linux as well as on Windows using Visual Studio 2019 on x86 and x64.
 
 This software is licenced under the GPL v2 and is primarily intended for amateur and educational use.
