@@ -22,7 +22,7 @@
 #
 # Full path to the M17Hosts file
 #
-M17HOSTS=/path/to/M17Hosts.json
+M17HOSTS=/path/to/M17Hosts.txt
 
 ###############################################################################
 #
