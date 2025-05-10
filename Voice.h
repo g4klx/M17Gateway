@@ -55,6 +55,8 @@ public:
 
 	void clock(unsigned int ms);
 
+	bool isBusy() const;
+
 private:
 	std::string                            m_language;
 	std::string                            m_indxFile;

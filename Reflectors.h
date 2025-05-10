@@ -1,5 +1,5 @@
 /*
-*   Copyright (C) 2016,2018,2020 by Jonathan Naylor G4KLX
+*   Copyright (C) 2016,2018,2020,2025 by Jonathan Naylor G4KLX
 *
 *   This program is free software; you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -28,15 +28,72 @@
 class CM17Reflector {
 public:
 	CM17Reflector() :
-	m_name(),
-	m_addr(),
-	m_addrLen(0U)
+	m_name()
 	{
+		IPv4.m_addrLen = 0U;
+		IPv6.m_addrLen = 0U;
 	}
 
-	std::string      m_name;
-	sockaddr_storage m_addr;
-	unsigned int     m_addrLen;
+	CM17Reflector(const CM17Reflector& in)
+	{
+		m_name = in.m_name;
+
+		IPv4.m_addrLen = in.IPv4.m_addrLen;
+		IPv6.m_addrLen = in.IPv6.m_addrLen;
+
+		::memcpy(&IPv4.m_addr, &in.IPv4.m_addr, sizeof(sockaddr_storage));
+		::memcpy(&IPv6.m_addr, &in.IPv6.m_addr, sizeof(sockaddr_storage));
+	}
+
+	bool isEmpty() const
+	{
+		return m_name.empty();
+	}
+
+	bool isUsed() const
+	{
+		return !m_name.empty();
+	}
+
+	void reset()
+	{
+		m_name.clear();
+	}
+
+	bool hasIPv4() const
+	{
+		return IPv4.m_addrLen > 0U;
+	}
+
+	bool hasIPv6() const
+	{
+		return IPv6.m_addrLen > 0U;
+	}
+
+	std::string          m_name;
+	struct {
+		sockaddr_storage m_addr;
+		unsigned int     m_addrLen;
+	} IPv4;
+	struct {
+		sockaddr_storage m_addr;
+		unsigned int     m_addrLen;
+	} IPv6;
+
+	CM17Reflector& operator=(const CM17Reflector& in)
+	{
+		if (&in != this) {
+			m_name = in.m_name;
+
+			IPv4.m_addrLen = in.IPv4.m_addrLen;
+			IPv6.m_addrLen = in.IPv6.m_addrLen;
+
+			::memcpy(&IPv4.m_addr, &in.IPv4.m_addr, sizeof(sockaddr_storage));
+			::memcpy(&IPv6.m_addr, &in.IPv6.m_addr, sizeof(sockaddr_storage));
+		}
+
+		return *this;
+	}
 };
 
 class CReflectors {
@@ -55,6 +112,10 @@ private:
 	std::string  m_hostsFile2;
 	std::vector<CM17Reflector*> m_reflectors;
 	CTimer       m_timer;
+
+	void remove();
+	bool parseJSON(const std::string& fileName);
+	bool parseHosts(const std::string& fileName);
 };
 
 #endif

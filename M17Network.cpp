@@ -59,20 +59,29 @@ CM17Network::~CM17Network()
 	delete[] m_encoded;
 }
 
-bool CM17Network::link(const std::string& name, const sockaddr_storage& addr, unsigned int addrLen, char module)
+bool CM17Network::link(const CM17Reflector& reflector, char module)
 {
 	close();
 
 	LogMessage("Opening M17 Network connection");
 
-	bool ret = m_socket.open(addr);
+	if (reflector.hasIPv6()) {
+		m_addr    = reflector.IPv6.m_addr;
+		m_addrLen = reflector.IPv6.m_addrLen;
+	} else if (reflector.hasIPv4()) {
+		m_addr    = reflector.IPv4.m_addr;
+		m_addrLen = reflector.IPv4.m_addrLen;
+	} else {
+		LogWarning("Reflector %s has no IPv6 or IPv4 address", reflector.m_name.c_str());
+		return false;
+	}
+
+	bool ret = m_socket.open(m_addr);
 	if (!ret)
 		return false;
 
-	m_name    = name;
-	m_addr    = addr;
-	m_addrLen = addrLen;
-	m_module  = module;
+	m_name   = reflector.m_name;
+	m_module = module;
 
 	m_state = M17NET_STATUS::LINKING;
 

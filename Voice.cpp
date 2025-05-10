@@ -238,7 +238,7 @@ void CVoice::createVoice(const std::vector<std::string>& words, const char* text
 	assert(text != nullptr);
 
 	size_t textSize = ::strlen(text);
-	unsigned char count = textSize / (M17_META_LENGTH_BYTES - 1U);
+	unsigned int count = textSize / (M17_META_LENGTH_BYTES - 1U);
 	if ((textSize % (M17_META_LENGTH_BYTES - 1U)) > 0U)
 		count++;
 
@@ -416,4 +416,9 @@ void CVoice::createFrame(uint16_t id, uint16_t& fn, const unsigned char* audio, 
 		::memcpy(m_voiceData + m_voiceLength, frame, M17_NETWORK_FRAME_LENGTH);
 		m_voiceLength += M17_NETWORK_FRAME_LENGTH;
 	}
+}
+
+bool CVoice::isBusy() const
+{
+	return (m_status == VOICE_STATUS::WAITING) || (m_status == VOICE_STATUS::SENDING);
 }

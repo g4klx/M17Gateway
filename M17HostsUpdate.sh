@@ -20,7 +20,7 @@
 #
 ###############################################################################
 #
-# Full path to the M17Hosts file
+# Full path to the M17Hosts JSON file
 #
 M17HOSTS=/path/to/M17Hosts.json
 
@@ -37,7 +37,7 @@ then
 	exit 1
 fi
 
-# Download the M17Hosts.txt file
-curl https://dvref.com/downloads/M17Hosts-resolved.txt > ${M17HOSTS}
+# Download the M17Hosts.json file
+curl curl -X 'GET' 'https://dvref.com/mrefd/reflectors/' -H 'accept: */*' > ${M17HOSTS}
 
 exit 0

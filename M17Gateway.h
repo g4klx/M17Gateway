@@ -22,6 +22,8 @@
 #include "M17Network.h"
 #include "APRSWriter.h"
 #include "GPSHandler.h"
+#include "Reflectors.h"
+#include "Voice.h"
 #include "Conf.h"
 
 #include <cstdio>
@@ -61,14 +63,14 @@ private:
 	M17_STATUS       m_status;
 	M17_STATUS       m_oldStatus;
 	CM17Network*     m_network;
-	std::string      m_reflector;
-	unsigned int     m_addrLen;
-	sockaddr_storage m_addr;
+	CM17Reflector    m_reflector;
 	char             m_module;
 	CAPRSWriter*     m_writer;
+	CVoice*          m_voice;
 	CGPSHandler*     m_gps;
 
 	void createGPS();
+	bool isVoiceBusy() const;
 };
 
 #endif
