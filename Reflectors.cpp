@@ -69,9 +69,9 @@ CM17Reflector* CReflectors::find(const std::string& name)
 	std::string nm = name;
 	nm.resize(7U);
 
-	for (std::vector<CM17Reflector*>::iterator it = m_reflectors.begin(); it != m_reflectors.end(); ++it) {
-		if (nm == (*it)->m_name)
-			return *it;
+	for (const auto& it : m_reflectors) {
+		if (nm == it->m_name)
+			return it;
 	}
 
 	return nullptr;
@@ -139,7 +139,7 @@ bool CReflectors::parseJSON(const std::string& fileName)
 
 			if ((addrLen_v4 > 0U) || (addrLen_v6 > 0U)) {
 				CM17Reflector* refl = new CM17Reflector;
-				refl->m_name         = name;
+				refl->m_name         = "M17-" + name;
 				refl->IPv4.m_addr    = addr_v4;
 				refl->IPv4.m_addrLen = addrLen_v4;
 				refl->IPv6.m_addr    = addr_v6;

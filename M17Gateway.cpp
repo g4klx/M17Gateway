@@ -289,6 +289,7 @@ int CM17Gateway::run()
 					m_voice->linkedTo(m_reflector.m_name);
 			}
 		} else {
+			LogWarning("The startup reflector of %s is not found", startupReflector.c_str());
 			startupReflector.clear();
 		}
 	}
