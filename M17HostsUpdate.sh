@@ -38,6 +38,6 @@ then
 fi
 
 # Download the M17Hosts.txt file
-curl https://dvref.com/downloads/M17Hosts-resolved.txt > ${M17HOSTS}
+curl --fail --silent -S -L -o  ${M17HOSTS} -A "M17Gateway - G4KLX" https://hostfiles.refcheck.radio/M17Hosts.txt
 
 exit 0
